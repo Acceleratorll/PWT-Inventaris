@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Repositories;
+
+class {{ $name }}
+{
+    protected $model;
+
+    public function __construct(Model $model)
+    {
+        $this->model = $model;
+    }
+
+    public function find($id)
+    {
+        return $this->model->find($id);
+    }
+
+    public function search($term)
+    {
+        return $this->model
+            ->where('name', 'LIKE', '%' . $term . '%')
+            ->orWhere('item_code', 'LIKE', '%' . $term . '%')
+            ->orWhere('note', 'LIKE', '%' . $term . '%')
+            ->orWhereHas('assetType', function ($query) use ($term) {
+                $query->where('name', 'LIKE', '%' . $term . '%');
+            })
+            ->orWhereHas('room', function ($query) use ($term) {
+                $query->where('name', 'LIKE', '%' . $term . '%');
+            })
+            ->get();
+    }
+
+    public function all()
+    {
+        return $this->model->with('asset_type')->get();
+    }
+
+    public function paginate()
+    {
+        return $this->model->with('asset_type')->paginate(10);
+    }
+
+    public function create($data)
+    {
+        return $this->model->create($data);
+    }
+
+    public function update($id, $data)
+    {
+        return $this->model->find($id)->update($data);
+    }
+
+    public function delete($id)
+    {
+        $data = $this->model->find($id);
+        return $data->delete();
+    }
+}

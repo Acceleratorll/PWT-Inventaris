@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Services;
+
+class {{ $name }}Service
+{
+    protected $repository;
+
+    public function __construct({{ $name }}Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    // Add your service methods here
+    // For example:
+    // public function getById($id)
+    // {
+    //     return $this->repository->find($id);
+    // }
+
+    // Define additional methods based on your project's needs
+}
