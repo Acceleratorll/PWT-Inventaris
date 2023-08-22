@@ -6,7 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "arielmejiadev/larapex-charts": "^6.0",
         "guzzlehttp/guzzle": "^7.2",
+        "jeroennoten/laravel-adminlte": "^3.9",
         "laravel/breeze": "^1.23",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
