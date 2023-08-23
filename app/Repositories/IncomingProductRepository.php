@@ -21,14 +21,14 @@ class IncomingProductRepository
     public function search($term)
     {
         return $this->model
-            ->where(function ($query) use ($term) {
-                $query->where('qty', 'LIKE', '%' . $term . '%')
-                    ->orWhereHas('product', function ($query) use ($term) {
-                        $query->where('name', 'LIKE', '%' . $term . '%');
-                    })
-                    ->orWhereHas('incoming', function ($query) use ($term) {
-                        $query->where('code', 'LIKE', '%' . $term . '%');
-                    });
+            ->where('qty', 'LIKE', '%' . $term . '%')
+            ->orWhereHas('product', function ($query) use ($term) {
+                $query->where('name', 'LIKE', '%' . $term . '%')
+                    ->orWhere('product_code', 'LIKE', '%' . $term . '%')
+                    ->orWhere('note', 'LIKE', '%' . $term . '%');
+            })
+            ->orWhereHas('incoming', function ($query) use ($term) {
+                $query->where('code', 'LIKE', '%' . $term . '%');
             })
             ->get();
     }

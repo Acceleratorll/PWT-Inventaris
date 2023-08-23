@@ -21,16 +21,14 @@ class OutgoingProductRepository
     public function search($term)
     {
         return $this->model
-        ->where(function ($query) use ($term) {
-            $query->where('qty', 'LIKE', '%' . $term . '%')
-                ->orWhereHas('product', function ($query) use ($term) {
-                    $query->where('name', 'LIKE', '%' . $term . '%');
-                })
-                ->orWhereHas('process_plan', function ($query) use ($term) {
-                    $query->where('customer', 'LIKE', '%' . $term . '%');
-                });
-        })
-        ->get();
+            ->where('qty', 'LIKE', '%' . $term . '%')
+            ->orWhereHas('product', function ($query) use ($term) {
+                $query->where('name', 'LIKE', '%' . $term . '%');
+            })
+            ->orWhereHas('process_plan', function ($query) use ($term) {
+                $query->where('customer', 'LIKE', '%' . $term . '%');
+            })
+            ->get();
     }
 
     public function all()

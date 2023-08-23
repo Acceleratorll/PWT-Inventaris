@@ -22,6 +22,21 @@
                 Info theme callout!
             </x-adminlte-callout>
         </div>
+        
+        @include('partials.search.index', ['action' => route('material.search')])
+
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody id="results-table-body">
+                
+            </tbody>
+        </table>
     </div>
     
     
@@ -102,8 +117,10 @@
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
     <link rel="stylesheet" href="/css/divider.css">
-@stop
-
-@section('js')
-    <script> console.log('Hi!'); </script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    @stop
+    
+    @section('js')
+    @include('partials.search.js')
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 @stop
