@@ -329,7 +329,7 @@ return [
         // ],
         [
             'text'        => 'Dashboard',
-            'url'         => '/home',
+            'route'         => 'dashboard.create',
             'icon'        => 'nav-icon fas fa-tachometer-alt',
             'label_color' => 'success',
         ],

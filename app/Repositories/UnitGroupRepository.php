@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
-class {{ $name }}
+use App\Models\UnitGroup;
+
+class UnitGroupRepository
 {
     protected $model;
 

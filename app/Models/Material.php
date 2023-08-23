@@ -10,7 +10,13 @@ class Material extends Model
 {
     use HasFactory;
 
-    public function products():HasMany
+    protected $fillable = [
+        'name',
+        'material_code',
+        'desc',
+    ];
+
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }

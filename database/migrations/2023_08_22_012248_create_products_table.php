@@ -16,8 +16,10 @@ return new class extends Migration
             $table->foreignId('material_id')->constrained();
             $table->foreignId('product_type_id')->constrained();
             $table->foreignId('qualifier_id')->constrained();
+            $table->foreignId('category_product_id')->constrained();
             $table->string('product_code')->unique();
             $table->string('name');
+            $table->string('max_amount');
             $table->string('amount');
             $table->string('note');
             $table->timestamps();

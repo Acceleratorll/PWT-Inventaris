@@ -46,20 +46,6 @@
                     <span class="text-black" style="margin-right: 15px;">10</span>
                 </div>
             </x-adminlte-card>
-            <div class="container px-4 mx-auto">
-                {!! $chart->container() !!}
-            </div><br>
-            <label for="table4">Tinta Stock Tipis</label>
-            <x-adminlte-datatable id="table4" :heads="$heads" theme="danger" :config="$config"
-            striped hoverable>
-            @foreach($config['data'] as $row)
-            <tr>
-                    @foreach($row as $cell)
-                    <td>{!! $cell !!}</td>
-                    @endforeach
-                </tr>
-                @endforeach
-            </x-adminlte-datatable>
         </x-adminlte-card>
     </div>
     <div class="col-md-4">
@@ -105,32 +91,12 @@
                 <span class="text-danger font-weight-bold" style="margin-right: 15px;">10</span>
             </div>
         </x-adminlte-card>
-            <div class="container px-4 mx-auto">
-                {{ $kategoriChart->container() }}
-            </div><br>
-            <label for="daily">Barang Kategori Daily</label>
-            <x-adminlte-datatable id="daily" :heads="$kheads" theme="danger" :config="$config"
-            striped hoverable>
-            @foreach($kconfig['data'] as $row)
-            <tr>
-                @foreach($row as $cell)
-                <td>{!! $cell !!}</td>
-                @endforeach
-            </tr>
-            @endforeach
-        </x-adminlte-datatable>
     </x-adminlte-card>
         </div>
     </div>
     
     <div class="row">
     </div>
-
-<script src="{{ $chart->cdn() }}"></script>
-{{ $chart->script() }}
-<script src="{{ $kategoriChart->cdn() }}"></script>
-{{ $kategoriChart->script() }}
-
 @stop
 
 @section('css')

@@ -11,12 +11,19 @@ class Qualifier extends Model
 {
     use HasFactory;
 
-    public function products() : HasMany
+    protected $fillable = [
+        'unit_group_id',
+        'name',
+        'abbreviation',
+        'conversion_factor',
+    ];
+
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
 
-    public function unit_group() : BelongsTo
+    public function unit_group(): BelongsTo
     {
         return $this->belongsTo(UnitGroup::class);
     }

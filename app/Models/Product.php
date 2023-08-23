@@ -10,6 +10,16 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'material_id',
+        'product_type_id',
+        'qualifier_id',
+        'product_code',
+        'name',
+        'amount',
+        'note',
+    ];
+
     public function material(): BelongsTo
     {
         return $this->belongsTo(Material::class);

@@ -9,6 +9,11 @@ class UnitGroup extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'desc',
+    ];
+
     public function qualifiers()
     {
         return $this->hasMany(Qualifier::class);
