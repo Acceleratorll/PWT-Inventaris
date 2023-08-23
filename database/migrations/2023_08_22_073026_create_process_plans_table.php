@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('process_plans', function (Blueprint $table) {
             $table->id();
+            $table->string('customer');
+            $table->string('order_type');
+            $table->integer('total');
             $table->timestamps();
         });
     }

@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Incoming extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'code',
+    ];
+
+    public function incoming_products()
+    {
+        return $this->hasMany(IncomingProducts::class);
+    }
 }

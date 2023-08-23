@@ -2,20 +2,25 @@
 
 namespace App\Models;
 
+use Elastic\Elasticsearch\ClientBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = [
         'material_id',
         'product_type_id',
         'qualifier_id',
+        'category_product_id',
         'product_code',
         'name',
+        'max_amount',
         'amount',
         'note',
     ];
@@ -33,5 +38,20 @@ class Product extends Model
     public function qualifier(): BelongsTo
     {
         return $this->belongsTo(Qualifier::class);
+    }
+
+    public function category_product(): BelongsTo
+    {
+        return $this->belongsTo(CategoryProduct::class);
+    }
+
+    public function outgoing_products(): HasMany
+    {
+        return $this->hasMany(OutgoingProducts::class);
+    }
+
+    public function incoming_products(): HasMany
+    {
+        return $this->hasMany(IncomingProducts::class);
     }
 }

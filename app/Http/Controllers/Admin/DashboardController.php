@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use Elastic\Elasticsearch\ClientBuilder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
