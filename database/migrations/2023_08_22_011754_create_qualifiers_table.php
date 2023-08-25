@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('abbreviation');
             $table->string('conversion_factor');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

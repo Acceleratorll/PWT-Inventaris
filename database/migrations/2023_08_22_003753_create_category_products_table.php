@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->tinyInteger('max');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

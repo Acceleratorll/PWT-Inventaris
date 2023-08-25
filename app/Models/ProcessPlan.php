@@ -3,21 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProcessPlan extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'customer',
         'order_type',
         'total',
     ];
-
-    public function outgoing_product(): HasMany
+ 
+    public function outgoing_products(): HasMany
     {
-        return $this->hasMany(OutgoingProducts::class);
+        return $this->hasMany(OutgoingProduct::class);
     }
 }

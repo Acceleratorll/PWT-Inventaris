@@ -329,36 +329,57 @@ return [
         // ],
         [
             'text'        => 'Dashboard',
-            'route'         => 'dashboard.create',
+            'route'         => 'dashboard.index',
             'icon'        => 'nav-icon fas fa-tachometer-alt',
             'label_color' => 'success',
         ],
         ['header' => 'product_settings'],
         [
+            'text'    => 'Category Product',
+            'icon' => 'nav-icon fas fa-th',
+            'submenu' => [
+                [
+                    'text'    => 'All Data',
+                    'route'     => 'category.index',
+                    'icon' => 'nav-icon fas fa-book',
+                ],
+                [
+                    'text'    => 'Add Category',
+                    'route'     => 'category.create',
+                    'icon' => 'nav-icon fas fa-edit',
+                ],
+            ],
+        ],
+        [
             'text'    => 'Product',
             'icon' => 'nav-icon fas fa-th',
             'submenu' => [
                 [
-                    'text'    => 'Tinta',
-                    'url'     => '#',
-                    'icon' => 'nav-icon fas fa-edit',
-                    'submenu' => [
-                        [
-                            'text' => 'Opsi Lagi',
-                            'url'  => '#',
-                        ],
-                    ],
+                    'text'    => 'All Data',
+                    'route'     => 'product.index',
+                    'icon' => 'nav-icon fas fa-book',
                 ],
                 [
-                    'text'    => 'Kertas',
-                    'url'     => '#',
+                    'text'    => 'Add Product',
+                    'route'     => 'product.create',
+                    'icon' => 'nav-icon fas fa-edit',
+                ],
+            ],
+        ],
+        ['header' => 'rpp_settings'],
+        [
+            'text'    => 'rpp',
+            'icon' => 'nav-icon fas fa-th',
+            'submenu' => [
+                [
+                    'text'    => 'All Data',
+                    'route'     => 'rpp.index',
                     'icon' => 'nav-icon fas fa-book',
-                    'submenu' => [
-                        [
-                            'text' => 'Opsi Lagi',
-                            'url'  => '#',
-                        ],
-                    ],
+                ],
+                [
+                    'text'    => 'Add RPP',
+                    'route'     => 'rpp.create',
+                    'icon' => 'nav-icon fas fa-edit',
                 ],
             ],
         ],

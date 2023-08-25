@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('material_code')->unique();
             $table->string('desc');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

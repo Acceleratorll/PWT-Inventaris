@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('customer');
             $table->string('order_type');
             $table->integer('total');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

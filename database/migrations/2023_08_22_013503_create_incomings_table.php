@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('incomings', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

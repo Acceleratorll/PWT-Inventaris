@@ -16,17 +16,18 @@ class CategoryProductSeeder extends Seeder
         $data = [
             [
                 'name' => 'Daily',
-                'max' => '1',
+                'max' => '0',
             ],
             [
                 'name' => 'Slow Moving',
-                'max' => '2',
+                'max' => '1',
             ],
             [
-                'name' => 'Daily',
-                'max' => '3',
+                'name' => 'Unused',
+                'max' => '2',
             ],
         ];
+
         DB::table('category_products')->insert($data);
     }
 }

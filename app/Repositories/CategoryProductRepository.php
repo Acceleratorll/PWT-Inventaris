@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\Qualifier;
+use App\Models\CategoryProduct;
 
-class QualifierRepository
+class CategoryProductRepository
 {
     protected $model;
 
-    public function __construct(Qualifier $model)
+    public function __construct(CategoryProduct $model)
     {
         $this->model = $model;
     }
@@ -22,13 +22,11 @@ class QualifierRepository
     {
         return $this->model
             ->where('name', 'LIKE', '%' . $term . '%')
-            ->orWhere('abbreviation', 'LIKE', '%' . $term . '%')
-            ->orWhere('conversion_factor', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('unit_group', function ($query) use ($term) {
-                $query->where('name', 'LIKE', '%' . $term . '%')
-                    ->orWhere('desc', 'LIKE', '%' . $term . '%');
+            ->orWhere('max', 'LIKE', '%' . $term . '%')
+            ->orWhereHas('products', function ($query) use ($term) {
+                $query->where('name', 'LIKE', '%' . $term . '%');
             })
-            ->paginate(5);
+            ->get();
     }
 
     public function all()
@@ -38,7 +36,7 @@ class QualifierRepository
 
     public function paginate()
     {
-        return $this->model->with('products', 'unit_group')->paginate(10);
+        return $this->model->with('qualifiers')->paginate(10);
     }
 
     public function create($data)
@@ -53,7 +51,6 @@ class QualifierRepository
 
     public function delete($id)
     {
-        $data = $this->model->find($id);
-        return $data->delete();
+        return $this->model->find($id)->delete();
     }
 }
