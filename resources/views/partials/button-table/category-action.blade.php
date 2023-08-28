@@ -1,7 +1,7 @@
 
 <form action="{{ route('category.destroy',['category' => $id]) }}" method="post">
-<a href="javascript:void(0)" data-toggle="tooltip" onClick="editFunc({{ $id }})" data-original-title="Edit" class="edit btn btn-success edit">
-Edit
+<a href="/category/{{ $id }}/edit" class="edit btn btn-success">
+    Edit
 </a>
     @csrf
     @method("DELETE")

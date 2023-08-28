@@ -22,9 +22,9 @@ class MaterialRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'material_code' => 'required',
-            'desc' => 'required',
+            'name' => 'required|string',
+            'material_code' => 'required|unique',
+            'desc' => 'required|text',
         ];
     }
 }

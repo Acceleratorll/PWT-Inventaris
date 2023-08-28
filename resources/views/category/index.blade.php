@@ -7,6 +7,37 @@
 @stop
 
 @section('content')
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for editing the category -->
+                <form id="editForm" method="post">
+                    @csrf
+                    @method('PATCH')
+
+                    <!-- Category fields for editing -->
+                    <div class="form-group">
+                        <label for="categoryName">Category Name</label>
+                        <input type="text" class="form-control" id="categoryName" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="max">Max Value</label>
+                        <input type="number" class="form-control" id="max" name="max">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-3">
         @if($message = Session::get('info'))
@@ -34,13 +65,12 @@
         @endif
     </div>
 </div>
+
 <div class="row">
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
-                <button type="button" class="btn btn-primary" onclick="location.href='/category/create'">
-                    <span>+ Add</span>
-                </button>
+                <a href="/category/create" class="btn btn-primary">+ Add</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">

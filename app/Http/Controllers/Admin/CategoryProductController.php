@@ -56,38 +56,31 @@ class CategoryProductController extends Controller
         return view('category.create');
     }
 
-    public function store(Request $request)
+    public function store(CategoryProductRequest $request)
     {
-        //
+        $input = $request->validated();
+        $this->categoryProductRepository->create($input);
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil dibuat !');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id): View
     {
         $category = $this->categoryProductRepository->find($id);
         return view('category.edit', compact('category'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(CategoryProductRequest $request, string $id)
     {
+        $input = $request->validated();
+        $this->categoryProductRepository->update($id, $input);
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil diubah !');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $this->categoryProductRepository->delete($id);

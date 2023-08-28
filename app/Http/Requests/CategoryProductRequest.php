@@ -22,8 +22,8 @@ class CategoryProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'max' => 'required',
+            'name' => 'required|string',
+            'max' => 'required|numeric',
         ];
     }
 }

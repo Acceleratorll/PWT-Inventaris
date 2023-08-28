@@ -22,8 +22,8 @@ class OutgoingProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'process_plan_id' => 'required',
-            'product_id' => 'required',
+            'process_plan_id' => 'required|integer',
+            'product_id' => 'required|integer',
             'qty' => 'required|integer',
         ];
     }

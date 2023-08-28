@@ -3,7 +3,7 @@
 @section('title', 'Kategori')
 
 @section('content_header')
-    <h1>Kategori Barang</h1>
+    <h1>Edit Kategori Barang</h1>
 @stop
 
 @section('content')
@@ -37,14 +37,15 @@
 <div class="row">
     <div class="card col-md-12">
         <div class="card-body">
-            <form action="/category" method="post">
+            <form action="/category/{{ $category->id }}" method="post">
                 @csrf
+                @method('PUT')
             <div class="row">
                 <div class="col-md-6">
-                    <x-adminlte-input fgroup-class="mb-3" name="name" label="Name" placeholder="Masukkan Nama Kategori" disable-feedback/>
+                    <x-adminlte-input fgroup-class="mb-3" name="name" label="Name" value="{{ $category->name }}" placeholder="Masukkan Nama Kategori" disable-feedback/>
                 </div>
                 <div class="col-md-6">
-                    <x-adminlte-input fgroup-class="mb-3" name="max" label="Max Tahun" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
+                    <x-adminlte-input fgroup-class="mb-3" name="max" label="Max Tahun" value="{{ $category->max }}" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
                 </div>
             </div>
             <button class="form-control btn btn-success" type="submit">Save</button>
@@ -52,6 +53,7 @@
         </div>
     </div>
 </div>
+
 
 @stop
     

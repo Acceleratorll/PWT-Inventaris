@@ -22,7 +22,7 @@ class IncomingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required',
+            'code' => 'required|unique',
         ];
     }
 }

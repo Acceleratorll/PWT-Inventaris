@@ -22,9 +22,9 @@ class IncomingProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'incoming_id' => 'required',
-            'product_id' => 'required',
-            'qty' => 'required',
+            'incoming_id' => 'required|integer',
+            'product_id' => 'required|integer',
+            'qty' => 'required|integer',
         ];
     }
 }
