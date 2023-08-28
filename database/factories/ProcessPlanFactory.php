@@ -17,9 +17,9 @@ class ProcessPlanFactory extends Factory
     public function definition(): array
     {
         return [
+            'code' => $this->faker->randomFloat(2, 100, 1000),
             'customer' => $this->faker->name,
             'order_type' => $this->faker->text,
-            'total' => $this->faker->randomFloat(2, 100, 1000),
             'created_at' => $this->faker->dateTimeThisYear(),
             'updated_at' => $this->faker->dateTimeThisYear(),
         ];

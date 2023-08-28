@@ -21,6 +21,7 @@ class ProductTypeRepository
     public function search($term)
     {
         return $this->model
+            ->with('products')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
             ->orWhereHas('products', function ($query) use ($term) {
@@ -32,7 +33,7 @@ class ProductTypeRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('products')->get();
     }
 
     public function paginate()

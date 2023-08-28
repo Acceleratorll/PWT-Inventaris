@@ -21,6 +21,7 @@ class MaterialRepository
     public function search($term)
     {
         return $this->model
+            ->with('products')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('material_code', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
@@ -33,7 +34,7 @@ class MaterialRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this-> model->with('products')->get();
     }
 
     public function paginate()

@@ -38,8 +38,9 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
-                                <th scope="col" class="text-center">Name</th>
-                                <th scope="col" class="text-center">Max Tahun</th>
+                                <th scope="col" class="text-center">Code</th>
+                                <th scope="col" class="text-center">Customer</th>
+                                <th scope="col" class="text-center">Order Type</th>
                                 <th scope="col" class="text-center" width="14%">Action</th>
                             </tr>
                         </thead>\
@@ -64,16 +65,12 @@
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('get-categories') }}',
+                ajax: '{{ route('get-rpps') }}',
                 columns: [
                     { data: 'id', name: 'id' },
-                    { data: 'name', name: 'name' },
-                    { 
-                        data: 'max', name: 'max',
-                        render: function(data) {
-                            return data + ' tahun'; // Adding 'tahun' to the value
-                        }
-                    },
+                    { data: 'code', name: 'code' },
+                    { data: 'customer', name: 'customer' },
+                    { data: 'order_type', name: 'order_type' },
                     { data: 'action', name: 'action', orderable: false },
                 ]
             });
@@ -81,8 +78,5 @@
         });
     </script>
 
-    {{-- <script src="{{ $chart->cdn() }}"></script>
-    {{ $chart->script() }} --}}
-    
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 @stop

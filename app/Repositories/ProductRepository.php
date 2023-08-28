@@ -21,6 +21,7 @@ class ProductRepository
     public function search($term)
     {
         return $this->model
+            ->with('product_type', 'qualifier', 'material', 'category_product')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('product_code', 'LIKE', '%' . $term . '%')
             ->orWhere('amount', 'LIKE', '%' . $term . '%')
@@ -39,12 +40,12 @@ class ProductRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->get();
     }
 
     public function paginate()
     {
-        return $this->model->with('product_type', 'qualifier', 'material')->paginate(10);
+        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->paginate(10);
     }
 
     public function create($data)

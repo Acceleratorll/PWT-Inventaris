@@ -21,6 +21,7 @@ class IncomingRepository
     public function search($term)
     {
         return $this->model
+            ->with('incoming_products')
             ->where('code', 'LIKE', '%' . $term . '%')
             ->orWhereHas('incoming_products', function ($query) use ($term) {
                 $query->whereHas('product', function ($query) use ($term) {
@@ -32,7 +33,7 @@ class IncomingRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('incoming_products')->get();
     }
 
     public function paginate()

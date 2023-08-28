@@ -21,6 +21,7 @@ class UnitGroupRepository
     public function search($term)
     {
         return $this->model
+            ->with('qualifiers')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
             ->orWhereHas('qualifier', function ($query) use ($term) {
@@ -31,7 +32,7 @@ class UnitGroupRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('qualifiers')->get();
     }
 
     public function paginate()

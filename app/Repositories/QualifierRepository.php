@@ -21,6 +21,7 @@ class QualifierRepository
     public function search($term)
     {
         return $this->model
+            ->with('products', 'unit_group')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('abbreviation', 'LIKE', '%' . $term . '%')
             ->orWhere('conversion_factor', 'LIKE', '%' . $term . '%')
@@ -33,7 +34,7 @@ class QualifierRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this-> model->with('products', 'unit_group')->get();
     }
 
     public function paginate()

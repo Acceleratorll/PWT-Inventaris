@@ -21,6 +21,7 @@ class RoleRepository
     public function search($term)
     {
         return $this->model
+            ->with('users')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhereHas('users', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%');
@@ -30,12 +31,12 @@ class RoleRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('users')->get();
     }
 
     public function paginate()
     {
-        return $this->model->with('qualifiers')->paginate(10);
+        return $this->model->with('users')->paginate(10);
     }
 
     public function create($data)

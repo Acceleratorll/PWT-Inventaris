@@ -21,6 +21,7 @@ class CategoryProductRepository
     public function search($term)
     {
         return $this->model
+            ->with('products')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('max', 'LIKE', '%' . $term . '%')
             ->orWhereHas('products', function ($query) use ($term) {
@@ -31,12 +32,12 @@ class CategoryProductRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('products')->get();
     }
 
     public function paginate()
     {
-        return $this->model->with('qualifiers')->paginate(10);
+        return $this->model->with('products')->paginate(10);
     }
 
     public function create($data)

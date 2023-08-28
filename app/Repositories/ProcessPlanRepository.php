@@ -21,6 +21,7 @@ class ProcessPlanRepository
     public function search($term)
     {
         return $this->model
+            ->with('outgoing_products')
             ->where('customer', 'LIKE', '%' . $term . '%')
             ->orWhere('order_type', 'LIKE', '%' . $term . '%')
             ->orWhere('total', 'LIKE', '%' . $term . '%')
@@ -34,12 +35,12 @@ class ProcessPlanRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('outgoing_products')->get();
     }
 
     public function paginate()
     {
-        return $this->model->with('qualifiers')->paginate(10);
+        return $this->model->with('outgoing_products')->paginate(10);
     }
 
     public function create($data)

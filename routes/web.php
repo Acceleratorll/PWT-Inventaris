@@ -36,7 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/rpp', ProcessPlanController::class);
 });
 
-Route::get('/get-rpp', [ProcessPlanController::class, 'getCategories'])->name('get-categories');
+Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rpps');
+Route::get('/get-products', [ProductController::class, 'getProducts'])->name('get-products');
 Route::get('/get-categories', [CategoryProductController::class, 'getCategories'])->name('get-categories');
 Route::get('/get-unused-products', [AdminDashboardController::class, 'getUnusedProducts'])->name('get-unused-products');
 Route::get('/get-report-process-plan', [AdminDashboardController::class, 'getReportProcessPlan'])->name('get-report-process-plan');

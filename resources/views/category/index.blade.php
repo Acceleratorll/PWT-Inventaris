@@ -61,7 +61,6 @@
 @stop
     
     @section('css')
-    {{-- <link rel="stylesheet" href="{{ asset('css/table.css') }}"> --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
     @stop
     
@@ -88,8 +87,5 @@
         });
     </script>
 
-    {{-- <script src="{{ $chart->cdn() }}"></script>
-    {{ $chart->script() }} --}}
-    
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 @stop
