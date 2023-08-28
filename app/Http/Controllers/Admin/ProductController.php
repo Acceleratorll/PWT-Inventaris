@@ -27,7 +27,29 @@ class ProductController extends Controller
 
     public function getProducts()
     {
-        return DataTables::of($this->productRepository->all())
+        $products = $this->productRepository->all();
+        return DataTables::of($products)
+            ->addColumn('material_name', function ($product) {
+                return $product->material->name;
+            })
+            ->addColumn('product_type_name', function ($product) {
+                return $product->product_type->name;
+            })
+            ->addColumn('qualifier_name', function ($product) {
+                return $product->qualifier->name;
+            })
+            ->addColumn('category_product_name', function ($product) {
+                return $product->category_product->name;
+            })
+            ->addColumn('note', function ($product) {
+                return $product->note;
+            })
+            ->addColumn('created_at', function ($product) {
+                return $product->created_at->format('d-m-Y');
+            })
+            ->addColumn('updated_at', function ($product) {
+                return $product->updated_at->format('d-m-Y');
+            })
             ->addColumn('action', 'partials.button-table.product-action')
             ->rawColumns(['action'])
             ->addIndexColumn()

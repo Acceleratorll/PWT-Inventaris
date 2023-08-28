@@ -29,7 +29,22 @@ class CategoryProductController extends Controller
 
     public function getCategories()
     {
-        return DataTables::of(CategoryProduct::query())
+
+        $categories = $this->categoryProductRepository->all();
+
+        return DataTables::of($categories)
+            ->addColumn('name', function ($category) {
+                return $category->name;
+            })
+            ->addColumn('max', function ($category) {
+                return $category->max;
+            })
+            ->addColumn('created_at', function ($category) {
+                return $category->created_at->format('d-m-Y');
+            })
+            ->addColumn('updated_at', function ($category) {
+                return $category->updated_at->format('d-m-Y');
+            })
             ->addColumn('action', 'partials.button-table.category-action')
             ->rawColumns(['action'])
             ->addIndexColumn()

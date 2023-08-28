@@ -101,7 +101,10 @@ class DashboardController extends Controller
 
         return DataTables::of($products)
             ->addColumn('last_used', function ($product) {
-                return $product->updated_at->format('Y-m-d');
+                return $product->updated_at->format('d-m-Y');
+            })
+            ->addColumn('created', function ($product) {
+                return $product->created_at->format('d-m-Y');
             })
             ->make(true);
     }

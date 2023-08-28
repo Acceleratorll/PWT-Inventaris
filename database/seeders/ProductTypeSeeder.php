@@ -17,26 +17,38 @@ class ProductTypeSeeder extends Seeder
             [
                 'name' => 'Bahan Baku',
                 'desc' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Bahan Bantu',
                 'desc' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Bahan Tinta',
                 'desc' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Barang Jadi Beli',
                 'desc' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Barang Jadi Produksi',
                 'desc' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Barang Langsung Biaya',
                 'desc' => '',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ];
 

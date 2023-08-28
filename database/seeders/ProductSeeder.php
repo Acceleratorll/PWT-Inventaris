@@ -24,7 +24,9 @@ class ProductSeeder extends Seeder
                 'name' => 'K.SEC. 230 GR (NON FIBER) 65x100',
                 'max_amount' => '500',
                 'amount' => '250',
-                'note' => '',
+                'note' => 'Noted',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'material_id' => 1,
@@ -35,7 +37,9 @@ class ProductSeeder extends Seeder
                 'name' => 'K.SEC. 230 GR (FIBRE) 65x100',
                 'max_amount' => '500',
                 'amount' => '400',
-                'note' => '',
+                'note' => 'Noted',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ];
 

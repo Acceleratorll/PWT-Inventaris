@@ -50,6 +50,8 @@
                             <th scope="col" class="text-center">ID</th>
                             <th scope="col" class="text-center">Name</th>
                             <th scope="col" class="text-center">Max Tahun</th>
+                            <th scope="col" class="text-center">Last Update</th>
+                            <th scope="col" class="text-center">Created At</th>
                             <th scope="col" class="text-center" width="14%">Action</th>
                         </tr>
                     </thead>
@@ -77,9 +79,11 @@
                     { 
                         data: 'max', name: 'max',
                         render: function(data) {
-                            return data + ' tahun'; // Adding 'tahun' to the value
+                            return data + ' tahun';
                         }
                     },
+                    { data: 'updated_at', name: 'updated_at' },
+                    { data: 'created_at', name: 'created_at' },
                     { data: 'action', name: 'action', orderable: false },
                 ]
             });

@@ -25,7 +25,23 @@ class ProcessPlanController extends Controller
 
     public function getRpps()
     {
-        return DataTables::of($this->processPlanRepository->all())
+        $rpps = $this->processPlanRepository->all();
+        return DataTables::of($rpps)
+            ->addColumn('customer', function ($rpp) {
+                return $rpp->customer;
+            })
+            ->addColumn('code', function ($rpp) {
+                return $rpp->code;
+            })
+            ->addColumn('order_type', function ($rpp) {
+                return $rpp->order_type;
+            })
+            ->addColumn('formatted_created_at', function ($rpp) {
+                return $rpp->created_at->format('d-m-Y');
+            })
+            ->addColumn('formatted_updated_at', function ($rpp) {
+                return $rpp->updated_at->format('d-m-Y');
+            })
             ->addColumn('action', 'partials.button-table.process-plan-action')
             ->rawColumns(['action'])
             ->addIndexColumn()

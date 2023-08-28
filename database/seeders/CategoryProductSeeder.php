@@ -17,14 +17,20 @@ class CategoryProductSeeder extends Seeder
             [
                 'name' => 'Daily',
                 'max' => '0',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Slow Moving',
                 'max' => '1',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Unused',
                 'max' => '2',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ];
 

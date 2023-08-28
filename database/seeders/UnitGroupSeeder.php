@@ -17,14 +17,20 @@ class UnitGroupSeeder extends Seeder
             [
                 'name' => 'Length',
                 'desc' => 'Length-Related',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Weight',
                 'desc' => 'Weight-Related',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Sheet',
                 'desc' => 'Sheet-Related',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ];
 

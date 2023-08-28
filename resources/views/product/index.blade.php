@@ -53,10 +53,12 @@
                             <th scope="col" class="text-center">Tipe Barang</th>
                             <th scope="col" class="text-center">Kategory</th>
                             <th scope="col" class="text-center">Code</th>
+                            <th scope="col" class="text-center">Satuan</th>
                             <th scope="col" class="text-center">Stock</th>
                             <th scope="col" class="text-center">Stock Maksimal</th>
                             <th scope="col" class="text-center">Keterangan</th>
                             <th scope="col" class="text-center">Last Updated</th>
+                            <th scope="col" class="text-center">Dibuat</th>
                             <th scope="col" class="text-center" width="14%">Action</th>
                         </tr>
                     </thead>
@@ -80,34 +82,30 @@
                 searchable: true,
                 ajax: '{{ route('get-products') }}',
                 columns: [
-            { data: 'id', name: 'id' },
-            { data: 'name', name: 'name' },
-            { 
-                data: 'material.name', 
-                name: 'material.name',
-                defaultContent: ''
-            },
-            { 
-                data: 'product_type.name', 
-                name: 'product_type.name',
-                defaultContent: ''
-            },
-            { 
-                data: 'category_product.name', 
-                name: 'category_product.name',
-                defaultContent: ''
-            },
-            { data: 'product_code', name: 'product_code' },
-            { data: 'amount', name: 'amount' },
-            { data: 'max_amount', name: 'max_amount' },
-            { data: 'note', name: 'note' },
+                    { data: 'id', name: 'id' },
+                    { data: 'name', name: 'name' },
                     { 
-                        data: 'updated_at', 
-                        name: 'updated_at',
-                        render: function(data) {
-                            return moment(data).format('DD-MM-YYYY');
-                        }
+                        data: 'material_name', 
+                        name: 'material_name',
                     },
+                    { 
+                        data: 'product_type_name', 
+                        name: 'product_type_name',
+                    },
+                    { 
+                        data: 'category_product_name', 
+                        name: 'category_product_name',
+                    },
+                    { data: 'product_code', name: 'product_code' },
+                    { 
+                        data: 'qualifier_name', 
+                        name: 'qualifier_name',
+                    },
+                    { data: 'amount', name: 'amount' },
+                    { data: 'max_amount', name: 'max_amount' },
+                    { data: 'note', name: 'note' },
+                    { data: 'updated_at', name: 'updated_at' },
+                    { data: 'created_at', name: 'created_at' },
                     { data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
