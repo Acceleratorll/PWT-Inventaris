@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Charts\categoryProductChart;
+use App\Charts\monthlyUsedTintaChart;
 use App\Charts\yearlyRppChart;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryProduct;
@@ -28,7 +29,7 @@ class DashboardController extends Controller
     }
 
     // Contoh Area Chart
-    public function index(yearlyRppChart $chart, categoryProductChart $categoryChart): View
+    public function index(yearlyRppChart $chart, categoryProductChart $categoryChart, monthlyUsedTintaChart $monthlyUsedTintaChart): View
     {
         $categories = $this->categoryRepository->all();
         $unusedMax = $categories->max('max');
@@ -37,6 +38,7 @@ class DashboardController extends Controller
         return view('dashboard.index', [
             'chart' => $chart->build(),
             'categoryChart' => $categoryChart->build(),
+            'monthlyUsedTintaChart' => $monthlyUsedTintaChart->build(),
             'categories' => $categories,
             'total' => $total,
             'unused' => $unused,

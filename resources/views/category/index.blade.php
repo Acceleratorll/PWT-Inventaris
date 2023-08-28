@@ -1,57 +1,64 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Kategori')
 
 @section('content_header')
-    <h1>Category Product</h1>
+    <h1>Kategori Barang</h1>
 @stop
 
 @section('content')
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-<div class="container">
 <div class="row">
-    <div class="col-md-12">
-        @if($message = Session::get('success'))
-        <div class="alert alert-success" role="alert">
+    <div class="col-md-3">
+        @if($message = Session::get('info'))
+        <x-adminlte-alert theme="info" title="Info">
             {{ $message }}
-        </div>
+        </x-adminlte-alert>
+    </div>
+    <div class="col-md-3">
+        @elseif($message =  Session::get('success'))
+        <x-adminlte-alert theme="success" title="Success">
+            {{ $message }}
+        </x-adminlte-alert>
+    </div>
+    <div class="col-md-3">
+        @elseif($message =  Session::get('warning'))
+        <x-adminlte-alert theme="warning" title="Warning">
+            {{ $message }}
+        </x-adminlte-alert>
+    </div>
+    <div class="col-md-3">
         @elseif($message =  Session::get('error'))
-        <div class="alert alert-danger" role="alert">
+        <x-adminlte-alert theme="danger" title="Danger">
             {{ $message }}
-        </div>
+        </x-adminlte-alert>
         @endif
-        <div class="row" style="height: 10px"></div>
-        <div class="card">
-            <div class="card-body">
-                <div class="button-action" style="margin-bottom: 20px">
-                    <button type="button" class="btn btn-primary" onclick="location.href='/category/create'">
-                        <span>+ Add</span>
-                    </button>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="table">
-                        <caption>List of Employees</caption>
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col" class="text-center">ID</th>
-                                <th scope="col" class="text-center">Name</th>
-                                <th scope="col" class="text-center">Max Tahun</th>
-                                <th scope="col" class="text-center" width="14%">Action</th>
-                            </tr>
-                        </thead>\
-                    </table>
-                </div>
+    </div>
+</div>
+<div class="row">
+    <div class="card col-md-12">
+        <div class="card-body">
+            <div class="button-action" style="margin-bottom: 20px">
+                <button type="button" class="btn btn-primary" onclick="location.href='/category/create'">
+                    <span>+ Add</span>
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="table">
+                    <caption>Table Kategori Barang</caption>
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="text-center">ID</th>
+                            <th scope="col" class="text-center">Name</th>
+                            <th scope="col" class="text-center">Max Tahun</th>
+                            <th scope="col" class="text-center" width="14%">Action</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
 </div>
-</div>
-
-    @stop
+@stop
     
     @section('css')
     {{-- <link rel="stylesheet" href="{{ asset('css/table.css') }}"> --}}
