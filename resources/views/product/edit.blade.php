@@ -36,56 +36,57 @@
 </div>
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('product.store') }}" method="post">
+        <form action="{{ route('product.update',['product'=>$product->id]) }}" method="post">
             @csrf
+            @method('PUT')
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <label for="name">Nama</label>
-                    <input type="text" class="form-control mb-3" name="name" label="Nama Barang" placeholder="Masukkan Nama Produk" required/>
+                    <input type="text" value="{{ $product->name }}" class="form-control mb-3" name="name" label="Nama Barang" placeholder="Masukkan Nama Produk" required/>
                 </div>
                 <div class="col-md-6">
                     <label for="product_code">Kode Barang</label>
-                    <input type="number" class="form-control mb-3" name="product_code" label="Kode Barang" id="product_code" placeholder="Masukkan Kode Barang" required/>
+                    <input type="number" class="form-control mb-3" value="{{ $product->product_code }}" name="product_code" label="Kode Barang" id="product_code" placeholder="Masukkan Kode Barang" required/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <label for="material_id">Material</label>
                     <select name="material_id" id="material_id" class="form-control mb-3" width="100%" required>
-                        <option value="" selected disabled>Pilih Material</option>
+                        <option value="{{ $product->material_id }}" selected>{{ $product->material->name }}</option>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="product_type_id">Tipe Barang</label>
                     <select name="product_type_id" id="product_type_id" class="form-control mb-3" width="100%" required>
-                        <option value="" selected disabled>Pilih Tipe Barang</option>
+                        <option value="{{ $product->product_type_id }}" selected>{{ $product->product_type->name }}</option>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="category_product_id">Kategori Barang</label>
                     <select name="category_product_id" id="category_product_id" class="form-control mb-3" width="100%" required>
-                        <option value="" selected disabled>Pilih Kategori Barang</option>
+                        <option value="{{ $product->category_product_id }}" selected>{{ $product->category_product->name }}</option>
                     </select>
                 </div>
             </div><br>
             <div class="row">
                 <div class="col-md-6">
                     <label for="note">Keterangan</label>
-                    <textarea name="note" id="note" cols="30" rows="10" placeholder="Keterangan" class="form-control" style="height: 25%"></textarea>
+                    <textarea name="note" id="note" cols="30" rows="10" placeholder="Keterangan" class="form-control" style="height: 25%">{{ $product->note }}</textarea>
                 </div>
                 <div class="col-md-2">
                     <label for="max_amount">Maksimal Stock</label>
-                    <input type="number" class="form-control mb-3" name="max_amount" label="Max Stock" id="max_amount" placeholder="Masukkan Maximal Stock Produk" required/>
+                    <input type="number" value="{{ $product->max_amount }}" class="form-control mb-3" name="max_amount" label="Max Stock" id="max_amount" placeholder="Masukkan Maximal Stock Produk" required/>
                 </div>
                 <div class="col-md-2">
                     <label for="max_amount">Stock Asli</label>
-                    <input type="number" class="form-control mb-3" name="amount" id="amount" placeholder="Masukkan Stock Barang Asli" required/>
+                    <input type="number" value="{{ $product->amount }}" class="form-control mb-3" name="amount" id="amount" placeholder="Masukkan Stock Barang Asli" required/>
                 </div>
                 <div class="col-md-2">
                     <label for="qualifier_id">Satuan</label>
                     <select name="qualifier_id" id="qualifier_id" class="form-control mb-3 select2" required>
-                        <option value="" selected disabled>Pilih Satuan Barang</option>
+                        <option value="{{ $product->qualifier_id }}" selected>{{ $product->qualifier->name }}</option>
                     </select>
                 </div>
             </div>

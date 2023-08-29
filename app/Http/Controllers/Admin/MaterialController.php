@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\ProductTypeRepository;
+use App\Repositories\MaterialRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ProductTypeController extends Controller
+class MaterialController extends Controller
 {
-    protected $productTypeRepository;
+    protected $materialRepository;
 
-    public function __construct(ProductTypeRepository $productTypeRepository)
+    public function __construct(MaterialRepository $materialRepository)
     {
-        $this->productTypeRepository = $productTypeRepository;
+        $this->materialRepository = $materialRepository;
     }
 
     public function index()
@@ -69,16 +69,16 @@ class ProductTypeController extends Controller
         //
     }
 
-    public function getJsonProductTypes(Request $request): JsonResponse
+    public function getJsonMaterials(Request $request): JsonResponse
     {
         $term = $request->term;
-        $product_types = $this->productTypeRepository->search($term);
-        $formattedProductTypes = $product_types->map(function ($product_type) {
+        $materials = $this->materialRepository->search($term);
+        $formattedMaterials = $materials->map(function ($material) {
             return [
-                'id' => $product_type->id,
-                'text' => $product_type->name,
+                'id' => $material->id,
+                'text' => $material->name,
             ];
         });
-        return response()->json($formattedProductTypes);
+        return response()->json($formattedMaterials);
     }
 }

@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\ProcessPlanController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductTypeController;
+use App\Http\Controllers\Admin\QualifierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -43,5 +46,14 @@ Route::get('/get-unused-products', [AdminDashboardController::class, 'getUnusedP
 Route::get('/get-report-process-plan', [AdminDashboardController::class, 'getReportProcessPlan'])->name('get-report-process-plan');
 Route::get('/get-qualifiers', [AdminDashboardController::class, 'getQualifiers'])->name('get-qualifiers');
 Route::get('/material/search', [AdminDashboardController::class, 'search'])->name('material.search');
+
+Route::prefix('/json')->group(function () {
+    Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');
+    Route::get('/get-products', [ProductController::class, 'getJsonProducts'])->name('get-json-products');
+    Route::get('/get-product-types', [ProductTypeController::class, 'getJsonProductTypes'])->name('get-json-product-types');
+    Route::get('/get-materials', [MaterialController::class, 'getJsonMaterials'])->name('get-json-materials');
+    Route::get('/get-categories', [CategoryProductController::class, 'getJsonCategories'])->name('get-json-categories');
+    Route::get('/get-qualifiers', [QualifierController::class, 'getJsonQualifiers'])->name('get-json-qualifiers');
+});
 
 require __DIR__ . '/auth.php';

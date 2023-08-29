@@ -115,7 +115,7 @@
     </div>
     <div class="col-md-8">
         <div class="rounded shadow">
-            <x-adminlte-card title="Info Rencana Proses Produksi" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <x-adminlte-card title="Info Pemakaian Tinta" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
                 {!! $monthlyUsedTintaChart->container() !!}
             </x-adminlte-card>
         </div>

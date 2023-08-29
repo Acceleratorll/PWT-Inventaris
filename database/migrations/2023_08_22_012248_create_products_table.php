@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('max_amount');
             $table->string('amount');
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

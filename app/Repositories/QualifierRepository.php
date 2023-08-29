@@ -29,12 +29,12 @@ class QualifierRepository
                 $query->where('name', 'LIKE', '%' . $term . '%')
                     ->orWhere('desc', 'LIKE', '%' . $term . '%');
             })
-            ->paginate(5);
+            ->get();
     }
 
     public function all()
     {
-        return $this-> model->with('products', 'unit_group')->get();
+        return $this->model->with('products', 'unit_group')->get();
     }
 
     public function paginate()

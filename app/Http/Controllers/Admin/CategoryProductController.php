@@ -7,6 +7,7 @@ use App\Http\Requests\CategoryProductRequest;
 use App\Models\CategoryProduct;
 use App\Repositories\CategoryProductRepository;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -85,5 +86,17 @@ class CategoryProductController extends Controller
     {
         $this->categoryProductRepository->delete($id);
         return back()->with('message', 'Category have been Removed');
+    }
+
+    public function getJsonCategories(Request $request): JsonResponse
+    {
+        $categories = $this->categoryProductRepository->search($request->term);
+        $formattedCategories = $categories->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'text' => $category->name,
+            ];
+        });
+        return response()->json($formattedCategories);
     }
 }

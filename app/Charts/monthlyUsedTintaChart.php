@@ -29,14 +29,14 @@ class monthlyUsedTintaChart
         $labels = [];
 
         foreach ($processPlans as $processPlan) {
-            $totalSalesQty = $processPlan->outgoing_products->sum('qty'); // You need to calculate this total
+            $totalSalesQty = $processPlan->outgoing_products->sum('qty');
 
             $data[] = $totalSalesQty;
             $labels[] = $processPlan->customer;
         }
 
         return $this->chart->areaChart()
-            ->setTitle('Penggunaan Tinta setiap ProcessPlan Bulanan')
+            ->setTitle('Penggunaan Tinta setiap RPP per Bulan')
             ->addData('Total Tinta', $data)
             ->setXAxis($labels)
             ->setColors(['#FF5733'])

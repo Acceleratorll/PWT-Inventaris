@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Http\Requests\ProductRequest;
 use App\Repositories\ProductRepository;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
-use Yajra\DataTables\Contracts\DataTable;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
@@ -56,9 +56,40 @@ class ProductController extends Controller
             ->make(true);
     }
 
+    public function create(): View
+    {
+        return view('product.create');
+    }
+
+    public function store(ProductRequest $request): RedirectResponse
+    {
+        $input = $request->validated();
+        $this->productRepository->create($input);
+        return redirect()->route('product.index')->with('success', 'Product created successfully');
+    }
+
+    public function edit($id): View
+    {
+        $product = $this->productRepository->find($id);
+        return view('product.edit', compact('product'));
+    }
+
+    public function update($id, ProductRequest $request): RedirectResponse
+    {
+        $input = $request->validated();
+        $this->productRepository->update($id, $input);
+        return redirect()->route('product.index')->with('success', 'Product updated successfully');
+    }
+
     public function destroy(string $id)
     {
         $this->productRepository->delete($id);
         return redirect()->back()->with('success', 'Product berhasil dihapus');
+    }
+
+    public function getJsonProducts(): HttpFoundationResponse
+    {
+        $products = $this->productRepository->all();
+        return response()->json($products);
     }
 }

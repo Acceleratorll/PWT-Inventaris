@@ -14,7 +14,7 @@ class ProcessPlan extends Model
     protected $fillable = [
         'customer',
         'order_type',
-        'total',
+        'code',
     ];
  
     public function outgoing_products(): HasMany

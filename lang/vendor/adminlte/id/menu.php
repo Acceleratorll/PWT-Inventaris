@@ -1,12 +1,13 @@
 <?php
 
 return [
-
     'main_navigation'               => 'NAVIGASI UTAMA',
     'blog'                          => 'Blog',
     'pages'                         => 'Halaman',
+    'rpp'                           => 'RPP',
     'product_settings'              => 'PENGATURAN BARANG',
     'account_settings'              => 'PENGATURAN AKUN',
+    'rpp_settings'                  => 'PENGATURAN RPP',
     'profile'                       => 'Profil',
     'change_password'               => 'Ubah Kata Sandi',
     'multilevel'                    => 'Multi Level',
