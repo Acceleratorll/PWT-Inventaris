@@ -1,4 +1,4 @@
-function selectInput(element, url) {
+function selectInput(element, url, placeholder) {
     $(element).select2({
         ajax: {
             url: url,
@@ -15,7 +15,8 @@ function selectInput(element, url) {
             },
             cache: true,
         },
+        placeholder: placeholder,
         minimumInputLength: 1,
-        width: "100%",
+        width: "resolve",
     });
 }

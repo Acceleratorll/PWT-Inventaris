@@ -12,25 +12,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
     Route::resource('/dashboard', AdminDashboardController::class);
     Route::resource('/profile', ProfileController::class);
@@ -50,6 +31,7 @@ Route::get('/material/search', [AdminDashboardController::class, 'search'])->nam
 Route::prefix('/json')->group(function () {
     Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');
     Route::get('/get-products', [ProductController::class, 'getJsonProducts'])->name('get-json-products');
+    Route::get('/get-product/{product}', [ProductController::class, 'getJsonProduct'])->name('get-json-product');
     Route::get('/get-product-types', [ProductTypeController::class, 'getJsonProductTypes'])->name('get-json-product-types');
     Route::get('/get-materials', [MaterialController::class, 'getJsonMaterials'])->name('get-json-materials');
     Route::get('/get-categories', [CategoryProductController::class, 'getJsonCategories'])->name('get-json-categories');

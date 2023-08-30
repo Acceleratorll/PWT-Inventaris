@@ -24,7 +24,7 @@ class ProcessPlanRequest extends FormRequest
         return [
             'customer' => 'required|string',
             'order_type' => 'required|string',
-            'total' => 'required|integer',
+            'code' => 'required|integer',
         ];
     }
 }

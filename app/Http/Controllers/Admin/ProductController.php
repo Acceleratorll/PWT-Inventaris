@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Repositories\ProductRepository;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
@@ -87,9 +88,21 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Product berhasil dihapus');
     }
 
-    public function getJsonProducts(): HttpFoundationResponse
+    public function getJsonProducts(Request $request): JsonResponse
     {
-        $products = $this->productRepository->all();
-        return response()->json($products);
+        $products = $this->productRepository->search($request->term);
+        $formattedProducts = $products->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'text' => $product->name
+            ];
+        });
+        return response()->json($formattedProducts);
+    }
+
+    public function getJsonProduct(string $id): JsonResponse
+    {
+        $product = $this->productRepository->find($id);
+        return response()->json($product);
     }
 }

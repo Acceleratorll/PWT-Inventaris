@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProcessPlan;
+use App\Http\Requests\ProcessPlanRequest;
+use App\Repositories\OutgoingProductRepository;
 use App\Repositories\ProcessPlanRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -12,10 +13,12 @@ use Yajra\DataTables\Facades\DataTables;
 class ProcessPlanController extends Controller
 {
     protected $processPlanRepository;
+    protected $outgoingProductRepository;
 
-    public function __construct(ProcessPlanRepository $processPlanRepository)
+    public function __construct(ProcessPlanRepository $processPlanRepository, OutgoingProductRepository $outgoingProductRepository)
     {
         $this->processPlanRepository = $processPlanRepository;
+        $this->outgoingProductRepository = $outgoingProductRepository;
     }
 
     public function index(): View
@@ -50,12 +53,23 @@ class ProcessPlanController extends Controller
 
     public function create()
     {
-        //
+        return view('rpp.create');
     }
 
-    public function store(Request $request)
+    public function store(ProcessPlanRequest $processPlanRequest, Request $request)
     {
-        //
+        $input = $processPlanRequest->validated();
+        $validatedData = $request->validate(['selected_products' => 'required|array']);
+        $rpp = $this->processPlanRepository->create($input);
+
+        foreach ($validatedData['selected_products'] as $productId => $productData) {
+            $inputOutPro = [
+                'process_plan_id' => $rpp->id,
+                'product_id' => $productId,
+                'qty' => $productData['qty'],
+            ];
+            $this->outgoingProductRepository->create($inputOutPro);
+        }
     }
 
     public function show(string $id)
