@@ -40,10 +40,10 @@ class ProcessPlanController extends Controller
                 return $rpp->order_type;
             })
             ->addColumn('formatted_created_at', function ($rpp) {
-                return $rpp->created_at->format('d-m-Y');
+                return $rpp->created_at->format('D, d-m-y, G:i');
             })
             ->addColumn('formatted_updated_at', function ($rpp) {
-                return $rpp->updated_at->format('d-m-Y');
+                return $rpp->updated_at->format('D, d-m-y, G:i');
             })
             ->addColumn('action', 'partials.button-table.process-plan-action')
             ->rawColumns(['action'])
@@ -56,39 +56,60 @@ class ProcessPlanController extends Controller
         return view('rpp.create');
     }
 
-    public function store(ProcessPlanRequest $processPlanRequest, Request $request)
+    public function store(ProcessPlanRequest $processPlanRequest)
     {
         $input = $processPlanRequest->validated();
-        $validatedData = $request->validate(['selected_products' => 'required|array']);
         $rpp = $this->processPlanRepository->create($input);
 
-        foreach ($validatedData['selected_products'] as $productId => $productData) {
+        foreach ($input['selected_products'] as $productId => $productData) {
             $inputOutPro = [
                 'process_plan_id' => $rpp->id,
                 'product_id' => $productId,
                 'qty' => $productData['qty'],
             ];
             $this->outgoingProductRepository->create($inputOutPro);
+
+            return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
         }
     }
 
     public function show(string $id)
     {
-        //
+        $rpp = $this->processPlanRepository->find($id);
+        return response()->json($rpp);
     }
 
-    public function edit(string $id)
+    public function edit(string $id): View
     {
-        //
+        $rpp = $this->processPlanRepository->find($id);
+        return view('rpp.edit', compact('rpp'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(ProcessPlanRequest $request, string $id)
     {
-        //
+        $input = $request->validated();
+        $rpp = $this->processPlanRepository->find($id);
+
+        foreach ($input['selected_products'] as $productId => $productData) {
+            if (isset($rpp->outgoing_products[$productId])) {
+                $outgoingProduct = $rpp->outgoing_products[$productId];
+                $outgoingProduct->qty = $productData['qty'];
+                $outgoingProduct->save();
+            }
+        }
+
+        $rpp->update([
+            'customer' => $input['customer'],
+            'order_type' => $input['order_type'],
+            'code' => $input['code'],
+        ]);
+
+        return redirect()->route('rpp.index')->with('success', 'RPP berhasil diupdate!');
     }
 
     public function destroy(string $id)
     {
-        //
+        $this->processPlanRepository->delete($id);
+        return redirect()->back()->with('success', 'RPP berhasil dihapus');
     }
 }

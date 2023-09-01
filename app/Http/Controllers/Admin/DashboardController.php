@@ -6,15 +6,10 @@ use App\Charts\categoryProductChart;
 use App\Charts\monthlyUsedTintaChart;
 use App\Charts\yearlyRppChart;
 use App\Http\Controllers\Controller;
-use App\Models\CategoryProduct;
 use App\Models\ProcessPlan;
 use App\Models\Product;
-use App\Models\Qualifier;
 use App\Repositories\CategoryProductRepository;
-use App\Repositories\MaterialRepository;
-use App\Repositories\QualifierRepository;
 use Carbon\Carbon;
-use Elastic\Elasticsearch\ClientBuilder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -107,10 +102,5 @@ class DashboardController extends Controller
                 return $product->created_at->format('d-m-Y');
             })
             ->make(true);
-    }
-
-    public function create(): View
-    {
-        return view('page');
     }
 }

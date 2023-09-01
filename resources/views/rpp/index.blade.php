@@ -7,12 +7,6 @@
 @stop
 
 @section('content')
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-<div class="container">
 <div class="row">
     <div class="col-md-12">
         @if($message = Session::get('success'))
@@ -52,7 +46,6 @@
         </div>
     </div>
 </div>
-</div>
 
     @stop
     
@@ -76,7 +69,8 @@
                     { data: 'formatted_updated_at', name: 'formatted_updated_at' },
                     { data: 'formatted_created_at', name: 'formatted_created_at' },
                     { data: 'action', name: 'action', orderable: false },
-                ]
+                ],
+                order:[[0, 'desc']],
             });
         });
     </script>

@@ -25,6 +25,7 @@ class ProcessPlanRequest extends FormRequest
             'customer' => 'required|string',
             'order_type' => 'required|string',
             'code' => 'required|integer',
+            'selected_products' => 'required|array'
         ];
     }
 }
