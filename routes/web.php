@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\DataAddedEvent;
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MaterialController;
@@ -7,8 +8,11 @@ use App\Http\Controllers\Admin\ProcessPlanController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTypeController;
 use App\Http\Controllers\Admin\QualifierController;
+use App\Http\Controllers\ChartManageController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +40,17 @@ Route::prefix('/json')->group(function () {
     Route::get('/get-materials', [MaterialController::class, 'getJsonMaterials'])->name('get-json-materials');
     Route::get('/get-categories', [CategoryProductController::class, 'getJsonCategories'])->name('get-json-categories');
     Route::get('/get-qualifiers', [QualifierController::class, 'getJsonQualifiers'])->name('get-json-qualifiers');
+    Route::prefix('/chart')->group(function () {
+        Route::get('/tinta', [ChartManageController::class, 'tintaMonthly'])->name('monthly.tinta.chart');
+        Route::get('/rpp', [ChartManageController::class, 'rppYearly'])->name('yearly.rpp.chart');
+    });
+});
+
+Route::get('/notifications', [NotificationController::class, 'index']);
+Route::get('/send-notification', [NotificationController::class, 'sendNotification']);
+
+Route::get('/', function () {
+    event(new DataAddedEvent("Berhasil kirim Pesan"));
 });
 
 require __DIR__ . '/auth.php';

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\AddedProcessPlanEvent;
+use App\Events\UpdateChartEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProcessPlanRequest;
+use App\Models\ProcessPlan;
 use App\Repositories\OutgoingProductRepository;
 use App\Repositories\ProcessPlanRepository;
 use Illuminate\Contracts\View\View;
@@ -60,6 +63,7 @@ class ProcessPlanController extends Controller
     {
         $input = $processPlanRequest->validated();
         $rpp = $this->processPlanRepository->create($input);
+        $currentMonth = now()->month;
 
         foreach ($input['selected_products'] as $productId => $productData) {
             $inputOutPro = [
@@ -67,10 +71,26 @@ class ProcessPlanController extends Controller
                 'product_id' => $productId,
                 'qty' => $productData['qty'],
             ];
-            $this->outgoingProductRepository->create($inputOutPro);
 
-            return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
+            $this->outgoingProductRepository->create($inputOutPro);
         }
+
+        $rpp->whereMonth('created_at', $currentMonth)
+            ->whereHas('outgoing_products.product.material', function ($query) {
+                $query->where('id', 3);
+            })
+            ->get();
+
+        $data = [];
+        $labels = [];
+
+        $totalSalesQty = $rpp->outgoing_products->sum('qty');
+
+        $data[] = $totalSalesQty;
+        $labels[] = $rpp->customer;
+
+        event(new UpdateChartEvent($labels, $data));
+        return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
     }
 
     public function show(string $id)

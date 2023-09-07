@@ -1,17 +1,13 @@
-import './bootstrap';
+import "./bootstrap";
+// const channel = Echo.channel("public.data.added.1");
 
-import Alpine from 'alpinejs';
-import Echo from "laravel-echo";
-
-window.Echo = new Echo({
-    broadcaster: "pusher",
-    key: "your-pusher-key",
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-    disableStats: true,
-});
-
-window.Alpine = Alpine;
-
-Alpine.start();
+// channel
+//     .subscribed(() => {
+//         console.log("Subscribed!");
+//         // alert(JSON.stringify("Success"));
+//         // notif(data);
+//     })
+//     .listen(".data.added", (e) => {
+//         console.log(e);
+//         alert(JSON.stringify(e));
+//     });

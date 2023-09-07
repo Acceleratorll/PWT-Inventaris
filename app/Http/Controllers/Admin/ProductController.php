@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\DataAddedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Repositories\ProductRepository;
@@ -25,47 +26,48 @@ class ProductController extends Controller
     {
         return view('product.index');
     }
-
+    
     public function getProducts()
     {
         $products = $this->productRepository->all();
         return DataTables::of($products)
-            ->addColumn('material_name', function ($product) {
-                return $product->material->name;
-            })
-            ->addColumn('product_type_name', function ($product) {
-                return $product->product_type->name;
-            })
-            ->addColumn('qualifier_name', function ($product) {
-                return $product->qualifier->name;
-            })
-            ->addColumn('category_product_name', function ($product) {
-                return $product->category_product->name;
-            })
-            ->addColumn('note', function ($product) {
-                return $product->note;
-            })
-            ->addColumn('created_at', function ($product) {
-                return $product->created_at->format('d-m-Y');
-            })
-            ->addColumn('updated_at', function ($product) {
-                return $product->updated_at->format('d-m-Y');
-            })
-            ->addColumn('action', 'partials.button-table.product-action')
-            ->rawColumns(['action'])
-            ->addIndexColumn()
-            ->make(true);
+        ->addColumn('material_name', function ($product) {
+            return $product->material->name;
+        })
+        ->addColumn('product_type_name', function ($product) {
+            return $product->product_type->name;
+        })
+        ->addColumn('qualifier_name', function ($product) {
+            return $product->qualifier->name;
+        })
+        ->addColumn('category_product_name', function ($product) {
+            return $product->category_product->name;
+        })
+        ->addColumn('note', function ($product) {
+            return $product->note;
+        })
+        ->addColumn('created_at', function ($product) {
+            return $product->created_at->format('d-m-Y');
+        })
+        ->addColumn('updated_at', function ($product) {
+            return $product->updated_at->format('d-m-Y');
+        })
+        ->addColumn('action', 'partials.button-table.product-action')
+        ->rawColumns(['action'])
+        ->addIndexColumn()
+        ->make(true);
     }
-
+    
     public function create(): View
     {
         return view('product.create');
     }
-
+    
     public function store(ProductRequest $request): RedirectResponse
     {
         $input = $request->validated();
         $this->productRepository->create($input);
+        event(new DataAddedEvent("New Product has been created!"));
         return redirect()->route('product.index')->with('success', 'Product created successfully');
     }
 

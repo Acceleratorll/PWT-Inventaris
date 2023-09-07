@@ -88,9 +88,7 @@
         </div>
         <div class="col-md-8">
             <div class="rounded shadow">
-                <x-adminlte-card title="Info Rencana Proses Produksi" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-                    {!! $chart->container() !!}
-                </x-adminlte-card>
+                <canvas id="rppChart" height="100"></canvas>
             </div>
         </div>
     </div>
@@ -115,9 +113,7 @@
     </div>
     <div class="col-md-8">
         <div class="rounded shadow">
-            <x-adminlte-card title="Info Pemakaian Tinta" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-                {!! $monthlyUsedTintaChart->container() !!}
-            </x-adminlte-card>
+            <canvas id="myChart" height="100"></canvas>
         </div>
     </div>
 </div>
@@ -135,19 +131,122 @@
 
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    @vite(['resources/css/app.css'])
     @stop
     
     @section('js')
-
-    <script src="{{ $monthlyUsedTintaChart->cdn() }}"></script>
-    {{ $monthlyUsedTintaChart->script() }}
-    <script src="{{ $categoryChart->cdn() }}"></script>
-    {{ $categoryChart->script() }}
-    <script src="{{ $chart->cdn() }}"></script>
-    {{ $chart->script() }}
-
+    
+    @vite(['resources/js/app.js'])
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
+
+        var pusher = new Pusher('50e5010495e7225dbb70', {
+            cluster: 'ap1'
+        });
+
+        var channels = pusher.subscribe('public.data.added.1')
+            .bind("data.added", (datas) => {
+                console.log(datas);
+                alert(JSON.stringify(datas));
+            });
+
+        function tintaChart()
+        {
+            $.ajax({    
+                url: '/json/chart/tinta',
+                method:'GET',
+                dataType: 'json',
+                success: function(data){
+                    console.log(data);
+                    label = data.labels,
+                    datas = data.datas;
+                    const ctx = document.getElementById("myChart");
+
+                    // if(tChart){
+                    //     tChart.destroy();
+                    // }
+
+                    tChart = new Chart(ctx,{
+                        type: 'line',
+                        data:{
+                            labels: label,
+                            datasets: [{
+                                label: 'Total Tinta',
+                                data: datas,
+                                fill: true,
+                                borderColor: 'rgb(75, 192, 192)',
+                                tension: 0.1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function rppChart()
+        {
+            $.ajax({    
+                url: '/json/chart/rpp',
+                method:'GET',
+                dataType: 'json',
+                success: function(data){
+                    console.log(data);
+                    label = data.labels,
+                    datas = data.datas;
+                    const ctx = document.getElementById("rppChart");
+
+                    // if(rChart){
+                    //     rChart.destroy();
+                    // }
+
+                    rChart = new Chart(ctx,{
+                        type: 'line',
+                        data:{
+                            labels: label,
+                            datasets: [{
+                                label: 'Total RPP',
+                                data: datas,
+                                fill: true,
+                                borderColor: 'rgb(75, 192, 192)',
+                                tension: 0.1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        setTimeout(() => {
+            var channels = pusher.subscribe('public.update.chart.1')
+            .bind("update.chart", (data) => {
+                console.log(data);
+                const chart = data.chart;
+                chart.data.labels.push(data.labels);
+                chart.data.datasets[0].push(data.datas);
+            });
+        }, 1000);
+
         $(function() {
+            rppChart();
+            tintaChart();
+            
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
