@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\DataAddedEvent;
+use App\Events\DeleteChartEvent;
+use App\Events\DeletedDataEvent;
+use App\Events\UpdateChartEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryProductRequest;
 use App\Models\CategoryProduct;
@@ -60,7 +64,22 @@ class CategoryProductController extends Controller
     public function store(CategoryProductRequest $request)
     {
         $input = $request->validated();
-        $this->categoryProductRepository->create($input);
+        $category = $this->categoryProductRepository->create($input);
+        $label = $category->name;
+        $data = $category->products->count();
+        $count = 0;
+
+        if ($category->products) {
+            $count = $category->products->count();
+        }
+
+        $data = [
+            'name' => $category->name,
+            'count' => $count,
+        ];
+
+        event(new UpdateChartEvent('cChart', $label, $data));
+        event(new DataAddedEvent($data, 'Category'));
         return redirect()->route('category.index')->with('success', 'Kategori berhasil dibuat !');
     }
 
@@ -84,6 +103,13 @@ class CategoryProductController extends Controller
 
     public function destroy(string $id)
     {
+        $category = $this->categoryProductRepository->find($id);
+        $data = [
+            'id' => $category->id,
+            'name' => $category->name,
+        ];
+        event(new DeleteChartEvent('cChart', $category->name));
+        event(new DeletedDataEvent($data, 'Category'));
         $this->categoryProductRepository->delete($id);
         return back()->with('message', 'Category have been Removed');
     }

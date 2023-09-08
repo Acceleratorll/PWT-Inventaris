@@ -89,7 +89,7 @@ class ProcessPlanController extends Controller
         $data[] = $totalSalesQty;
         $labels[] = $rpp->customer;
 
-        event(new UpdateChartEvent($labels, $data));
+        event(new UpdateChartEvent('tChart', $labels, $data));
         return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
     }
 

@@ -43,6 +43,7 @@ Route::prefix('/json')->group(function () {
     Route::prefix('/chart')->group(function () {
         Route::get('/tinta', [ChartManageController::class, 'tintaMonthly'])->name('monthly.tinta.chart');
         Route::get('/rpp', [ChartManageController::class, 'rppYearly'])->name('yearly.rpp.chart');
+        Route::get('/category', [ChartManageController::class, 'categoryOverall'])->name('category.overall.chart');
     });
 });
 

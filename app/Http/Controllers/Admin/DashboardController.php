@@ -24,16 +24,13 @@ class DashboardController extends Controller
     }
 
     // Contoh Area Chart
-    public function index(yearlyRppChart $chart, categoryProductChart $categoryChart, monthlyUsedTintaChart $monthlyUsedTintaChart): View
+    public function index(): View
     {
         $categories = $this->categoryRepository->all();
         $unusedMax = $categories->max('max');
         $unused = $categories->where('max', $unusedMax)->first();
         $total = Product::all()->count();
         return view('dashboard.index', [
-            'chart' => $chart->build(),
-            'categoryChart' => $categoryChart->build(),
-            'monthlyUsedTintaChart' => $monthlyUsedTintaChart->build(),
             'categories' => $categories,
             'total' => $total,
             'unused' => $unused,
@@ -95,11 +92,14 @@ class DashboardController extends Controller
         $products = Product::where('category_product_id', $unused->id)->get();
 
         return DataTables::of($products)
+            ->addColumn('id', function ($product) {
+                return $product->id;
+            })
+            ->addColumn('name', function ($product) {
+                return $product->name;
+            })
             ->addColumn('last_used', function ($product) {
                 return $product->updated_at->format('d-m-Y');
-            })
-            ->addColumn('created', function ($product) {
-                return $product->created_at->format('d-m-Y');
             })
             ->make(true);
     }

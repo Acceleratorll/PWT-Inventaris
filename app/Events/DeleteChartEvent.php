@@ -4,43 +4,42 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateChartEvent implements ShouldBroadcast
+class DeleteChartEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     protected $chart;
     protected $label;
-    protected $data;
 
-    public function __construct($chart, $label, $data)
+    public function __construct($chart, $label)
     {
         $this->chart = $chart;
         $this->label = $label;
-        $this->data = $data;
     }
 
     public function broadcastOn(): array
     {
         return [
-            new Channel('public.update.chart.1'),
+            new Channel('public.delete.chart.1'),
         ];
     }
 
     public function broadcastAs()
     {
-        return 'update.chart';
+        return 'delete.chart';
     }
 
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
         return [
             'chart' => $this->chart,
             'label' => $this->label,
-            'data' => $this->data,
         ];
     }
 }

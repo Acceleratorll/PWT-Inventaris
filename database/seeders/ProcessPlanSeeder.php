@@ -33,7 +33,7 @@ class ProcessPlanSeeder extends Seeder
         // DB::table('process_plans')->insert($data);
 
         $processPlans = ProcessPlan::factory()
-            ->has(OutgoingProduct::factory()->count(2), 'outgoing_products')
+            ->has(OutgoingProduct::factory()->count(7), 'outgoing_products')
             ->count(50)
             ->create();
     }

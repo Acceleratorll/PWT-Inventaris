@@ -8,39 +8,36 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateChartEvent implements ShouldBroadcast
+class DeletedDataEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $chart;
-    protected $label;
     protected $data;
+    protected $name;
 
-    public function __construct($chart, $label, $data)
+    public function __construct($data, $name)
     {
-        $this->chart = $chart;
-        $this->label = $label;
         $this->data = $data;
+        $this->name = $name;
     }
 
     public function broadcastOn(): array
     {
         return [
-            new Channel('public.update.chart.1'),
+            new Channel('public.deleted.data.1'),
         ];
     }
 
     public function broadcastAs()
     {
-        return 'update.chart';
+        return 'deleted.data';
     }
 
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
         return [
-            'chart' => $this->chart,
-            'label' => $this->label,
             'data' => $this->data,
+            'name' => $this->name,
         ];
     }
 }

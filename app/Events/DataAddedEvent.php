@@ -4,8 +4,6 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -14,11 +12,13 @@ class DataAddedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $datas;
+    protected $data;
+    protected $name;
 
-    public function __construct($datas)
+    public function __construct($data, $name)
     {
-        $this->datas = $datas;
+        $this->data = $data;
+        $this->name = $name;
     }
 
     public function broadcastOn(): array
@@ -33,10 +33,11 @@ class DataAddedEvent implements ShouldBroadcast
         return 'data.added';
     }
 
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
         return [
-            "datas" => $this->datas
+            "data" => $this->data,
+            "name" => $this->name,
         ];
     }
 }

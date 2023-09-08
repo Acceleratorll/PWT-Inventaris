@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+<div id="custom-target"></div>
 <div class="row">
     <div class="col-md-3">
         @if($message = Session::get('info'))
@@ -34,65 +35,51 @@
         @endif
     </div>
 </div>
+
 <div class="row">
-        <div class="col-md-3">
-            <x-adminlte-callout theme="info" title="Information">
-                Info theme callout!
-            </x-adminlte-callout>
-        </div>
-        <div class="col-md-3">
-            <x-adminlte-callout theme="success" title="Success">
-                Success theme callout!
-            </x-adminlte-callout>
-        </div>
-        <div class="col-md-3">
-        <x-adminlte-callout theme="warning" title="Warning">
-            Warning theme callout!
-        </x-adminlte-callout>
-        </div>
-        <div class="col-md-3">
-            <x-adminlte-callout theme="danger" title="Danger">
-                Danger theme callout!
-            </x-adminlte-callout>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="p-6 m-20 bg-white rounded shadow">
-                <x-adminlte-card title="Info Barang" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-                    <div class="justify-content-between">
-                        {{ $categoryChart->container() }}
-                    </div>
-                    @foreach($categories as $category)
-                    @if ($category->id == 3)
+    <div class="col-md-4">
+        <x-adminlte-card title="Info Barang" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="justify-content-between">
+                <canvas id="categoryChart" height="100"></canvas>
+            </div>
+                @foreach($categories as $category)
+                @if ($category->id == 3)
+                <div id="category_{{ $category->id }}">
                     <hr class="divider">
                     <div class="d-flex justify-content-between">
                         <span class="text-danger font-weight-bold">{{ $category->name }}</span>
                         <span class="text-danger font-weight-bold" style="margin-right: 15px;">{{ $category->products->count() }}</span>
                     </div>
-                    @else
-                    <hr class="divider">
-                    <div class="d-flex justify-content-between">
-                        <span class="text-black">{{ $category->name }}</span>
-                        <span class="text-black" style="margin-right: 15px;">{{ $category->products->count() }}</span>
-                    </div>
-                    @endif
-                    @endforeach
-                    <hr class="divider">
-                    <div class="d-flex justify-content-between">
-                        <span class="text-black"><strong>Total Seluruh Barang</strong></span>
-                        <span class="text-black" style="margin-right: 15px;"><strong>{{ $total }}</strong></span>
-                    </div>
-                </x-adminlte-card>
-            </div>
-        </div>
-        <div class="col-md-8">
+                </div>
+                @else
+                <div id="category_{{ $category->id }}">
+                <hr class="divider">
+                <div class="d-flex justify-content-between">
+                    <span class="text-black">{{ $category->name }}</span>
+                    <span class="text-black" style="margin-right: 15px;">{{ $category->products->count() }}</span>
+                </div>
+                </div>
+                @endif
+                @endforeach
+                <div id="categoryInfo"></div>
+                <div id="category_{{ $category->id }}">
+                <hr class="divider">
+                <div class="d-flex justify-content-between">
+                    <span class="text-black"><strong>Total Seluruh Barang</strong></span>
+                    <span class="text-black" style="margin-right: 15px;"><strong>{{ $total }}</strong></span>
+                </div>
+                </div>
+        </x-adminlte-card>
+    </div>
+    <div class="col-md-8">
+        <x-adminlte-card title="Info RPP Setahun" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="rounded shadow">
                 <canvas id="rppChart" height="100"></canvas>
             </div>
-        </div>
+        </x-adminlte-card>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-4">
         <x-adminlte-card title="Unused Barang" icon="fas fa-trash" theme="danger" theme-mode="outline">
@@ -113,7 +100,7 @@
     </div>
     <div class="col-md-8">
         <div class="rounded shadow">
-            <canvas id="myChart" height="100"></canvas>
+            <canvas id="tintaChart" height="100"></canvas>
         </div>
     </div>
 </div>
@@ -141,57 +128,97 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script>
+        let tChart;
+        let rChart;
+        let cChart;
+        let labels;
+        let datas;
 
         var pusher = new Pusher('50e5010495e7225dbb70', {
             cluster: 'ap1'
         });
 
-        var channels = pusher.subscribe('public.data.added.1')
-            .bind("data.added", (datas) => {
-                console.log(datas);
-                alert(JSON.stringify(datas));
+        var dataAdded = pusher.subscribe('public.data.added.1')
+            .bind("data.added", (data) => {
+                console.log(data);
+                
+                addCategoryInfo(data);
+
+                Swal.fire({
+                    position: 'top-end',
+                    type: 'success',
+                    title: 'New '+data.name+' Added',
+                    text: 'New '+data.name+' dengan nama: '+data.data.name+' just Added',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true
+                })
             });
 
-        function tintaChart()
-        {
-            $.ajax({    
-                url: '/json/chart/tinta',
-                method:'GET',
-                dataType: 'json',
-                success: function(data){
-                    console.log(data);
-                    label = data.labels,
-                    datas = data.datas;
-                    const ctx = document.getElementById("myChart");
-
-                    // if(tChart){
-                    //     tChart.destroy();
-                    // }
-
-                    tChart = new Chart(ctx,{
-                        type: 'line',
-                        data:{
-                            labels: label,
-                            datasets: [{
-                                label: 'Total Tinta',
-                                data: datas,
-                                fill: true,
-                                borderColor: 'rgb(75, 192, 192)',
-                                tension: 0.1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    })
-                }
+        var dataDeleted = pusher.subscribe('public.deleted.data.1')
+        .bind("deleted.data", (data) => {
+            console.log(data);
+            
+            var categoryToDelete = document.getElementById('category_' + data.data.id);
+            
+            // Check if the category element exists before trying to remove it
+            if (categoryToDelete) {
+                categoryToDelete.remove(); // Remove the category element
+            }
+            
+            Swal.fire({
+                position: 'top-end',
+                type: 'warning',
+                title: data.name+' Deleted',
+                text: data.name+' dengan nama "'+data.data.name+'" just Deleted !',
+                showConfirmButton: false,
+                timer: 3300,
+                timerProgressBar: true
             })
+        });
+
+        function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+        
+        function tintaChart() {
+    $.ajax({
+        url: '/json/chart/tinta',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data);
+
+            const ctx = document.getElementById("tintaChart");
+
+            if (tChart) {
+                tChart.destroy();
+            }
+
+            tChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: data.datasets, // Use the datasets from the response
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
         }
+    })
+}
 
         function rppChart()
         {
@@ -201,18 +228,18 @@
                 dataType: 'json',
                 success: function(data){
                     console.log(data);
-                    label = data.labels,
+                    labels = data.labels,
                     datas = data.datas;
                     const ctx = document.getElementById("rppChart");
 
-                    // if(rChart){
-                    //     rChart.destroy();
-                    // }
+                    if(rChart){
+                        rChart.destroy();
+                    }
 
                     rChart = new Chart(ctx,{
                         type: 'line',
                         data:{
-                            labels: label,
+                            labels: labels,
                             datasets: [{
                                 label: 'Total RPP',
                                 data: datas,
@@ -233,17 +260,63 @@
             })
         }
 
-        setTimeout(() => {
-            var channels = pusher.subscribe('public.update.chart.1')
-            .bind("update.chart", (data) => {
-                console.log(data);
-                const chart = data.chart;
-                chart.data.labels.push(data.labels);
-                chart.data.datasets[0].push(data.datas);
-            });
-        }, 1000);
+        function categoryChart()
+        {
+            $.ajax({    
+                url: '/json/chart/category',
+                method:'GET',
+                dataType: 'json',
+                success: function(data){
+                    console.log(data);
+                    labels = data.labels,
+                    datas = data.datas;
+                    const ctx = document.getElementById("categoryChart");
 
+                    if(cChart){
+                        cChart.destroy();
+                    }
+
+                    cChart = new Chart(ctx,{
+                        type: 'doughnut',
+                        data:{
+                            labels: labels,
+                            datasets: [{
+                                label: 'Total Product',
+                                data: datas,
+                                fill: true,
+                                backgroundColor: ['#FF5733', '#3366FF', '#33FF57', '#FF33E9', '#FFAA33', '#33FFF7', '#FF3366', '#33FF33'],
+                                tension: 0.1
+                            }]
+                        },
+                    })
+                }
+            })
+        }
+
+        function addCategoryInfo(newCategoryData) {
+            var categoryInfoContainer = document.getElementById('categoryInfo');
+            
+            var categoryDiv = document.createElement('div');
+            categoryDiv.className = 'd-flex justify-content-between';
+            
+            var categoryNameSpan = document.createElement('span');
+            categoryNameSpan.className = 'text-black';
+            categoryNameSpan.textContent = newCategoryData.data.name;
+            
+            var categoryCountSpan = document.createElement('span');
+            categoryCountSpan.className = 'text-black';
+            categoryCountSpan.style.marginRight = '15px';
+            categoryCountSpan.textContent = newCategoryData.data.count;
+            
+            categoryDiv.appendChild(categoryNameSpan);
+            categoryDiv.appendChild(categoryCountSpan);
+            
+            categoryInfoContainer.innerHTML = ''; // Clear previous content
+            categoryInfoContainer.appendChild(categoryDiv);
+        }
+        
         $(function() {
+            categoryChart();
             rppChart();
             tintaChart();
             
@@ -259,10 +332,56 @@
                     { data: 'name', name: 'name' },
                     { data: 'last_used', name: 'last_used' },
                 ],
-                rawColumns: ['last_used'],
             });
         });
-    </script>
-
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+        
+        setTimeout(() => {
+            var addDataChart = pusher.subscribe('public.update.chart.1')
+            .bind("update.chart", (data) => {
+                console.log(data);
+                var chart = data.chart;
+                
+                // Find the chart by its ID
+                var chartInstance = null;
+                if (chart === 'cChart') {
+                    chartInstance = cChart;
+                } else if (chart === 'tChart') {
+                    chartInstance = tChart;
+                } else if (chart === 'rChart') {
+                    chartInstance = rChart;
+                }
+                
+                if (chartInstance) {
+                    chartInstance.data.labels.push(data.label);
+                    chartInstance.data.datasets[0].data.push(data.data);
+                    chartInstance.update();
+                }
+            });
+            
+            var deleteData = pusher.subscribe('public.delete.chart.1')
+            .bind("delete.chart", (data) => {
+                var chart = data.chart;
+                
+                var chartInstance = null;
+                if (chart === 'cChart') {
+                    chartInstance = cChart;
+                } else if (chart === 'tChart') {
+                    chartInstance = tChart;
+                } else if (chart === 'rChart') {
+                    chartInstance = rChart;
+                }
+                
+                if (chartInstance) {
+                    var dataIndex = chartInstance.data.labels.indexOf(data.label);
+                    if (dataIndex !== -1) {
+                        chartInstance.data.labels.splice(dataIndex, 1);
+                        chartInstance.data.datasets[0].data.splice(dataIndex, 1);
+                        chartInstance.update();
+                    }
+                }
+            });
+        }, 1000);
+            
+</script>
 @stop
+
