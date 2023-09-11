@@ -13,6 +13,11 @@ class ProcessPlanRepository
         $this->model = $model;
     }
 
+    public function currentMonth($month)
+    {
+        return $this->model->whereMonth('created_at', $month)->get();
+    }
+
     public function find($id)
     {
         return $this->model->find($id);

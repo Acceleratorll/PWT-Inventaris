@@ -74,6 +74,7 @@ class CategoryProductController extends Controller
         }
 
         $data = [
+            'id' => $category->id,
             'name' => $category->name,
             'count' => $count,
         ];

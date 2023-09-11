@@ -8,33 +8,6 @@
 
 @section('content')
 <div id="custom-target"></div>
-<div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
 
 <div class="row">
     <div class="col-md-4">
@@ -130,6 +103,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script>
+        $(document).ready(function() {
+
         let tChart;
         let rChart;
         let cChart;
@@ -140,85 +115,88 @@
             cluster: 'ap1'
         });
 
-        var dataAdded = pusher.subscribe('public.data.added.1')
-            .bind("data.added", (data) => {
-                console.log(data);
+        
+            var dataAdded = pusher.subscribe('public.data.added.1')
+                .bind("data.added", (data) => {
+                    console.log(data);
                 
-                addCategoryInfo(data);
+                    addCategoryInfo(data);
 
+                    Swal.fire({
+                        position: 'top-end',
+                        type: 'success',
+                        title: 'New '+data.name+' Added',
+                        text: 'New '+data.name+' dengan nama: '+data.data.name+' just Added',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true
+                    })
+                });
+
+            var dataDeleted = pusher.subscribe('public.deleted.data.1')
+                .bind("deleted.data", (data) => {
+                console.log(data);
+            
+                var categoryToDelete = document.getElementById('category_' + data.data.id);
+                console.log("Category to delete: ", categoryToDelete);
+
+                if (categoryToDelete) {
+                    categoryToDelete.remove();
+                    console.log("Category removed");
+                }
+            
                 Swal.fire({
                     position: 'top-end',
-                    type: 'success',
-                    title: 'New '+data.name+' Added',
-                    text: 'New '+data.name+' dengan nama: '+data.data.name+' just Added',
+                    type: 'warning',
+                    title: data.name+' Deleted',
+                    text: data.name+' dengan nama "'+data.data.name+'" just Deleted !',
                     showConfirmButton: false,
-                    timer: 5000,
+                    timer: 3300,
                     timerProgressBar: true
                 })
             });
 
-        var dataDeleted = pusher.subscribe('public.deleted.data.1')
-        .bind("deleted.data", (data) => {
-            console.log(data);
-            
-            var categoryToDelete = document.getElementById('category_' + data.data.id);
-            
-            // Check if the category element exists before trying to remove it
-            if (categoryToDelete) {
-                categoryToDelete.remove(); // Remove the category element
-            }
-            
-            Swal.fire({
-                position: 'top-end',
-                type: 'warning',
-                title: data.name+' Deleted',
-                text: data.name+' dengan nama "'+data.data.name+'" just Deleted !',
-                showConfirmButton: false,
-                timer: 3300,
-                timerProgressBar: true
-            })
-        });
-
         function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+        
         
         function tintaChart() {
-    $.ajax({
-        url: '/json/chart/tinta',
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            console.log(data);
+            $.ajax({
+                url: '/json/chart/tinta',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
 
-            const ctx = document.getElementById("tintaChart");
+                    const ctx = document.getElementById("tintaChart");
 
-            if (tChart) {
-                tChart.destroy();
-            }
-
-            tChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.labels,
-                    datasets: data.datasets, // Use the datasets from the response
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                    if (tChart) {
+                        tChart.destroy();
                     }
+
+                    tChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.labels,
+                            datasets: data.datasets, // Use the datasets from the response
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
                 }
-            });
+            })
         }
-    })
-}
 
         function rppChart()
         {
@@ -299,6 +277,10 @@
             var categoryDiv = document.createElement('div');
             categoryDiv.className = 'd-flex justify-content-between';
             
+            var categoryId = 'category_' + newCategoryData.data.id;
+            categoryDiv.id = categoryId;
+            console.log(newCategoryData);
+            
             var categoryNameSpan = document.createElement('span');
             categoryNameSpan.className = 'text-black';
             categoryNameSpan.textContent = newCategoryData.data.name;
@@ -311,9 +293,9 @@
             categoryDiv.appendChild(categoryNameSpan);
             categoryDiv.appendChild(categoryCountSpan);
             
-            categoryInfoContainer.innerHTML = ''; // Clear previous content
             categoryInfoContainer.appendChild(categoryDiv);
         }
+
         
         $(function() {
             categoryChart();
@@ -341,7 +323,6 @@
                 console.log(data);
                 var chart = data.chart;
                 
-                // Find the chart by its ID
                 var chartInstance = null;
                 if (chart === 'cChart') {
                     chartInstance = cChart;
@@ -358,7 +339,7 @@
                 }
             });
             
-            var deleteData = pusher.subscribe('public.delete.chart.1')
+            var deleteChart = pusher.subscribe('public.delete.chart.1')
             .bind("delete.chart", (data) => {
                 var chart = data.chart;
                 
@@ -381,7 +362,7 @@
                 }
             });
         }, 1000);
-            
+        });
 </script>
 @stop
 

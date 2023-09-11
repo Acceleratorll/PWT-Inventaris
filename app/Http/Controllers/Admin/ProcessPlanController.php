@@ -64,6 +64,7 @@ class ProcessPlanController extends Controller
         $input = $processPlanRequest->validated();
         $rpp = $this->processPlanRepository->create($input);
         $currentMonth = now()->month;
+        $formattedCurrentMonth = now()->format('M');
 
         foreach ($input['selected_products'] as $productId => $productData) {
             $inputOutPro = [
@@ -89,7 +90,9 @@ class ProcessPlanController extends Controller
         $data[] = $totalSalesQty;
         $labels[] = $rpp->customer;
 
+        $qty = $this->processPlanRepository->currentMonth($currentMonth);
         event(new UpdateChartEvent('tChart', $labels, $data));
+        event(new UpdateChartEvent('rChart', $formattedCurrentMonth, $qty));
         return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
     }
 
