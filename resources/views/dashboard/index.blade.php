@@ -21,7 +21,7 @@
                     <hr class="divider">
                     <div class="d-flex justify-content-between">
                         <span class="text-danger font-weight-bold">{{ $category->name }}</span>
-                        <span class="text-danger font-weight-bold" style="margin-right: 15px;">{{ $category->products->count() }}</span>
+                        <span class="text-danger font-weight-bold" id="qty" style="margin-right: 15px;">{{ $category->products->count() }}</span>
                     </div>
                 </div>
                 @else
@@ -29,7 +29,7 @@
                 <hr class="divider">
                 <div class="d-flex justify-content-between">
                     <span class="text-black">{{ $category->name }}</span>
-                    <span class="text-black" style="margin-right: 15px;">{{ $category->products->count() }}</span>
+                    <span class="text-black" id="qty" style="margin-right: 15px;">{{ $category->products->count() }}</span>
                 </div>
                 </div>
                 @endif
@@ -39,7 +39,7 @@
                 <hr class="divider">
                 <div class="d-flex justify-content-between">
                     <span class="text-black"><strong>Total Seluruh Barang</strong></span>
-                    <span class="text-black" style="margin-right: 15px;"><strong>{{ $total }}</strong></span>
+                    <span class="text-black" id="qty" style="margin-right: 15px;"><strong>{{ $total }}</strong></span>
                 </div>
                 </div>
         </x-adminlte-card>
@@ -128,9 +128,29 @@
             .bind("update.chart", (data) => {
                 console.log(data);
 
-                if(data.chart == 'cChart'){
+                var chart = data.chart;
+                if(chart == 'cChart'){
+                    chart = cChart;
+                    console.log('Label Index ', cChart.data.labels);
+                    var labelIndex = cChart.data.labels.indexOf(data.data.name);
+                    console.log('Label Index ', labelIndex);
+                    
+                    if (labelIndex !== -1) {
+                        cChart.data.datasets[0].data[labelIndex] = data.data.qty;
+                        console.log(cChart.data.datasets[0].data[labelIndex]);
+                        
+                        cChart.update();
+                        console.log('Successfully updated');
+                    }
+                    
                     updateCategoryChartData(data);
+                }else if(chart == 'tChart'){
+                    chart = tChart;
+                }else if(chart == 'rChart'){
+                    chart = rChart;
                 }
+
+                
             });
             
             var deleteChart = pusher.subscribe('public.delete.chart.1')
@@ -270,7 +290,7 @@
                                     label: 'Total Product',
                                     data: datas,
                                     fill: true,
-                                    backgroundColor: ['#FF5733', '#3366FF', '#33FF57', '#FF33E9', '#FFAA33', '#33FFF7', '#FF3366', '#33FF33'],
+                                    backgroundColor: ['#33FF57', '#FFAA33', '#FF0000', '#3366FF', '#FF33E9', '#FF5733', '#33FFF7', '#FF3366', '#33FF33'],
                                     tension: 0.1
                                 }]
                             },
@@ -323,12 +343,12 @@
                 }
             }
 
-            function updateCategoryChartData(data){
-                var categoryToUpdate = document.getElementById('category_' + data.id);
+            function updateCategoryChartData(data) {
+                var categoryToUpdate = document.getElementById('category_' + data.data.id);
                 if (categoryToUpdate) {
-                    var quantityElement = categoryToUpdate.querySelector('.text-black');
+                    var quantityElement = categoryToUpdate.querySelector('#qty'); // Select the element with id "qty"
                     if (quantityElement) {
-                        quantityElement.textContent = data.qty;
+                        quantityElement.textContent = data.data.qty; // Update the text content to the new quantity
                     }
                 }
             }

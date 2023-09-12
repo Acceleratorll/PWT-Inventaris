@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\DataAddedEvent;
+use App\Events\UpdateChartEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Repositories\CategoryProductRepository;
@@ -71,7 +72,7 @@ class ProductController extends Controller
         $product = $this->productRepository->create($input);
 
         $category = $this->categoryProductRepository->find($product->category_product_id);
-        $count = $category->count();
+        $count = $category->products->count();
 
         $data = [
             'id' => $product->category_product_id,
@@ -80,6 +81,7 @@ class ProductController extends Controller
         ];
 
         event(new DataAddedEvent($data, 'Product'));
+        event(new UpdateChartEvent('cChart', $data));
         return redirect()->route('product.index')->with('success', 'Product created successfully');
     }
 
