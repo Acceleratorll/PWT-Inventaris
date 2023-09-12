@@ -35,7 +35,6 @@ class CategoryProductController extends Controller
 
     public function getCategories()
     {
-
         $categories = $this->categoryProductRepository->all();
 
         return DataTables::of($categories)
@@ -99,9 +98,19 @@ class CategoryProductController extends Controller
     public function update(CategoryProductRequest $request, string $id)
     {
         $input = $request->validated();
-        $category = $this->categoryProductRepository->update($id, $input);
+        $category = $this->categoryProductRepository->find($id);
 
-        event(new UpdateChartEvent('cChart', $category));
+        $categoryUpdated = $this->categoryProductRepository->update($id, $input);
+
+        $data = [
+            'id' => $id,
+            'name' => $category->name,
+            'newName' => $categoryUpdated->name,
+            'qty' => $categoryUpdated->products->count(),
+            'context' => 'update',
+        ];
+
+        event(new UpdateChartEvent('cChart', $data));
         return redirect()->route('category.index')->with('success', 'Kategori berhasil diubah !');
     }
 

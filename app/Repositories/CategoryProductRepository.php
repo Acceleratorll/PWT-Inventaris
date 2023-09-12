@@ -47,7 +47,9 @@ class CategoryProductRepository
 
     public function update($id, $data)
     {
-        return $this->model->find($id)->update($data);
+        $category = $this->model->find($id);
+        $category->update($data);
+        return $category;
     }
 
     public function delete($id)
