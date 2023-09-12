@@ -101,7 +101,18 @@ class ProductController extends Controller
 
     public function destroy(string $id)
     {
+        $product = $this->productRepository->find($id);
+        $category = $this->categoryProductRepository->find($product->category_product_id);
         $this->productRepository->delete($id);
+
+        $data = [
+            'id' => $category->id,
+            'name' => $category->name,
+            'qty' => $category->products->count(),
+            'context' => 'delete',
+        ];
+
+        event(new UpdateChartEvent('cChart', $data));
         return redirect()->back()->with('success', 'Product berhasil dihapus');
     }
 

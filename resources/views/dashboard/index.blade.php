@@ -135,13 +135,20 @@
                     var labelIndex = cChart.data.labels.indexOf(data.data.name);
                     console.log('Label Index ', labelIndex);
                     
-                    if (labelIndex !== -1 && data.data.newName) {
-                        cChart.data.labels[labelIndex] = data.data.newName;
-                        cChart.data.datasets[0].data[labelIndex] = data.data.qty;
-                        console.log(cChart.data.datasets[0].data[labelIndex]);
-                        
-                        cChart.update();
-                        console.log('Successfully updated');
+                    if (labelIndex !== -1) {
+                        if(data.data.context == 'update'){
+                            cChart.data.labels[labelIndex] = data.data.newName;
+                            cChart.data.datasets[0].data[labelIndex] = data.data.qty;
+                            console.log(cChart.data.datasets[0].data[labelIndex]);
+                            
+                            cChart.update();
+                            console.log('Successfully updated');
+                        }else if(data.data.context == 'delete'){
+                            cChart.data.datasets[0].data[labelIndex] = data.data.qty;
+                            console.log(cChart.data.datasets[0].data[labelIndex]);
+                            
+                            cChart.update();
+                        }
                     }
                     
                     updateCategoryChartData(data);
@@ -347,18 +354,28 @@
             function updateCategoryChartData(data) {
                 var categoryToUpdate = document.getElementById('category_' + data.data.id);
                 var totalToUpdate = document.getElementById('total');
-                if (categoryToUpdate && data.data.context == 'create') {
-                    var quantityElement = categoryToUpdate.querySelector('#qty');
-                    var quantityOfTotalElement = totalToUpdate.querySelector('#qty');
-                    if (quantityElement && quantityOfTotalElement) {
-                        quantityElement.textContent = parseInt(quantityElement.textContent) + 1;
-                        console.log(quantityElement.textContent);
-                        quantityOfTotalElement.textContent = parseInt(quantityOfTotalElement.textContent)+1;
-                    }
-                }else if(categoryToUpdate && data.data.context == 'update'){
-                    var nameElement = categoryToUpdate.querySelector('#name');
-                    if(nameElement){
-                        nameElement.textContent = data.data.newName;
+                if (categoryToUpdate) {
+                    if(data.data.context == 'create'){
+                        var quantityElement = categoryToUpdate.querySelector('#qty');
+                        var quantityOfTotalElement = totalToUpdate.querySelector('#qty');
+                        if (quantityElement && quantityOfTotalElement) {
+                            quantityElement.textContent = parseInt(quantityElement.textContent) + 1;
+                            console.log(quantityElement.textContent);
+                            quantityOfTotalElement.textContent = parseInt(quantityOfTotalElement.textContent)+1;
+                        }
+                    }else if(data.data.context == 'update'){
+                        var nameElement = categoryToUpdate.querySelector('#name');
+                        if(nameElement){
+                            nameElement.textContent = data.data.newName;
+                        }
+                    }else if(data.data.context == 'delete'){
+                        var quantityElement = categoryToUpdate.querySelector('#qty');
+                        var quantityOfTotalElement = totalToUpdate.querySelector('#qty');
+                        if (quantityElement && quantityOfTotalElement) {
+                            quantityElement.textContent = parseInt(quantityElement.textContent) - 1;
+                            console.log(quantityElement.textContent);
+                            quantityOfTotalElement.textContent = parseInt(quantityOfTotalElement.textContent) - 1;
+                        }
                     }
                 }
             }
