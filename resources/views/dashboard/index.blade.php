@@ -37,7 +37,7 @@
                 <div id="categoryInfo"></div>
                 <div id="category_{{ $category->id }}">
                 <hr class="divider">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between" id="total">
                     <span class="text-black"><strong>Total Seluruh Barang</strong></span>
                     <span class="text-black" id="qty" style="margin-right: 15px;"><strong>{{ $total }}</strong></span>
                 </div>
@@ -345,10 +345,14 @@
 
             function updateCategoryChartData(data) {
                 var categoryToUpdate = document.getElementById('category_' + data.data.id);
+                var totalToUpdate = document.getElementById('total');
                 if (categoryToUpdate) {
-                    var quantityElement = categoryToUpdate.querySelector('#qty'); // Select the element with id "qty"
-                    if (quantityElement) {
-                        quantityElement.textContent = data.data.qty; // Update the text content to the new quantity
+                    var quantityElement = categoryToUpdate.querySelector('#qty');
+                    var quantityOfTotalElement = totalToUpdate.querySelector('#qty');
+                    if (quantityElement && quantityOfTotalElement && data.data.context == 'create') {
+                        quantityElement.textContent = parseInt(quantityElement.textContent) + 1;
+                        console.log(quantityElement.textContent);
+                        quantityOfTotalElement.textContent = parseInt(quantityOfTotalElement.textContent)+1;
                     }
                 }
             }

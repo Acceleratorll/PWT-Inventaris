@@ -78,6 +78,7 @@ class ProductController extends Controller
             'id' => $product->category_product_id,
             'name' => $product->category_product->name,
             'qty' => $count,
+            'context' => 'create',
         ];
 
         event(new DataAddedEvent($data, 'Product'));
