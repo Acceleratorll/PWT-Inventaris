@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\AddedProcessPlanEvent;
+use App\Events\DataAddedEvent;
+use App\Events\DeleteChartEvent;
+use App\Events\DeletedDataEvent;
 use App\Events\UpdateChartEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProcessPlanRequest;
@@ -90,9 +93,16 @@ class ProcessPlanController extends Controller
         $data[] = $totalSalesQty;
         $labels[] = $rpp->customer;
 
+        $rpp = [
+            'id' => $rpp->id,
+            'name' => $rpp->customer,
+            'count' => $rpp->amount,
+        ];
+
         $qty = $this->processPlanRepository->currentMonth($currentMonth);
         event(new UpdateChartEvent('tChart', $labels, $data));
         event(new UpdateChartEvent('rChart', $formattedCurrentMonth, $qty));
+        event(new DataAddedEvent($rpp, 'RPP'));
         return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
     }
 
@@ -132,7 +142,16 @@ class ProcessPlanController extends Controller
 
     public function destroy(string $id)
     {
+        $rpp = $this->processPlanRepository->find($id);
+        $data = [
+            'name' => $rpp->customer
+        ];
+
         $this->processPlanRepository->delete($id);
+
+        event(new DeleteChartEvent('rChart', $rpp->customer));
+        event(new DeletedDataEvent($data, 'RPP'));
+
         return redirect()->back()->with('success', 'RPP berhasil dihapus');
     }
 }

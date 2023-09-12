@@ -43,7 +43,7 @@
                 </button>
             </div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="table">
+                <table class="table table-bordered" id="myTable">
                     <caption>Table Barang</caption>
                     <thead class="thead-light">
                         <tr>
@@ -56,9 +56,9 @@
                             <th scope="col" class="text-center">Satuan</th>
                             <th scope="col" class="text-center">Stock</th>
                             <th scope="col" class="text-center">Stock Maksimal</th>
-                            <th scope="col" class="text-center">Keterangan</th>
                             <th scope="col" class="text-center">Last Updated</th>
                             <th scope="col" class="text-center">Dibuat</th>
+                            <th scope="col" class="text-center">Keterangan</th>
                             <th scope="col" class="text-center" width="14%">Action</th>
                         </tr>
                     </thead>
@@ -75,41 +75,43 @@
     
     @section('js')
     <script>
+
+        var columns = [
+            { data: 'id', name: 'id' },
+            { data: 'name', name: 'name' },
+            { 
+                data: 'material_name', 
+                name: 'material_name',
+            },
+            { 
+                data: 'product_type_name', 
+                name: 'product_type_name',
+            },
+            { 
+                data: 'category_product_name', 
+                name: 'category_product_name',
+            },
+            { data: 'product_code', name: 'product_code' },
+            { 
+                data: 'qualifier_name', 
+                name: 'qualifier_name',
+            },
+            { data: 'amount', name: 'amount' },
+            { data: 'max_amount', name: 'max_amount' },
+            { data: 'updated_at', name: 'updated_at' },
+            { data: 'created_at', name: 'created_at' },
+            { data: 'note', name: 'note' },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
+        ];
+
         $(function() {
-            $('#table').DataTable({
+            $('#myTable').DataTable({
                 processing: true,
                 serverSide: true,
                 searchable: true,
                 ajax: '{{ route('get-products') }}',
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'name', name: 'name' },
-                    { 
-                        data: 'material_name', 
-                        name: 'material_name',
-                    },
-                    { 
-                        data: 'product_type_name', 
-                        name: 'product_type_name',
-                    },
-                    { 
-                        data: 'category_product_name', 
-                        name: 'category_product_name',
-                    },
-                    { data: 'product_code', name: 'product_code' },
-                    { 
-                        data: 'qualifier_name', 
-                        name: 'qualifier_name',
-                    },
-                    { data: 'amount', name: 'amount' },
-                    { data: 'max_amount', name: 'max_amount' },
-                    { data: 'note', name: 'note' },
-                    { data: 'updated_at', name: 'updated_at' },
-                    { data: 'created_at', name: 'created_at' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false},
-                ]
+                columns: columns,
             });
-            console.log(data);
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>

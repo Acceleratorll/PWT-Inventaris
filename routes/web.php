@@ -50,8 +50,4 @@ Route::prefix('/json')->group(function () {
 Route::get('/notifications', [NotificationController::class, 'index']);
 Route::get('/send-notification', [NotificationController::class, 'sendNotification']);
 
-Route::get('/', function () {
-    event(new DataAddedEvent("Berhasil kirim Pesan"));
-});
-
 require __DIR__ . '/auth.php';

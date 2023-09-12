@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\AddChartEvent;
 use App\Events\DataAddedEvent;
 use App\Events\DeleteChartEvent;
 use App\Events\DeletedDataEvent;
@@ -79,7 +80,7 @@ class CategoryProductController extends Controller
             'count' => $count,
         ];
 
-        event(new UpdateChartEvent('cChart', $label, $data));
+        event(new AddChartEvent('cChart', $label, $data));
         event(new DataAddedEvent($data, 'Category'));
         return redirect()->route('category.index')->with('success', 'Kategori berhasil dibuat !');
     }
@@ -98,7 +99,9 @@ class CategoryProductController extends Controller
     public function update(CategoryProductRequest $request, string $id)
     {
         $input = $request->validated();
-        $this->categoryProductRepository->update($id, $input);
+        $category = $this->categoryProductRepository->update($id, $input);
+
+        event(new UpdateChartEvent('cChart', $category));
         return redirect()->route('category.index')->with('success', 'Kategori berhasil diubah !');
     }
 
