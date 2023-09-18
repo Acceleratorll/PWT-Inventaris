@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\DataAddedEvent;
+use App\Events\DeletedDataEvent;
 use App\Events\UpdateChartEvent;
+use App\Events\UpdateDataEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Repositories\CategoryProductRepository;
@@ -82,7 +84,6 @@ class ProductController extends Controller
         ];
 
         event(new DataAddedEvent($data, 'Product'));
-        event(new UpdateChartEvent('cChart', $data));
         return redirect()->route('product.index')->with('success', 'Product created successfully');
     }
 
@@ -95,7 +96,18 @@ class ProductController extends Controller
     public function update($id, ProductRequest $request): RedirectResponse
     {
         $input = $request->validated();
+        $product = $this->productRepository->find($id);
         $this->productRepository->update($id, $input);
+        if ($request->category_product_id != $product->category_product_id) {
+            $category = $this->categoryProductRepository->find($request->category_product_id);
+            $data = [
+                'id' => $category->id,
+                'name' => $category->name,
+                'qty' => $category->products->count(),
+                'context' => 'update',
+            ];
+            event(new UpdateDataEvent($data, 'Product'));
+        }
         return redirect()->route('product.index')->with('success', 'Product updated successfully');
     }
 
@@ -112,7 +124,7 @@ class ProductController extends Controller
             'context' => 'delete',
         ];
 
-        event(new UpdateChartEvent('cChart', $data));
+        event(new DeletedDataEvent($data, 'Product'));
         return redirect()->back()->with('success', 'Product berhasil dihapus');
     }
 

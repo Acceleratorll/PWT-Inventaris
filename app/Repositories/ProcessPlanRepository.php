@@ -13,9 +13,21 @@ class ProcessPlanRepository
         $this->model = $model;
     }
 
-    public function currentMonth($month)
+    public function currentMonth($month, $year)
     {
-        return $this->model->whereMonth('created_at', $month)->get();
+        return $this->model->whereHas('outgoing_products.product.material')
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->whereHas('outgoing_products.product.material')
+            ->get();
+    }
+
+    public function qtyCurrentMonth($month, $year)
+    {
+        return $this->model->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->whereHas('outgoing_products.product.material')
+            ->count();
     }
 
     public function find($id)

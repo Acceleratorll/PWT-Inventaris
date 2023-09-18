@@ -13,7 +13,6 @@ class UpdateChartEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     protected $chart;
-    protected $label;
     protected $data;
 
     public function __construct($chart, $data)

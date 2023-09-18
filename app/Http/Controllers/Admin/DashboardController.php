@@ -23,7 +23,6 @@ class DashboardController extends Controller
         $this->categoryRepository = $categoryRepository;
     }
 
-    // Contoh Area Chart
     public function index(): View
     {
         $categories = $this->categoryRepository->all();

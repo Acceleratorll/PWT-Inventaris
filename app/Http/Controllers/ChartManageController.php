@@ -30,9 +30,7 @@ class ChartManageController extends Controller
         foreach ($materials as $material) {
             $processPlans = ProcessPlan::with(['outgoing_products.product.material'])
                 ->whereMonth('created_at', $currentMonth)
-                ->whereHas('outgoing_products.product.material', function ($query) use ($material) {
-                    $query->where('id', $material->id);
-                })
+                ->whereHas('outgoing_products.product.material')
                 ->get();
 
             $data = [];
@@ -46,9 +44,8 @@ class ChartManageController extends Controller
                 $labels[] = $processPlan->customer;
             }
 
-            // Create a dataset for the current material
             $datasets[] = [
-                'label' => $material->name, // Material name as label
+                'label' => $material->name,
                 'data' => $data,
                 'fill' => false,
             ];

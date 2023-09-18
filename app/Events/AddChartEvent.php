@@ -15,13 +15,11 @@ class AddChartEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     protected $chart;
-    protected $label;
     protected $data;
 
-    public function __construct($chart, $label, $data)
+    public function __construct($chart, $data)
     {
         $this->chart = $chart;
-        $this->label = $label;
         $this->data = $data;
     }
 
@@ -41,7 +39,6 @@ class AddChartEvent implements ShouldBroadcast
     {
         return [
             'chart' => $this->chart,
-            'label' => $this->label,
             'data' => $this->data,
         ];
     }

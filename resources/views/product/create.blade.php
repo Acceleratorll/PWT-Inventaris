@@ -46,7 +46,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="product_code">Kode Barang</label>
-                    <input type="number" class="form-control mb-3" name="product_code" label="Kode Barang" id="product_code" placeholder="Masukkan Kode Barang" required/>
+                    <input type="text" class="form-control mb-3" name="product_code" label="Kode Barang" id="product_code" placeholder="Masukkan Kode Barang" required/>
                 </div>
             </div>
             <div class="row">

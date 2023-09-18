@@ -50,4 +50,8 @@ Route::prefix('/json')->group(function () {
 Route::get('/notifications', [NotificationController::class, 'index']);
 Route::get('/send-notification', [NotificationController::class, 'sendNotification']);
 
+Route::fallback(function () {
+    return redirect()->route('dashboard.index');
+});
+
 require __DIR__ . '/auth.php';

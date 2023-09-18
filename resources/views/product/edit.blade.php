@@ -47,26 +47,32 @@
                 </div>
                 <div class="col-md-6">
                     <label for="product_code">Kode Barang</label>
-                    <input type="number" class="form-control mb-3" value="{{ $product->product_code }}" name="product_code" label="Kode Barang" id="product_code" placeholder="Masukkan Kode Barang" required/>
+                    <input type="text" class="form-control mb-3" value="{{ $product->product_code }}" name="product_code" label="Kode Barang" id="product_code" placeholder="Masukkan Kode Barang" required/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <label for="material_id">Material</label>
                     <select name="material_id" id="material_id" class="form-control mb-3" width="100%" required>
+                        @if($product->material)
                         <option value="{{ $product->material_id }}" selected>{{ $product->material->name }}</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="product_type_id">Tipe Barang</label>
                     <select name="product_type_id" id="product_type_id" class="form-control mb-3" width="100%" required>
+                        @if($product->product_type)
                         <option value="{{ $product->product_type_id }}" selected>{{ $product->product_type->name }}</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="category_product_id">Kategori Barang</label>
                     <select name="category_product_id" id="category_product_id" class="form-control mb-3" width="100%" required>
+                        @if($product->category_product)
                         <option value="{{ $product->category_product_id }}" selected>{{ $product->category_product->name }}</option>
+                        @endif
                     </select>
                 </div>
             </div><br>
@@ -86,7 +92,9 @@
                 <div class="col-md-2">
                     <label for="qualifier_id">Satuan</label>
                     <select name="qualifier_id" id="qualifier_id" class="form-control mb-3 select2" required>
+                        @if($product->qualifier)
                         <option value="{{ $product->qualifier_id }}" selected>{{ $product->qualifier->name }}</option>
+                        @endif
                     </select>
                 </div>
             </div>

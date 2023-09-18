@@ -7,6 +7,7 @@ use App\Events\DataAddedEvent;
 use App\Events\DeleteChartEvent;
 use App\Events\DeletedDataEvent;
 use App\Events\UpdateChartEvent;
+use App\Events\UpdateDataEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryProductRequest;
 use App\Models\CategoryProduct;
@@ -65,7 +66,6 @@ class CategoryProductController extends Controller
     {
         $input = $request->validated();
         $category = $this->categoryProductRepository->create($input);
-        $label = $category->name;
         $data = $category->products->count();
         $count = 0;
 
@@ -76,10 +76,11 @@ class CategoryProductController extends Controller
         $data = [
             'id' => $category->id,
             'name' => $category->name,
-            'count' => $count,
+            'qty' => $count,
+            'context' => 'create',
         ];
 
-        event(new AddChartEvent('cChart', $label, $data));
+        event(new AddChartEvent('cChart', $data));
         event(new DataAddedEvent($data, 'Category'));
         return redirect()->route('category.index')->with('success', 'Kategori berhasil dibuat !');
     }
@@ -111,20 +112,25 @@ class CategoryProductController extends Controller
         ];
 
         event(new UpdateChartEvent('cChart', $data));
+        event(new UpdateDataEvent($data, 'Kategori'));
         return redirect()->route('category.index')->with('success', 'Kategori berhasil diubah !');
     }
 
     public function destroy(string $id)
     {
         $category = $this->categoryProductRepository->find($id);
+
         $data = [
             'id' => $category->id,
             'name' => $category->name,
+            'qty' => $category->products->count(),
+            'context' => 'delete',
         ];
-        event(new DeleteChartEvent('cChart', $category->name));
-        event(new DeletedDataEvent($data, 'Category'));
+
         $this->categoryProductRepository->delete($id);
-        return back()->with('message', 'Category have been Removed');
+        event(new DeletedDataEvent($data, 'Category'));
+        event(new DeleteChartEvent('cChart', $data));
+        return redirect()->back()->with('success', 'Category have been Removed');
     }
 
     public function getJsonCategories(Request $request): JsonResponse

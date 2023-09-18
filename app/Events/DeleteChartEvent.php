@@ -15,12 +15,12 @@ class DeleteChartEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     protected $chart;
-    protected $label;
+    protected $data;
 
-    public function __construct($chart, $label)
+    public function __construct($chart, $data)
     {
         $this->chart = $chart;
-        $this->label = $label;
+        $this->data = $data;
     }
 
     public function broadcastOn(): array
@@ -39,7 +39,7 @@ class DeleteChartEvent implements ShouldBroadcast
     {
         return [
             'chart' => $this->chart,
-            'label' => $this->label,
+            'data' => $this->data,
         ];
     }
 }

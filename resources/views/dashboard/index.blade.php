@@ -2,8 +2,9 @@
 
 @section('title', 'Dashboard')
 
+
 @section('content_header')
-    <h1>Dashboard</h1>
+<h1>Dashboard</h1>
 @stop
 
 @section('content')
@@ -16,7 +17,7 @@
                 <canvas id="categoryChart" height="100"></canvas>
             </div>
                 @foreach($categories as $category)
-                @if ($category->id == 3)
+                @if ($category->id == $unused->id)
                 <div id="category_{{ $category->id }}">
                     <hr class="divider">
                     <div class="d-flex justify-content-between">
@@ -118,63 +119,50 @@
             });
             
             
-            var addDataChart = pusher.subscribe('public.add.chart.1')
+            var addChart = pusher.subscribe('public.add.chart.1')
             .bind("add.chart", (data) => {
                 console.log(data);
-                addChartData(data);
+
+                addDataChart(data);
             });
 
-            var updateDataChart = pusher.subscribe('public.update.chart.1')
+            var updateChart = pusher.subscribe('public.update.chart.1')
             .bind("update.chart", (data) => {
                 console.log(data);
 
-                var chart = data.chart;
-                if(chart == 'cChart'){
-                    chart = cChart;
-                    console.log('Label Index ', cChart.data.labels);
-                    var labelIndex = cChart.data.labels.indexOf(data.data.name);
-                    console.log('Label Index ', labelIndex);
-                    
-                    if (labelIndex !== -1) {
-                        if(data.data.context == 'update'){
-                            cChart.data.labels[labelIndex] = data.data.newName;
-                            cChart.data.datasets[0].data[labelIndex] = data.data.qty;
-                            console.log(cChart.data.datasets[0].data[labelIndex]);
-                            
-                            cChart.update();
-                            console.log('Successfully updated');
-                        }else if(data.data.context == 'delete'){
-                            cChart.data.datasets[0].data[labelIndex] = data.data.qty;
-                            console.log(cChart.data.datasets[0].data[labelIndex]);
-                            
-                            cChart.update();
-                        }
-                    }
-                    
-                    updateCategoryChartData(data);
-                }else if(chart == 'tChart'){
-                    chart = tChart;
-                }else if(chart == 'rChart'){
-                    chart = rChart;
-                }
-
-                
+                updateDataChart(data);
             });
             
             var deleteChart = pusher.subscribe('public.delete.chart.1')
             .bind("delete.chart", (data) => {
                 console.log(data);
-                deleteCategoryChartData(data);
+
+                deleteDataChart(data);
             });
         
+            var dataUpdated = pusher.subscribe('public.update.data.1')
+            .bind("update.data", (data) => {
+                console.log(data);
+                
+                if(data.name == 'Category'){
+                    changeCategoryInfo(data);
+                }else if(data.name == 'Product'){
+                    affectedByProduct(data);
+                }
+
+                toastUpdateData(data);
+            });
+
             var dataAdded = pusher.subscribe('public.data.added.1')
             .bind("data.added", (data) => {
                 console.log(data);
                 
                 if(data.name == 'Category'){
-                    addCategoryInfo(data);
+                    changeCategoryInfo(data);
+                }else if(data.name == 'Product'){
+                    affectedByProduct(data);
                 }
-
+                
                 toastAddData(data);
             });
 
@@ -183,13 +171,9 @@
                 console.log(data);
                 
                 if(data.name == 'Category'){
-                    var categoryToDelete = document.getElementById('category_' + data.data.id);
-                    console.log("Category to delete: ", categoryToDelete);
-                    
-                    if (categoryToDelete) {
-                        categoryToDelete.remove();
-                        console.log("Category removed");
-                    }
+                    changeCategoryInfo(data);
+                }else if(data.name == 'Product'){
+                    affectedByProduct(data);
                 }
                 
                 toastDeleteData(data);
@@ -210,7 +194,7 @@
                     method: 'GET',
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
+                        console.log(data.datasets);
                         
                         const ctx = document.getElementById("tintaChart");
                         
@@ -222,7 +206,7 @@
                             type: 'line',
                             data: {
                                 labels: data.labels,
-                                datasets: data.datasets, // Use the datasets from the response
+                                datasets: data.datasets,
                             },
                             options: {
                                 scales: {
@@ -307,103 +291,163 @@
                 })
             }
             
-            function addCategoryInfo(newCategoryData) {
-                var categoryInfoContainer = document.getElementById('categoryInfo');
+            // Category Details
+            function changeCategoryInfo(data) {
+                var categoryToUpdate = document.getElementById('category_' + data.data.id);
                 
-                var categoryDiv = document.createElement('div');
-                categoryDiv.className = 'd-flex justify-content-between';
+                if(data.data.context == 'create'){
+                    var categoryInfoContainer = document.getElementById('categoryInfo');
                 
-                var categoryId = 'category_' + newCategoryData.data.id;
-                categoryDiv.id = categoryId;
-                console.log(newCategoryData);
-                
-                var categoryNameSpan = document.createElement('span');
-                categoryNameSpan.className = 'text-black';
-                categoryNameSpan.textContent = newCategoryData.data.name;
-                
-                var categoryCountSpan = document.createElement('span');
-                categoryCountSpan.className = 'text-black';
-                categoryCountSpan.style.marginRight = '15px';
-                categoryCountSpan.textContent = newCategoryData.data.count;
-                
-                categoryDiv.appendChild(categoryNameSpan);
-                categoryDiv.appendChild(categoryCountSpan);
-                
-                categoryInfoContainer.appendChild(categoryDiv);
-            }
-            
-            function addChartData(data){
-                var chart = data.chart;
-                
-                var chartInstance = null;
-                if (chart === 'cChart') {
-                    chartInstance = cChart;
-                } else if (chart === 'tChart') {
-                    chartInstance = tChart;
-                } else if (chart === 'rChart') {
-                    chartInstance = rChart;
-                }
-                
-                if (chartInstance) {
-                    chartInstance.data.labels.push(data.label);
-                    chartInstance.data.datasets[0].data.push(data.data);
-                    chartInstance.update();
+                    var categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'd-flex justify-content-between';
+                    
+                    categoryDiv.id = 'category_' + data.data.id;
+                    
+                    var categoryNameSpan = document.createElement('span');
+                    categoryNameSpan.className = 'text-black';
+                    categoryNameSpan.textContent = data.data.name;
+                    categoryNameSpan.id = 'name';
+                    
+                    var categoryCountSpan = document.createElement('span');
+                    categoryCountSpan.className = 'text-black';
+                    categoryCountSpan.style.marginRight = '15px';
+                    categoryCountSpan.textContent = data.data.qty;
+                    categoryCountSpan.id = 'qty';
+                    
+                    categoryDiv.appendChild(categoryNameSpan);
+                    categoryDiv.appendChild(categoryCountSpan);
+                    
+                    categoryInfoContainer.appendChild(categoryDiv);
+                }else if(data.data.context == 'update'){
+                    var nameElement = categoryToUpdate.querySelector('#name');
+                    if(nameElement){
+                        nameElement.textContent = data.data.newName;
+                    }
+                }else if(data.data.context == 'delete'){
+                    console.log("Category to delete: ", categoryToUpdate);
+                    
+                    categoryToUpdate.remove();
+                    console.log("Category removed");
                 }
             }
 
-            function updateCategoryChartData(data) {
+            // Product
+            function affectedByProduct(data) {
                 var categoryToUpdate = document.getElementById('category_' + data.data.id);
                 var totalToUpdate = document.getElementById('total');
                 if (categoryToUpdate) {
+                    var quantityElement = categoryToUpdate.querySelector('#qty');
+                    var quantityOfTotalElement = totalToUpdate.querySelector('#qty');
                     if(data.data.context == 'create'){
-                        var quantityElement = categoryToUpdate.querySelector('#qty');
-                        var quantityOfTotalElement = totalToUpdate.querySelector('#qty');
                         if (quantityElement && quantityOfTotalElement) {
                             quantityElement.textContent = parseInt(quantityElement.textContent) + 1;
                             console.log(quantityElement.textContent);
-                            quantityOfTotalElement.textContent = parseInt(quantityOfTotalElement.textContent)+1;
+                            quantityOfTotalElement.textContent = parseInt(quantityOfTotalElement.textContent) + 1;
+                        }
+                        
+                        console.log(cChart);
+
+                        var labelIndex = cChart.data.labels.indexOf(data.data.name);
+                        if (labelIndex !== -1) {
+                            cChart.data.datasets[0].data[labelIndex] = data.data.qty;
+                            cChart.update();
+                            console.log('Successfully updated');
                         }
                     }else if(data.data.context == 'update'){
-                        var nameElement = categoryToUpdate.querySelector('#name');
-                        if(nameElement){
-                            nameElement.textContent = data.data.newName;
+                        if (quantityElement && quantityOfTotalElement) {
+                            quantityElement.textContent = data.data.qty;
+                            console.log(quantityElement.textContent);
+                        }
+                        
+                        var labelIndex = cChart.data.labels.indexOf(data.data.name);
+                        if (labelIndex !== -1) {
+                            cChart.data.datasets[0].data[labelIndex] = data.data.qty;
+                            cChart.update();
+                            console.log('Successfully updated');
                         }
                     }else if(data.data.context == 'delete'){
-                        var quantityElement = categoryToUpdate.querySelector('#qty');
-                        var quantityOfTotalElement = totalToUpdate.querySelector('#qty');
                         if (quantityElement && quantityOfTotalElement) {
                             quantityElement.textContent = parseInt(quantityElement.textContent) - 1;
                             console.log(quantityElement.textContent);
                             quantityOfTotalElement.textContent = parseInt(quantityOfTotalElement.textContent) - 1;
                         }
+
+                        var labelIndex = cChart.data.labels.indexOf(data.data.name);
+                        if (labelIndex !== -1) {
+                            cChart.data.datasets[0].data[labelIndex] = data.data.qty;
+                            cChart.update();
+                            console.log('cChart Successfully updated');
+                        }
                     }
                 }
             }
 
-            function deleteCategoryChartData(data){
-                var chart = data.chart;
-                
+            // CHART
+            function updateDataChart(data){
                 var chartInstance = null;
-                if (chart === 'cChart') {
+                if(data.chart == 'cChart'){
                     chartInstance = cChart;
-                } else if (chart === 'tChart') {
+                }else if(data.chart == 'tChart'){
                     chartInstance = tChart;
-                } else if (chart === 'rChart') {
+                }else if(data.chart == 'rChart'){
                     chartInstance = rChart;
                 }
-                console.log('Chart Instance ',chartInstance);
-                
-                if (chartInstance) {
-                    var dataIndex = chartInstance.data.labels.indexOf(data.label);
-                    if (dataIndex !== -1) {
-                        chartInstance.data.labels.splice(dataIndex, 1);
-                        chartInstance.data.datasets[0].data.splice(dataIndex, 1);
-                        chartInstance.update();
-                        console.log('data removed from chart');
+
+                console.log('Data Label ', data.data.name);
+                var labelIndex = chartInstance.data.labels.indexOf(data.data.name);
+                console.log('Label Index ', labelIndex);
+                if (labelIndex !== -1) {
+                    if(data.data.newName){
+                        chartInstance.data.labels[labelIndex] = data.data.newName;
+                    }else if(data.data.qty){
+                        data.data.qty.forEach((qty, index) => {
+                            chartInstance.data.datasets[index].data[labelIndex] = qty;
+                        });
                     }
+                    chartInstance.update();
+                }
+            }
+        
+            function addDataChart(data){
+                var chartInstance = null;
+                if(data.chart == 'cChart'){
+                    chartInstance = cChart;
+                }else if(data.chart == 'tChart'){
+                    chartInstance = tChart;
+                }
+
+                console.log(data.data.qty);
+
+                chartInstance.data.labels.push(data.data.name);
+                data.data.qty.forEach((qty, index) => {
+                    chartInstance.data.datasets[index].data.push(qty);
+                });
+
+                chartInstance.update();
+            }
+
+            function deleteDataChart(data){
+                var chartInstance = null;
+
+                if(data.chart == 'cChart'){
+                    chartInstance = cChart;
+                }else if(data.chart == 'tChart'){
+                    chartInstance = tChart;
+                }else if(data.chart == 'rChart'){
+                    chartInstance = rChart;
+                }
+                
+                var labelIndex = chartInstance.data.labels.indexOf(data.data.name);
+
+                if (labelIndex !== -1) {
+                    chartInstance.data.labels.splice(labelIndex, 1);
+                    chartInstance.data.datasets[0].data.splice(labelIndex, 1);
+                    chartInstance.update();
+                    console.log(data.data.name + ' removed from chart');
                 }
             }
             
+            // TOAST
             function toastDeleteData(data){
                 Swal.fire({
                     position: 'top-end',
@@ -416,11 +460,23 @@
                 })
             }
             
+            function toastUpdateData(data){
+                Swal.fire({
+                    position: 'top-end',
+                    type: 'success',
+                    title: data.name+' Updated',
+                    text: data.name+' dengan nama "'+data.data.name+'" just Updated !',
+                    showConfirmButton: false,
+                    timer: 3300,
+                    timerProgressBar: true
+                })
+            }
+
             function toastAddData(data){
                 Swal.fire({
                     position: 'top-end',
                     type: 'success',
-                    title: data.name+' Deleted',
+                    title: data.name+' Added',
                     text: data.name+' dengan nama "'+data.data.name+'" just Added !',
                     showConfirmButton: false,
                     timer: 3300,
