@@ -43,9 +43,24 @@ class ProductRepository
         return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->get();
     }
 
-    public function paginate()
+    public function getWarning()
     {
-        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->paginate(10);
+        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->whereRaw('amount < (0.3 * max_amount) && amount > (0.1 * max_amount)')->get();
+    }
+
+    public function getDanger()
+    {
+        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->whereRaw('amount < (0.1 * max_amount)')->get();
+    }
+
+    public function orderBy($col, $desc)
+    {
+        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->orderByRaw('CAST(' . $col . ' AS SIGNED) ' . $desc)->get();
+    }
+
+    public function paginate($number)
+    {
+        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->paginate($number);
     }
 
     public function create($data)

@@ -13,8 +13,8 @@
 <div class="row">
     <div class="col-md-4">
         <x-adminlte-card title="Info Barang" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="justify-content-between">
-                <canvas id="categoryChart" height="100"></canvas>
+            <div class="justify-center" id="chart-category">
+                <canvas id="categoryChart"></canvas>
             </div>
                 @foreach($categories as $category)
                 @if ($category->id == $unused->id)
@@ -47,8 +47,8 @@
     </div>
     <div class="col-md-8">
         <x-adminlte-card title="Info RPP Setahun" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow">
-                <canvas id="rppChart" height="100"></canvas>
+            <div class="rounded shadow justify-center" id="chart-rpp">
+                <canvas id="rppChart"></canvas>
             </div>
         </x-adminlte-card>
     </div>
@@ -74,8 +74,8 @@
     </div>
     <div class="col-md-8">
         <x-adminlte-card title="Barang Setiap RPP" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow">
-                <canvas id="tintaChart" height="100"></canvas>
+            <div class="rounded shadow justify-center" id="chart-tinta">
+                <canvas id="tintaChart"></canvas>
             </div>
         </x-adminlte-card>
     </div>
@@ -95,6 +95,7 @@
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="{{ asset('css/chart.css') }}">
     @vite(['resources/css/app.css'])
     @stop
     
@@ -252,7 +253,8 @@
                                     y: {
                                         beginAtZero: true
                                     }
-                                }
+                                },
+                                responsive: true
                             }
                         })
                     }
@@ -286,6 +288,7 @@
                                     tension: 0.1
                                 }]
                             },
+                            maintainAspectRatio: false,
                         })
                     }
                 })
@@ -393,16 +396,26 @@
                     chartInstance = rChart;
                 }
 
-                console.log('Data Label ', data.data.name);
+                console.log('Data Label ', data.data.name, 'QTY : ', data.data.qty);
                 var labelIndex = chartInstance.data.labels.indexOf(data.data.name);
                 console.log('Label Index ', labelIndex);
                 if (labelIndex !== -1) {
-                    if(data.data.newName){
-                        chartInstance.data.labels[labelIndex] = data.data.newName;
-                    }else if(data.data.qty){
-                        data.data.qty.forEach((qty, index) => {
-                            chartInstance.data.datasets[index].data[labelIndex] = qty;
-                        });
+                    if(data.chart == 'rChart'){
+                        chartInstance.data.datasets[0].data[labelIndex] = data.data.qty;
+                        console.log('Updated chart data', chartInstance.data.datasets[0].data[labelIndex]);
+                        // if(data.data.context == 'delete'){
+                        // }else if(data.data.context == 'add'){
+                        //     chartInstance.data.datasets[index].data[labelIndex] = data.data.qty;
+                        // }
+                    }else{
+                        if(data.data.newName){
+                            chartInstance.data.labels[labelIndex] = data.data.newName;
+                            
+                        }else if(data.data.qty){
+                            data.data.qty.forEach((qty, index) => {
+                                chartInstance.data.datasets[index].data[labelIndex] = qty;
+                            });
+                        }
                     }
                     chartInstance.update();
                 }
@@ -483,7 +496,38 @@
                     timerProgressBar: true
                 })
             }
-            
+
+            function toastAmount(data){
+                var type, title, text;
+                
+                if (data.amount < (0.1 * data.max_amount)) {
+                    type = 'error';
+                    title = data.name + ' Stocknya kurang';
+                    text = data.name + ' dengan nama "' + data.data.name + '" dari 10% !';
+                } else if(data.amount < (0.3 * data.max_amount)){
+                    type = 'warning';
+                    title = data.name + ' Stocknya kurang';
+                    text = data.name + ' dengan nama "' + data.data.name + '" dari 30% !';
+                }
+                
+                Swal.fire({
+                    position: 'center',
+                    type: type,
+                    title: title,
+                    text: text,
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                    confirmButtonText: 'Redirect',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonText: 'Close',
+                    timer: 3300,
+                    timerProgressBar: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/product';
+                    }
+                });
+            }
             
             $(function() {
                 categoryChart();
@@ -495,7 +539,7 @@
                     serverSide: true,
                     lengthChange: false,
                     paginate: true,
-                    pageLength: 8,
+                    pageLength: 5,
                     ajax: '{{ route('get-unused-products') }}',
                     columns: [
                         { data: 'id', name: 'id' },

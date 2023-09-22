@@ -19,7 +19,11 @@ import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 import Chart from "chart.js/auto";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+
 import "sweetalert2/src/sweetalert2.scss";
+import "datatables.net-select-bs4";
+import "datatables.net-searchpanes-bs4";
+import "datatables.net-responsive-dt";
 
 window.Pusher = Pusher;
 

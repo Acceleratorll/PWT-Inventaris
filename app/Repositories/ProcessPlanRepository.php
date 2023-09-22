@@ -32,7 +32,7 @@ class ProcessPlanRepository
 
     public function find($id)
     {
-        return $this->model->find($id);
+        return $this->model->findOrFail($id);
     }
 
     public function search($term)
@@ -52,7 +52,7 @@ class ProcessPlanRepository
 
     public function all()
     {
-        return $this->model->with('outgoing_products')->get();
+        return $this->model->with('outgoing_products.product.material')->get();
     }
 
     public function paginate()
@@ -72,7 +72,6 @@ class ProcessPlanRepository
 
     public function delete($id)
     {
-        $data = $this->model->find($id);
-        return $data->delete();
+        return $this->model->findOrFail($id)->delete();
     }
 }

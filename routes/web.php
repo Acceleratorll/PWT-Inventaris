@@ -25,12 +25,18 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rpps');
-Route::get('/get-products', [ProductController::class, 'getProducts'])->name('get-products');
+Route::get('/get-all-products', [ProductController::class, 'getAllProducts'])->name('get-all-products');
+Route::get('/get-warning-products', [ProductController::class, 'getWarningProducts'])->name('get-warning-products');
+Route::get('/get-danger-products', [ProductController::class, 'getDangerProducts'])->name('get-danger-products');
 Route::get('/get-categories', [CategoryProductController::class, 'getCategories'])->name('get-categories');
 Route::get('/get-unused-products', [AdminDashboardController::class, 'getUnusedProducts'])->name('get-unused-products');
 Route::get('/get-report-process-plan', [AdminDashboardController::class, 'getReportProcessPlan'])->name('get-report-process-plan');
 Route::get('/get-qualifiers', [AdminDashboardController::class, 'getQualifiers'])->name('get-qualifiers');
 Route::get('/material/search', [AdminDashboardController::class, 'search'])->name('material.search');
+Route::get('/export/products', [ProductController::class, 'exportProducts']);
+Route::post('/import/products', [ProductController::class, 'importProducts']);
+Route::get('/export/process-plans', [ProcessPlanController::class, 'exportProcessPlans']);
+Route::post('/import/process-plans', [ProcessPlanController::class, 'importProcessPlans']);
 
 Route::prefix('/json')->group(function () {
     Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');

@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\AddChartEvent;
-use App\Events\AddedProcessPlanEvent;
 use App\Events\DataAddedEvent;
 use App\Events\DeleteChartEvent;
 use App\Events\DeletedDataEvent;
 use App\Events\UpdateChartEvent;
-use App\Events\UpdateDataEvent;
+use App\Exports\ProcessPlansExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProcessPlanRequest;
-use App\Models\ProcessPlan;
+use App\Imports\ProcessPlansImport;
 use App\Repositories\MaterialRepository;
 use App\Repositories\OutgoingProductRepository;
 use App\Repositories\ProcessPlanRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProcessPlanController extends Controller
@@ -43,6 +43,7 @@ class ProcessPlanController extends Controller
     public function getRpps()
     {
         $rpps = $this->processPlanRepository->all();
+
         return DataTables::of($rpps)
             ->addColumn('customer', function ($rpp) {
                 return $rpp->customer;
@@ -80,6 +81,7 @@ class ProcessPlanController extends Controller
             $formattedCurrentMonth = now()->format('M');
 
             $datasets = [];
+            $amountChanges = [];
 
             foreach ($input['selected_products'] as $productId => $productData) {
                 $inputOutPro = [
@@ -87,6 +89,12 @@ class ProcessPlanController extends Controller
                     'product_id' => $productId,
                     'qty' => $productData['qty'],
                 ];
+
+                $netChange = $productData['qty'];
+                if (!isset($amountChanges[$productId])) {
+                    $amountChanges[$productId] = 0;
+                }
+                $amountChanges[$productId] += $netChange;
 
                 $this->outgoingProductRepository->create($inputOutPro);
 
@@ -100,7 +108,7 @@ class ProcessPlanController extends Controller
                 'id' => $rpp->id,
                 'name' => $formattedCurrentMonth,
                 'qty' => $qty,
-                'context' => 'update'
+                'context' => 'add'
             ];
 
             event(new UpdateChartEvent('rChart', $rppChart));
@@ -112,10 +120,6 @@ class ProcessPlanController extends Controller
             $labels = [];
 
             foreach ($materials as $material) {
-                $processPlans = $this->processPlanRepository->currentMonth($currentMonth, $currentYear);
-
-                foreach ($processPlans as $processPlan) {
-                }
                 $totalSalesQty = $rpp->outgoing_products
                     ->where('product.material.id', $material->id)
                     ->sum('qty');
@@ -147,7 +151,6 @@ class ProcessPlanController extends Controller
         return redirect()->back()->with('error', 'Data isnt correct !');
     }
 
-
     public function show(string $id)
     {
         $rpp = $this->processPlanRepository->find($id);
@@ -165,27 +168,21 @@ class ProcessPlanController extends Controller
         $input = $request->validated();
         $rpp = $this->processPlanRepository->find($id);
 
-        // Initialize an array to track the net change in product amount
         $amountChanges = [];
 
-        // Loop through selected products to update or create outgoing_products
         foreach ($input['selected_products'] as $productId => $productData) {
             $outgoingProduct = $rpp->outgoing_products->firstWhere('product_id', $productId);
 
             if ($outgoingProduct) {
-                // Calculate the net change and track it
                 $netChange = $productData['qty'] - $outgoingProduct['qty'];
-                var_dump($netChange);
                 if (!isset($amountChanges[$productId])) {
                     $amountChanges[$productId] = 0;
                 }
                 $amountChanges[$productId] += $netChange;
 
-                // Update existing outgoing_product
                 $outgoingProduct->qty = $productData['qty'];
                 $outgoingProduct->save();
             } else {
-                // Create a new outgoing_product if it doesn't exist
                 $inputOutPro = [
                     'process_plan_id' => $rpp->id,
                     'product_id' => $productId,
@@ -194,7 +191,6 @@ class ProcessPlanController extends Controller
 
                 $this->outgoingProductRepository->create($inputOutPro);
 
-                // Calculate the net change and track it
                 $netChange = $productData['qty'];
                 if (!isset($amountChanges[$productId])) {
                     $amountChanges[$productId] = 0;
@@ -203,10 +199,9 @@ class ProcessPlanController extends Controller
             }
         }
 
-        // Now, apply the net changes to product amounts
         foreach ($amountChanges as $productId => $netChange) {
             $product = $this->productRepository->find($productId);
-            $product->amount += $netChange; // Use += to add or subtract as needed
+            $product->amount += $netChange;
             $product->save();
         }
 
@@ -233,8 +228,6 @@ class ProcessPlanController extends Controller
         return redirect()->route('rpp.index')->with('success', 'RPP berhasil diupdate!');
     }
 
-
-
     public function destroy(string $id)
     {
         $rpp = $this->processPlanRepository->find($id);
@@ -248,7 +241,7 @@ class ProcessPlanController extends Controller
         $datasets = [
             'name' => now()->format('M'),
             'qty' => (int)$qty - 1,
-            'context' => 'update',
+            'context' => 'delete',
         ];
 
         $this->processPlanRepository->delete($id);
@@ -258,5 +251,28 @@ class ProcessPlanController extends Controller
         event(new DeletedDataEvent($data, 'Rpp'));
 
         return redirect()->back()->with('success', 'RPP berhasil dihapus');
+    }
+
+    public function exportProcessPlans()
+    {
+        $processPlans = $this->processPlanRepository->all();
+
+        return (new ProcessPlansExport($processPlans))->download('process_plans.xlsx');
+    }
+
+    public function importProcessPlans()
+    {
+        try {
+            DB::beginTransaction();
+
+            Excel::import(new ProcessPlansImport, request()->file('file'));
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Import successful');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
+        }
     }
 }
