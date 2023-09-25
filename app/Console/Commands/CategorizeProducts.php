@@ -19,28 +19,23 @@ class CategorizeProducts extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Categorize products based on usage duration';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $products = Product::all();
+        Product::where('updated_at', '>=', now()->subYears(1))
+            ->update(['category_product_id' => 1]);
 
-        foreach ($products as $product) {
-            $firstUsageDate = $product->first_usage_date; // Replace with actual property name
-            $currentDate = now(); // Current date and time
+        Product::where('updated_at', '>=', now()->subYears(2))
+            ->where('updated_at', '<', now()->subYears(1))
+            ->update(['category_product_id' => 2]);
 
-            $usageDuration = $currentDate->diffInYears($firstUsageDate);
+        Product::where('updated_at', '<', now()->subYears(2))
+            ->update(['category_product_id' => 3]);
 
-            if ($usageDuration < 1) {
-                $product->update(['category_product_id' => 1]);
-            } elseif ($usageDuration > 1 && $usageDuration <= 2) {
-                $product->update(['category_product_id' => 2]);
-            } elseif ($usageDuration > 2) {
-                $product->update(['category_product_id' => 3]);
-            }
-        }
+        $this->info('Products categorized successfully.');
     }
 }
