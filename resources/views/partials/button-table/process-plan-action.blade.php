@@ -1,4 +1,3 @@
-
 <form action="{{ route('rpp.destroy',['rpp' => $id]) }}" method="post">
     <a href="/rpp/{{ $id }}/edit" data-toggle="tooltip" onClick="editFunc({{ $id }})" data-original-title="Edit" class="edit btn btn-success edit">
         Edit
@@ -8,7 +7,13 @@
     </button>
     @csrf
     @method("DELETE")
-    <button type="submit" id="delete-compnay" data-original-title="Delete" class="delete btn btn-danger">
-        Delete
+    <button
+        type="button"
+        id="delete-company"
+        data-original-title="Delete"
+        class="delete btn btn-danger"
+        onclick="confirmDelete('{{ route('rpp.destroy', ['rpp' => $id]) }}')"
+    >
+    Delete
     </button>
 </form>

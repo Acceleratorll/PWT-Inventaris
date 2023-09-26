@@ -20,7 +20,12 @@ class ProcessPlansImport implements ToModel, WithHeadingRow
             'customer' => $row['customer'],
             'code' => $row['code'],
             'order_type' => $row['order_type'],
+            'desc' => ''
         ]);
+
+        if ($row['description']) {
+            $this->rpp->desc = $row['description'];
+        }
 
         $this->rpp->save();
 
@@ -63,11 +68,6 @@ class ProcessPlansImport implements ToModel, WithHeadingRow
         if ($product) {
             return $product->id;
         } else {
-            // dd($productName);
-            // dd(OutgoingProduct::with('product')->whereHas('product', function ($query) use ($productName) {
-            //     $query->where('name', $productName);
-            // })
-            //     ->first());
             return -1;
         }
     }

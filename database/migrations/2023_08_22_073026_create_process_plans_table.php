@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('code');
             $table->string('customer');
             $table->string('order_type');
+            $table->string('desc');
             $table->softDeletes();
             $table->timestamps();
         });

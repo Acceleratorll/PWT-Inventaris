@@ -15,6 +15,7 @@ class ProcessPlan extends Model
         'customer',
         'order_type',
         'code',
+        'desc',
     ];
  
     public function outgoing_products(): HasMany

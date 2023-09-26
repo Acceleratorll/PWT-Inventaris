@@ -41,6 +41,7 @@
                                 <th scope="col" class="text-center">Code</th>
                                 <th scope="col" class="text-center">Customer</th>
                                 <th scope="col" class="text-center">Order Type</th>
+                                <th scope="col" class="text-center">Description</th>
                                 <th scope="col" class="text-center">Last Updated</th>
                                 <th scope="col" class="text-center">Dibuat</th>
                                 <th scope="col" class="text-center" width="14%">Action</th>
@@ -111,6 +112,7 @@
                     { data: 'code', name: 'code' },
                     { data: 'customer', name: 'customer' },
                     { data: 'order_type', name: 'order_type' },
+                    { data: 'desc', name: 'desc' },
                     { data: 'formatted_updated_at', name: 'formatted_updated_at' },
                     { data: 'formatted_created_at', name: 'formatted_created_at' },
                     { data: 'action', name: 'action', orderable: false },
@@ -133,7 +135,39 @@
                 
                 modal.modal('show');
             });
+
+            $('#delete-company').on('submit', function(){
+                toastText();
+            });
         });
+
+        async function confirmDelete(deleteUrl) {
+        const { value: description } = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            html: `
+            <input type="text" id="description" class="swal2-input" placeholder="Reason for deletion" required>
+            `,
+            preConfirm: () => {
+                return document.getElementById('description').value;
+            }
+        });
+
+        if (description) {
+            const form = document.querySelector('form[action="' + deleteUrl + '"]');
+            const hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'desc');
+            hiddenInput.setAttribute('value', description);
+            form.appendChild(hiddenInput);
+            form.submit();
+        }
+    }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>

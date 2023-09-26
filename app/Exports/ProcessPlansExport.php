@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\ProcessPlan;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -32,6 +31,7 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
                 'Code' => $processPlan->code,
                 'Order Type' => $processPlan->order_type,
                 'Outgoing Products' => $this->formatOutgoingProducts($processPlan->outgoing_products),
+                'Description' => $processPlan->desc,
             ];
         });
     }
@@ -43,14 +43,13 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
             'Code',
             'Order Type',
             'Outgoing Products',
+            'Description',
         ];
     }
 
     protected function formatOutgoingProducts($outgoingProducts)
     {
-        // Convert the collection of outgoing products to an array of strings
         $formattedOutgoingProducts = $outgoingProducts->map(function ($outgoingProduct) {
-            // Assuming 'product' is the relationship to the Product model
             $productName = $outgoingProduct->product->name;
             $qualifierAbb = $outgoingProduct->product->qualifier->abbreviation;
             $qty = $outgoingProduct->qty;
@@ -58,7 +57,6 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
             return "{$productName} [Qty: {$qty} {$qualifierAbb}]";
         })->toArray();
 
-        // Implode the array into a comma-separated string
         return implode(', ', $formattedOutgoingProducts);
     }
 
@@ -91,6 +89,7 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
             'A' => 33.0,
             'B' => 33.0,
             'C' => 55.0,
+            'D' => 130.0,
             'D' => 130.0,
         ];
     }

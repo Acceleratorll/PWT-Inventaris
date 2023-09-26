@@ -41,7 +41,7 @@ class ProcessPlanRepository
             ->with('outgoing_products')
             ->where('customer', 'LIKE', '%' . $term . '%')
             ->orWhere('order_type', 'LIKE', '%' . $term . '%')
-            ->orWhere('total', 'LIKE', '%' . $term . '%')
+            ->orWhere('desc', 'LIKE', '%' . $term . '%')
             ->orWhereHas('outgoing_products', function ($query) use ($term) {
                 $query->whereHas('product', function ($query) use ($term) {
                     $query->where('name', 'LIKE', '%' . $term . '%');

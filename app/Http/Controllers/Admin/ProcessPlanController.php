@@ -54,6 +54,9 @@ class ProcessPlanController extends Controller
             ->addColumn('order_type', function ($rpp) {
                 return $rpp->order_type;
             })
+            ->addColumn('desc', function ($rpp) {
+                return $rpp->desc;
+            })
             ->addColumn('formatted_created_at', function ($rpp) {
                 return $rpp->created_at->format('D, d-m-y, G:i');
             })

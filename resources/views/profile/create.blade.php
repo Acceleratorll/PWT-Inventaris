@@ -1,42 +1,37 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit Profile Page')
+@section('title', 'Create Profile Page')
 
 @section('content-header')
-    <h1>Edit Profile</h1>
+    <h1>Create Profile</h1>
 @endsection
 
 @section('content')
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('profile.update', ['profile' => $user->id]) }}" method="post">
+        <form action="{{ route('profile.store') }}" method="post">
         @csrf
-        @method('PUT')
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
                     <label for="name">Nama</label>
-                    <input type="text" class="form-control mb-3" value="{{ $user->name }}" name="name" label="Nama" placeholder="Masukkan Nama" required/>
+                    <input type="text" class="form-control mb-3" name="name" label="Nama" placeholder="Masukkan Nama" required/>
                 </div>
                 <div class="col-md-6">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control mb-3" value="{{ $user->email }}" name="email" label="Email" id="email" placeholder="Masukkan Email" required/>
+                    <input type="email" class="form-control mb-3" name="email" label="Email" id="email" placeholder="Masukkan Email" required/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <label for="role_id">Roles</label>
                     <select name="role_id" id="role_id" class="form-control mb-3" width="100%" required>
-                        @if($user->role_id)
-                        <option value="{{ $user->role_id }}" selected>{{ $user->role->name }}</option>
-                        @else
                         <option value="" selected disabled>Pilih Roles</option>
-                        @endif
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label for="password">New Password</label>
-                    <input type="password" name="password" id="password" class="form-control mb-3" width="100%" autocomplete="new-password"/>
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-control mb-3" width="100%" required/>
                 </div>
             </div>
             <br>
