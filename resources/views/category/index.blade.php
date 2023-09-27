@@ -70,7 +70,7 @@
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
-                <a href="/category/create" class="btn btn-primary">+ Add</a>
+                <a href="{{ route('category.create') }}" class="btn btn-primary">+ Add</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">

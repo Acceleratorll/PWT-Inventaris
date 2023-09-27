@@ -1,6 +1,6 @@
 
 <form action="{{ route('product.destroy',['product' => $id]) }}" method="post">
-    <a href="/product/{{ $id }}/edit"class="edit btn btn-success edit">
+    <a href="{{ route('product.edit', ['product' => $id]) }}"class="edit btn btn-success edit">
         Edit
     </a>
     @csrf

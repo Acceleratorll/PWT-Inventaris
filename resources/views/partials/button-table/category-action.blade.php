@@ -1,6 +1,6 @@
 
 <form action="{{ route('category.destroy',['category' => $id]) }}" method="post">
-    <a href="/category/{{ $id }}/edit" class="edit btn btn-success">
+    <a href="{{route('category.edit', ['category' => $id])}}" class="edit btn btn-success">
         Edit
     </a>
     @csrf

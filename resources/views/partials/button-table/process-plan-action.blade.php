@@ -1,5 +1,5 @@
 <form action="{{ route('rpp.destroy',['rpp' => $id]) }}" method="post">
-    <a href="/rpp/{{ $id }}/edit" data-toggle="tooltip" onClick="editFunc({{ $id }})" data-original-title="Edit" class="edit btn btn-success edit">
+    <a href="{{ route('rpp.edit', ['rpp' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
         Edit
     </a>
     <button type="button" id="show-outgoing-products" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">

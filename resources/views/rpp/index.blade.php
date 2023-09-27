@@ -22,13 +22,13 @@
         <div class="card">
             <div class="card-body">
                 <div class="button-action" style="margin-bottom: 20px">
-                    <button type="button" class="btn btn-primary" onclick="location.href='/rpp/create'">
+                    <button type="button" class="btn btn-primary" onclick="location.href='{{ route('rpp.create') }}'">
                         <span>+ Add</span>
                     </button>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
                     </a>
-                    <a class="btn btn-secondary" href="/export/process-plans">
+                    <a class="btn btn-secondary" href="{{ route('export.processplans') }}">
                         <span>Excel</span>
                     </a>
                 </div>
@@ -73,7 +73,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/import/process-plans" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('import.processplans') }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
                             @csrf
                             <div class="form-group">

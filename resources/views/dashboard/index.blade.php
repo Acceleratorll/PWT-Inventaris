@@ -191,7 +191,7 @@
             
             function tintaChart() {
                 $.ajax({
-                    url: '/json/chart/tinta',
+                    url: "{{route('monthly.tinta.chart')}}",
                     method: 'GET',
                     dataType: 'json',
                     success: function (data) {
@@ -223,7 +223,7 @@
             
             function rppChart(){
                 $.ajax({    
-                    url: '/json/chart/rpp',
+                    url: "{{route('yearly.rpp.chart')}}",
                     method:'GET',
                     dataType: 'json',
                     success: function(data){
@@ -263,7 +263,7 @@
             
             function categoryChart(){
                 $.ajax({    
-                    url: '/json/chart/category',
+                    url: "{{route('category.overall.chart')}}",
                     method:'GET',
                     dataType: 'json',
                     success: function(data){

@@ -44,7 +44,7 @@
                 <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                     <span>Import</span>
                 </a>
-                <a class="btn btn-secondary" href="/export/profiles">
+                <a class="btn btn-secondary" href="{{ route('export.profiles') }}">
                     <span>Excel</span>
                 </a>
             </div>
@@ -84,7 +84,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/import/profiles" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('import.profiles') }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     @csrf
                     <div class="form-group">

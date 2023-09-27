@@ -37,7 +37,7 @@
 <div class="row">
     <div class="card col-md-12">
         <div class="card-body">
-            <form action="/category/{{ $category->id }}" method="post">
+            <form action="{{ route('category.edit', ['category' => $category->id]) }}" method="post">
                 @csrf
                 @method('PUT')
             <div class="row">

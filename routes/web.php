@@ -31,12 +31,12 @@ Route::get('/get-unused-products', [AdminDashboardController::class, 'getUnusedP
 Route::get('/get-report-process-plan', [AdminDashboardController::class, 'getReportProcessPlan'])->name('get-report-process-plan');
 Route::get('/get-qualifiers', [AdminDashboardController::class, 'getQualifiers'])->name('get-qualifiers');
 Route::get('/material/search', [AdminDashboardController::class, 'search'])->name('material.search');
-Route::get('/export/profiles', [ProfileController::class, 'exportProfiles']);
-Route::post('/import/profiles', [ProfileController::class, 'importProfiles']);
-Route::get('/export/products', [ProductController::class, 'exportProducts']);
-Route::post('/import/products', [ProductController::class, 'importProducts']);
-Route::get('/export/process-plans', [ProcessPlanController::class, 'exportProcessPlans']);
-Route::post('/import/process-plans', [ProcessPlanController::class, 'importProcessPlans']);
+Route::get('/export/profiles', [ProfileController::class, 'exportProfiles'])->name('export.profiles');
+Route::post('/import/profiles', [ProfileController::class, 'importProfiles'])->name('import.profiles');
+Route::get('/export/products', [ProductController::class, 'exportProducts'])->name('export.products');
+Route::post('/import/products', [ProductController::class, 'importProducts'])->name('import.products');
+Route::get('/export/process-plans', [ProcessPlanController::class, 'exportProcessPlans'])->name('export.processplans');
+Route::post('/import/process-plans', [ProcessPlanController::class, 'importProcessPlans'])->name('import.processplans');
 
 Route::prefix('/json')->group(function () {
     Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');
