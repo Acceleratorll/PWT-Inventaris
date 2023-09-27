@@ -38,7 +38,7 @@
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
-                <button type="button" class="btn btn-primary" onclick="location.href='/product/create'">
+                <button type="button" class="btn btn-primary" href="{{route('product.create')}}">
                     <span>+ Add</span>
                 </button>
                 <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
