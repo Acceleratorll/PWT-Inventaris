@@ -336,6 +336,7 @@
 
             // Product
             function affectedByProduct(data) {
+                console.log(data);
                 var categoryToUpdate = document.getElementById('category_' + data.data.id);
                 var totalToUpdate = document.getElementById('total');
                 if (categoryToUpdate) {
@@ -348,8 +349,6 @@
                             quantityOfTotalElement.textContent = parseInt(quantityOfTotalElement.textContent) + 1;
                         }
                         
-                        console.log(cChart);
-
                         var labelIndex = cChart.data.labels.indexOf(data.data.name);
                         if (labelIndex !== -1) {
                             cChart.data.datasets[0].data[labelIndex] = data.data.qty;
@@ -358,13 +357,19 @@
                         }
                     }else if(data.data.context == 'update'){
                         if (quantityElement && quantityOfTotalElement) {
+                            var oldCategoryToUpdate = document.getElementById('category_' + data.data.id_old);
+                            var oldQuantityElement = oldCategoryToUpdate.querySelector('#qty');
+                            oldQuantityElement.textContent = data.data.qty_old;
                             quantityElement.textContent = data.data.qty;
+                            console.log(oldCategoryToUpdate);
                             console.log(quantityElement.textContent);
                         }
                         
                         var labelIndex = cChart.data.labels.indexOf(data.data.name);
-                        if (labelIndex !== -1) {
+                        var oldLabelIndex = cChart.data.labels.indexOf(data.data.name_old);
+                        if (labelIndex !== -1 && oldLabelIndex !== -1) {
                             cChart.data.datasets[0].data[labelIndex] = data.data.qty;
+                            cChart.data.datasets[0].data[oldLabelIndex] = data.data.qty_old;
                             cChart.update();
                             console.log('Successfully updated');
                         }
@@ -403,19 +408,18 @@
                     if(data.chart == 'rChart'){
                         chartInstance.data.datasets[0].data[labelIndex] = data.data.qty;
                         console.log('Updated chart data', chartInstance.data.datasets[0].data[labelIndex]);
-                        // if(data.data.context == 'delete'){
-                        // }else if(data.data.context == 'add'){
-                        //     chartInstance.data.datasets[index].data[labelIndex] = data.data.qty;
-                        // }
                     }else{
                         if(data.data.newName){
                             chartInstance.data.labels[labelIndex] = data.data.newName;
                             
-                        }else if(data.data.qty){
+                        }else if(Array.isArray(data.data.qty)){
                             data.data.qty.forEach((qty, index) => {
                                 chartInstance.data.datasets[index].data[labelIndex] = qty;
                             });
+                        }else if(data.data.qty){
+                            chartInstance.data.datasets[0].data[labelIndex] = data.data.qty;
                         }
+                        console.log(chartInstance.data.datasets[0]);
                     }
                     chartInstance.update();
                 }
@@ -432,9 +436,13 @@
                 console.log(data.data.qty);
 
                 chartInstance.data.labels.push(data.data.name);
-                data.data.qty.forEach((qty, index) => {
-                    chartInstance.data.datasets[index].data.push(qty);
-                });
+                if(Array.isArray(data.data.qty)){
+                    data.data.qty.forEach((qty, index) => {
+                        chartInstance.data.datasets[index].data.push(qty);
+                    });
+                }else if(data.data.qty){
+                    chartInstance.data.datasets[0].data[labelIndex] = data.data.qty;
+                }
 
                 chartInstance.update();
             }

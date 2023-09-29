@@ -163,10 +163,14 @@ class ProductController extends Controller
         $product = $this->productRepository->find($id);
         $this->productRepository->update($id, $input);
         if ($request->category_product_id != $product->category_product_id) {
+            $category_old = $this->categoryProductRepository->find($product->category_product_id);
             $category = $this->categoryProductRepository->find($request->category_product_id);
             $data = [
                 'id' => $category->id,
+                'id_old' => $product->category_product_id,
+                'name_old' => $product->category_product->name,
                 'name' => $category->name,
+                'qty_old' => $category_old->products->count(),
                 'qty' => $category->products->count(),
                 'context' => 'update',
             ];
