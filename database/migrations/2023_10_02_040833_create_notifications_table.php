@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('process_plans', function (Blueprint $table) {
-            $table->id();
-            $table->string('code');
-            $table->string('customer');
-            $table->string('order_type');
-            $table->string('desc')->nullable();
-            $table->softDeletes();
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('process_plans');
+        Schema::dropIfExists('notifications');
     }
 };

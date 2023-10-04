@@ -22,9 +22,9 @@
         <div class="card">
             <div class="card-body">
                 <div class="button-action" style="margin-bottom: 20px">
-                    <button type="button" class="btn btn-primary" href="{{ route('rpp.create') }}'">
+                    <a class="btn btn-primary" href="{{ route('rpp.create') }}">
                         <span>+ Add</span>
-                    </button>
+                    </a>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
                     </a>

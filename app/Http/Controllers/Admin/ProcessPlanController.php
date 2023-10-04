@@ -6,11 +6,13 @@ use App\Events\AddChartEvent;
 use App\Events\DataAddedEvent;
 use App\Events\DeleteChartEvent;
 use App\Events\DeletedDataEvent;
+use App\Events\ProductNotificationEvent;
 use App\Events\UpdateChartEvent;
 use App\Exports\ProcessPlansExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProcessPlanRequest;
 use App\Imports\ProcessPlansImport;
+use App\Notifications\WarningProduct;
 use App\Repositories\MaterialRepository;
 use App\Repositories\OutgoingProductRepository;
 use App\Repositories\ProcessPlanRepository;
@@ -77,6 +79,7 @@ class ProcessPlanController extends Controller
     public function store(ProcessPlanRequest $processPlanRequest)
     {
         $input = $processPlanRequest->validated();
+        $user = auth()->user();
         if ($input) {
             $rpp = $this->processPlanRepository->create($input);
             $currentMonth = now()->month;
@@ -103,6 +106,14 @@ class ProcessPlanController extends Controller
 
                 $product = $this->productRepository->find($productId);
                 $this->productRepository->update($productId, ['amount' => $product->amount - $productData['qty']]);
+
+                if ($product->amount < (0.3 * $product->maxAmount)) {
+                    $user->notify(new WarningProduct($product));
+                    event(new ProductNotificationEvent('warning', $product));
+                } else if ($product->amount < (0.1 * $product->maxAmount)) {
+                    $user->notify(new WarningProduct($product));
+                    event(new ProductNotificationEvent('critical', $product));
+                }
             }
 
             $qty = $this->processPlanRepository->qtyCurrentMonth($currentMonth, $currentYear);
