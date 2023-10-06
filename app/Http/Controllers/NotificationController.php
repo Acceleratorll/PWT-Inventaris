@@ -15,10 +15,16 @@ class NotificationController extends Controller
     }
 
 
-    public function sendNotification()
+    public function show($id)
     {
-        event(new NewNotificationEvent());
-
         return response()->json(['message' => 'Notification sent']);
+    }
+
+    public function markAsRead(Request $request)
+    {
+        auth()->user()->unreadNotifications
+            ->where('data.type', $request->type)
+            ->markAsRead();
+        return response()->json(['message' => 'Notifications marked as read']);
     }
 }

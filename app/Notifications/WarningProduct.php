@@ -28,7 +28,8 @@ class WarningProduct extends Notification
     {
         return [
             'message' => "Low stock alert: {$this->product->name} is below 30% of max amount.",
-            'product_id' => $this->product->id,
+            'name' => $this->product->name,
+            'id' => $this->product->id,
             'type' => 'warning',
         ];
     }
@@ -38,7 +39,8 @@ class WarningProduct extends Notification
     {
         return new BroadcastMessage([
             'message' => "Low stock alert: {$this->product->name} is below 30% of max amount.",
-            'product_id' => $this->product->id,
+            'name' => $this->product->name,
+            'id' => $this->product->id,
         ]);
     }
 

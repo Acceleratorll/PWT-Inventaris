@@ -12,6 +12,7 @@ use App\Exports\ProcessPlansExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProcessPlanRequest;
 use App\Imports\ProcessPlansImport;
+use App\Notifications\CriticalProduct;
 use App\Notifications\WarningProduct;
 use App\Repositories\MaterialRepository;
 use App\Repositories\OutgoingProductRepository;
@@ -29,8 +30,12 @@ class ProcessPlanController extends Controller
     protected $productRepository;
     protected $materialRepository;
 
-    public function __construct(ProcessPlanRepository $processPlanRepository, OutgoingProductRepository $outgoingProductRepository, ProductRepository $productRepository, MaterialRepository $materialRepository)
-    {
+    public function __construct(
+        ProcessPlanRepository $processPlanRepository,
+        OutgoingProductRepository $outgoingProductRepository,
+        ProductRepository $productRepository,
+        MaterialRepository $materialRepository
+    ) {
         $this->processPlanRepository = $processPlanRepository;
         $this->outgoingProductRepository = $outgoingProductRepository;
         $this->productRepository = $productRepository;
@@ -97,22 +102,39 @@ class ProcessPlanController extends Controller
                 ];
 
                 $netChange = $productData['qty'];
+
                 if (!isset($amountChanges[$productId])) {
                     $amountChanges[$productId] = 0;
                 }
+
                 $amountChanges[$productId] += $netChange;
 
                 $this->outgoingProductRepository->create($inputOutPro);
-
                 $product = $this->productRepository->find($productId);
-                $this->productRepository->update($productId, ['amount' => $product->amount - $productData['qty']]);
 
-                if ($product->amount < (0.3 * $product->maxAmount)) {
-                    $user->notify(new WarningProduct($product));
-                    event(new ProductNotificationEvent('warning', $product));
-                } else if ($product->amount < (0.1 * $product->maxAmount)) {
-                    $user->notify(new WarningProduct($product));
-                    event(new ProductNotificationEvent('critical', $product));
+                DB::beginTransaction();
+
+                try {
+                    if ($product->amount - $productData['qty'] >= 0) {
+                        $this->productRepository->update($productId, ['amount' => $product->amount - $productData['qty']]);
+                        DB::commit();
+                    } else {
+                        throw new \Exception('Stock ' . $product->name . ' Kurang.');
+                    }
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return back()->with('error', $e->getMessage());
+                }
+            }
+
+            foreach ($rpp->outgoing_products as $oProduct) {
+                $cproduct = $this->productRepository->find($oProduct->product_id);
+                if ($cproduct->amount < (0.1 * $cproduct->max_amount)) {
+                    $user->notify(new CriticalProduct($cproduct));
+                    event(new ProductNotificationEvent('critical', $cproduct));
+                } else if ($cproduct->amount < (0.3 * $cproduct->max_amount)) {
+                    $user->notify(new WarningProduct($cproduct));
+                    event(new ProductNotificationEvent('warning', $cproduct));
                 }
             }
 

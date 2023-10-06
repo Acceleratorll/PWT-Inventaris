@@ -43,6 +43,14 @@ class ProductRepository
         return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->get();
     }
 
+    public function getProductsByCategory($category)
+    {
+        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')
+            ->whereHas('category_product', function ($query) use ($category) {
+                $query->where('name', $category);
+            })->take(5)->get();
+    }
+
     public function getWarning()
     {
         return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->whereRaw('amount < (0.3 * max_amount) && amount > (0.1 * max_amount)')->get();

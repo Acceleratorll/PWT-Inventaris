@@ -32,8 +32,6 @@ class CategoryProductController extends Controller
         return view('category.index');
     }
 
-
-
     public function getCategories()
     {
         $categories = $this->categoryProductRepository->all();
@@ -143,5 +141,11 @@ class CategoryProductController extends Controller
             ];
         });
         return response()->json($formattedCategories);
+    }
+
+    public function getJsonCategory($category): JsonResponse
+    {
+        $category = $this->categoryProductRepository->find($category);
+        return response()->json($category);
     }
 }

@@ -26,6 +26,7 @@ Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rp
 Route::get('/get-all-products', [ProductController::class, 'getAllProducts'])->name('get-all-products');
 Route::get('/get-warning-products', [ProductController::class, 'getWarningProducts'])->name('get-warning-products');
 Route::get('/get-danger-products', [ProductController::class, 'getDangerProducts'])->name('get-danger-products');
+Route::get('/get-products/{category}', [ProductController::class, 'getProductsByCategory'])->name('get-products-by-category');
 Route::get('/get-categories', [CategoryProductController::class, 'getCategories'])->name('get-categories');
 Route::get('/get-unused-products', [AdminDashboardController::class, 'getUnusedProducts'])->name('get-unused-products');
 Route::get('/get-report-process-plan', [AdminDashboardController::class, 'getReportProcessPlan'])->name('get-report-process-plan');
@@ -41,10 +42,12 @@ Route::post('/import/process-plans', [ProcessPlanController::class, 'importProce
 Route::prefix('/json')->group(function () {
     Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');
     Route::get('/get-products', [ProductController::class, 'getJsonProducts'])->name('get-json-products');
+    Route::get('/get-products/{category}', [ProductController::class, 'getJsonProductsByCategory'])->name('get-json-products-by-category');
     Route::get('/get-product/{product}', [ProductController::class, 'getJsonProduct'])->name('get-json-product');
     Route::get('/get-product-types', [ProductTypeController::class, 'getJsonProductTypes'])->name('get-json-product-types');
     Route::get('/get-materials', [MaterialController::class, 'getJsonMaterials'])->name('get-json-materials');
     Route::get('/get-categories', [CategoryProductController::class, 'getJsonCategories'])->name('get-json-categories');
+    Route::get('/get-category/{category}', [CategoryProductController::class, 'getJsonCategory'])->name('get-json-category');
     Route::get('/get-qualifiers', [QualifierController::class, 'getJsonQualifiers'])->name('get-json-qualifiers');
     Route::get('/get-roles', [RoleController::class, 'getJsonRoles'])->name('get-json-roles');
     Route::prefix('/chart')->group(function () {
@@ -54,8 +57,11 @@ Route::prefix('/json')->group(function () {
     });
 });
 
-Route::get('/notifications', [NotificationController::class, 'index']);
-Route::get('/send-notification', [NotificationController::class, 'sendNotification']);
+Route::prefix('/notifications')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('notification.index');
+    Route::get('/show/{id}', [NotificationController::class, 'show'])->name('notification.show');
+    Route::post('/markAsRead', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
+});
 
 Route::fallback(function () {
     return redirect()->route('dashboard.index');

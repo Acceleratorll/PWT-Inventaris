@@ -15,7 +15,7 @@ class CategoryProductRepository
 
     public function find($id)
     {
-        return $this->model->find($id);
+        return $this->model->with('products')->findOrFail($id);
     }
 
     public function search($term)

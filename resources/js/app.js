@@ -1,13 +1,6 @@
 import "./bootstrap";
-// const channel = Echo.channel("public.data.added.1");
-
-// channel
-//     .subscribed(() => {
-//         console.log("Subscribed!");
-//         // alert(JSON.stringify("Success"));
-//         // notif(data);
-//     })
-//     .listen(".data.added", (e) => {
-//         console.log(e);
-//         alert(JSON.stringify(e));
-//     });
+import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+import "@fortawesome/fontawesome-free/scss/brands.scss";
+import "@fortawesome/fontawesome-free/scss/regular.scss";
+import "@fortawesome/fontawesome-free/scss/solid.scss";
+import "@fortawesome/fontawesome-free/scss/v4-shims.scss";

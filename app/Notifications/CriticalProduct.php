@@ -29,7 +29,8 @@ class CriticalProduct extends Notification implements ShouldBroadcast
     {
         return [
             'message' => "Low stock alert: {$this->product->name} is below 10% of max amount.",
-            'product_id' => $this->product->id,
+            'name' => $this->product->name,
+            'id' => $this->product->id,
             'type' => 'critical',
         ];
     }
@@ -38,7 +39,8 @@ class CriticalProduct extends Notification implements ShouldBroadcast
     {
         return new BroadcastMessage([
             'message' => "Low stock alert: {$this->product->name} is below 10% of max amount.",
-            'product_id' => $this->product->id,
+            'name' => $this->product->name,
+            'id' => $this->product->id,
         ]);
     }
 

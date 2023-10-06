@@ -37,6 +37,36 @@ class ProductController extends Controller
         return view('product.index');
     }
 
+    public function getProductsByCategory($category)
+    {
+        $products = $this->productRepository->getProductsByCategory($category);
+        return DataTables::of($products)
+            ->addColumn('material_name', function ($product) {
+                return $product->material ? $product->material->name : 'N/A';
+            })
+            ->addColumn('product_type_name', function ($product) {
+                return $product->product_type ? $product->product_type->name : 'N/A';
+            })
+            ->addColumn('qualifier_name', function ($product) {
+                return $product->qualifier ? $product->qualifier->name : 'N/A';
+            })
+            ->addColumn('category_product_name', function ($product) {
+                return $product->category_product ? $product->category_product->name : 'N/A';
+            })
+            ->addColumn('note', function ($product) {
+                return $product->note ? $product->note : 'N/A';
+            })
+            ->addColumn('created_at', function ($product) {
+                return $product->created_at->format('d-m-Y');
+            })
+            ->addColumn('updated_at', function ($product) {
+                return $product->updated_at->format('d-m-Y');
+            })
+            ->addColumn('action', 'partials.button-table.product-action')
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
     public function getAllProducts()
     {
         $products = $this->productRepository->all();
@@ -206,6 +236,12 @@ class ProductController extends Controller
             ];
         });
         return response()->json($formattedProducts);
+    }
+
+    public function getJsonProductsByCategory($category): JsonResponse
+    {
+        $products = $this->productRepository->getProductsByCategory($category);
+        return response()->json($products);
     }
 
     public function getJsonProduct(string $id): JsonResponse

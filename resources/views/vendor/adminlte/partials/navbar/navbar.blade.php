@@ -17,7 +17,6 @@
     {{-- Navbar right links --}}
     <ul class="navbar-nav ml-auto">
         {{-- Custom right links --}}
-        @include('partials.navbar.notification')
 
         @yield('content_top_nav_right')
 
