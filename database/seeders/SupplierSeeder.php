@@ -6,40 +6,33 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class UnitGroupSeeder extends Seeder
+class SupplierSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $data = [
             [
-                'name' => 'Length',
-                'desc' => 'Length-Related',
+                'name' => 'PT. Tsubasa',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Weight',
-                'desc' => 'Weight-Related',
+                'name' => 'PT. Nusa Bangsa',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Sheet',
-                'desc' => 'Sheet-Related',
+                'name' => 'PT. Prim A',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Fluid',
-                'desc' => 'Fluid-Related',
+                'name' => 'Fajrul',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
         ];
 
-        DB::table('unit_groups')->insert($data);
+        DB::table('suppliers')->insert($data);
     }
 }

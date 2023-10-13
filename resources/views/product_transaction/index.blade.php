@@ -41,6 +41,7 @@
                                 <th scope="col" class="text-center">Code</th>
                                 <th scope="col" class="text-center">Customer</th>
                                 <th scope="col" class="text-center">Order Type</th>
+                                <th scope="col" class="text-center">Description</th>
                                 <th scope="col" class="text-center">Last Updated</th>
                                 <th scope="col" class="text-center">Dibuat</th>
                                 <th scope="col" class="text-center" width="14%">Action</th>
@@ -111,6 +112,7 @@
                     { data: 'code', name: 'code' },
                     { data: 'customer', name: 'customer' },
                     { data: 'order_type', name: 'order_type' },
+                    { data: 'desc', name: 'desc' },
                     { data: 'formatted_updated_at', name: 'formatted_updated_at' },
                     { data: 'formatted_created_at', name: 'formatted_created_at' },
                     { data: 'action', name: 'action', orderable: false },
@@ -128,9 +130,14 @@
                 
                 console.log(outgoingProducts);
                 $.each(outgoingProducts, function(index, product) {
+                    console.log(product.product.qualifiers[0]);
+                    let qualifiersArray = product.product.qualifiers || []; // Check if qualifiers array exists
+                    let firstQualifier = qualifiersArray.length > 0 ? qualifiersArray[0] : null;
+                
+                    console.log(firstQualifier ? firstQualifier.id : null);
                 
                     modalList.append('<li>' + product.product.name + ' : ' + product.qty +
-                        (product.product.qualifier ? ' ' + product.product.qualifier.name : '') +'</li>');
+                        (firstQualifier ? ' ' + firstQualifier.name : '') +'</li>');
                 });
                 
                 modal.modal('show');

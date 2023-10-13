@@ -18,7 +18,7 @@ class ProcessPlanFactory extends Factory
     {
         return [
             'code' => $this->faker->randomFloat(2, 100, 1000),
-            'customer' => $this->faker->name,
+            'customer_id' => $this->faker->numberBetween(1, 3),
             'order_type' => $this->faker->sentence(2),
             'desc' => $this->faker->text,
             'created_at' => $this->faker->dateTimeThisYear(),

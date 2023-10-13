@@ -52,7 +52,7 @@ class ProcessPlanRepository
 
     public function all()
     {
-        return $this->model->with('outgoing_products.product.material')->get();
+        return $this->model->with('outgoing_products.product.qualifier.unit_group')->get();
     }
 
     public function paginate()

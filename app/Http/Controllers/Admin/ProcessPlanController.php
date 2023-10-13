@@ -53,7 +53,7 @@ class ProcessPlanController extends Controller
 
         return DataTables::of($rpps)
             ->addColumn('customer', function ($rpp) {
-                return $rpp->customer;
+                return $rpp->customer->name;
             })
             ->addColumn('code', function ($rpp) {
                 return $rpp->code;
@@ -202,19 +202,30 @@ class ProcessPlanController extends Controller
     public function update(ProcessPlanRequest $request, string $id)
     {
         $input = $request->validated();
+        $this->processPlanRepository->update($id, $input);
         $rpp = $this->processPlanRepository->find($id);
 
         $amountChanges = [];
 
-        foreach ($input['selected_products'] as $productId => $productData) {
+        $this->updateOutgoingProducts($rpp, $input['selected_products'], $amountChanges);
+
+        $this->updateProductAmounts($amountChanges);
+
+        $this->updateChart($rpp);
+
+        return redirect()->route('rpp.index')->with('success', 'RPP berhasil diupdate!');
+    }
+
+    private function updateOutgoingProducts($rpp, $selectedProducts, &$amountChanges)
+    {
+        foreach ($selectedProducts as $productId => $productData) {
             $outgoingProduct = $rpp->outgoing_products->firstWhere('product_id', $productId);
 
             if ($outgoingProduct) {
-                $netChange = $productData['qty'] - $outgoingProduct['qty'];
-                if (!isset($amountChanges[$productId])) {
-                    $amountChanges[$productId] = 0;
+                $netChange = $productData['qty'] - $outgoingProduct->qty;
+                if ($netChange <= 0) {
+                    $this->updateAmountChanges($amountChanges, $productId, $netChange);
                 }
-                $amountChanges[$productId] += $netChange;
 
                 $outgoingProduct->qty = $productData['qty'];
                 $outgoingProduct->save();
@@ -228,19 +239,22 @@ class ProcessPlanController extends Controller
                 $this->outgoingProductRepository->create($inputOutPro);
 
                 $netChange = $productData['qty'];
-                if (!isset($amountChanges[$productId])) {
-                    $amountChanges[$productId] = 0;
-                }
-                $amountChanges[$productId] += $netChange;
+                $this->updateAmountChanges($amountChanges, $productId, $netChange);
             }
         }
+    }
 
+    private function updateProductAmounts($amountChanges)
+    {
         foreach ($amountChanges as $productId => $netChange) {
             $product = $this->productRepository->find($productId);
             $product->amount += $netChange;
             $product->save();
         }
+    }
 
+    private function updateChart($rpp)
+    {
         $materials = $this->materialRepository->all();
 
         $data = [];
@@ -261,7 +275,15 @@ class ProcessPlanController extends Controller
         ];
 
         event(new UpdateChartEvent('tChart', $addedData));
-        return redirect()->route('rpp.index')->with('success', 'RPP berhasil diupdate!');
+    }
+
+
+    private function updateAmountChanges(&$amountChanges, $productId, $netChange)
+    {
+        if (!isset($amountChanges[$productId])) {
+            $amountChanges[$productId] = 0;
+        }
+        $amountChanges[$productId] += $netChange;
     }
 
     public function destroy(string $id)

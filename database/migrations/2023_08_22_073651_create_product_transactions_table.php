@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('process_plans', function (Blueprint $table) {
+        Schema::create('product_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained();
+            $table->foreignId('supplier_id')->constrained();
             $table->string('code');
-            $table->string('order_type');
-            $table->string('desc')->nullable();
+            $table->date('purchase_date');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('process_plans');
+        Schema::dropIfExists('product_transactions');
     }
 };

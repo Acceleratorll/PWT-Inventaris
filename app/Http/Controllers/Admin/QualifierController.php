@@ -28,4 +28,10 @@ class QualifierController extends Controller
         });
         return response()->json($formattedQualifiers);
     }
+
+    // public function getJsonQualifierByProduct($product): JsonResponse
+    // {
+    //     $qualifier = $this->qualifierRepository->getQualifierByProduct($product);
+    //     return response()->json($qualifier);
+    // }
 }

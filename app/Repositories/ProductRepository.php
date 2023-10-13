@@ -15,7 +15,7 @@ class ProductRepository
 
     public function find($id)
     {
-        return $this->model->findOrFail($id);
+        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->findOrFail($id);
     }
 
     public function search($term)

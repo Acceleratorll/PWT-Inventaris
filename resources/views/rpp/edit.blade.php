@@ -42,8 +42,10 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <label for="customer">Customer</label>
-                    <input type="text" value="{{ $rpp->customer }}" class="form-control mb-3" name="customer" placeholder="Masukkan Nama Customer" required/>
+                    <label for="customer_id">Customer</label>
+                    <select class="form-control mb-3" name="customer_id" required>
+                        <option value="{{ $rpp->customer_id }}">{{ $rpp->customer->name }}</option>
+                    </select>
                 </div>
                 <div class="col-md-6">
                     <label for="product_code">Kode RPP</label>
@@ -94,18 +96,19 @@
     @section('js')
     <script src="{{ asset('/js/customSelect2.js') }}"></script>
     <script>
-        $(document).ready(function () {
-        const productsSelect = $("#products");
-        const selectedProductsDiv = $("#selected-products");
+    $(document).ready(function () {
 
-        function getProductQty(productId) {
+         function getProductQty(productId) {
             @foreach($rpp->outgoing_products as $outgoing_product)
                 if ({{ $outgoing_product->product_id }} == productId) {
                     return {{ $outgoing_product->qty }};
                 }
             @endforeach
         }
-        // Function to update selected products dynamically
+
+        const productsSelect = $("#products");
+        const selectedProductsDiv = $("#selected-products");
+
         function updateSelectedProducts() {
             selectedProductsDiv.empty();
             const selectedProducts = productsSelect.select2("data");
@@ -113,31 +116,43 @@
             selectedProducts.forEach(function (product) {
                 const productId = product.id;
                 const productName = product.text;
-                const productQty = getProductQty(productId);
 
-                // Create input fields for each selected product
-                const inputHtml = `
-                    <div class="row justify-end">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-2">
-                            <label>Nama Barang</label>
-                            <input type="hidden" name="selected_products[${productId}][product_id]" value="${productId}">
-                            <input type="text" class="form-control mb-3" value="${productName}" disabled>
-                        </div>
-                        <div class="col-md-2">
-                            <label>Qty</label>
-                            <input type="number" name="selected_products[${productId}][qty]" class="form-control mb-3" value="${productQty}" placeholder="Quantity" required>
-                        </div>
-                    </div>
-                `;
+                console.log(product);
 
-                selectedProductsDiv.append(inputHtml);
+                $.ajax({
+                    url: `{{ route("get-json-product", ["product_id" => ":product"]) }}}`.replace(':product', productId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        const qualifier = data.qualifier;
+
+                        const inputHtml = `
+                            <div class="row justify-end">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-2">
+                                    <label>Nama Barang</label>
+                                    <input type="hidden" name="selected_products[${productId}][product_id]" value="${productId}">
+                                    <input type="text" class="form-control mb-3" value="${productName}" disabled>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Qty</label>
+                                    <input type="number" name="selected_products[${productId}][qty]" value="${getProductQty(productId)}" class="form-control mb-3" placeholder="Quantity" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Qualifier</label>
+                                    <input type="text" name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" value="${qualifier.name}" placeholder="Qualifier" required>
+                                </div>
+                            </div>
+                        `;
+                        selectedProductsDiv.append(inputHtml);
+                    },
+                    error: function (error) {
+                        console.error("Error fetching qualifier data:", error);
+                    }
+                });
             });
         }
 
-        // Function to get the quantity from outgoing_products
-
-        // Initialize select2 and update selected products on change
         productsSelect.select2({
             width: "100%",
             multiple: true,
@@ -146,8 +161,8 @@
             updateSelectedProducts();
         });
 
-        // Initially, update selected products if there are any pre-selected
         updateSelectedProducts();
     });
-    </script>
+</script>
+
 @stop

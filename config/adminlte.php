@@ -366,7 +366,7 @@ return [
                 ],
             ],
         ],
-        ['header' => 'rpp_settings'],
+        ['header' => 'transactions_settings'],
         [
             'text'    => 'rpp',
             'icon' => 'nav-icon fas fa-th',
@@ -383,10 +383,36 @@ return [
                 ],
             ],
         ],
+        [
+            'text'    => 'product_transactions',
+            'icon' => 'nav-icon fas fa-th',
+            'submenu' => [
+                [
+                    'text'    => 'All Data',
+                    'route'     => 'supplier.index',
+                    'icon' => 'nav-icon fas fa-book',
+                ],
+                [
+                    'text'    => 'Add Transaction',
+                    'route'     => 'supplier.create',
+                    'icon' => 'nav-icon fas fa-edit',
+                ],
+            ],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
             'route'  => 'profile.index',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'supplier',
+            'route'  => 'supplier.index',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'customer',
+            'route'  => 'customer.index',
             'icon' => 'fas fa-fw fa-user',
         ],
     ],

@@ -12,18 +12,24 @@ class IncomingProduct extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'incoming_id',
+        'product_transaction_id',
         'product_id',
+        'qualifier_id',
         'qty',
     ];
 
-    public function incoming(): BelongsTo
+    public function product_transaction(): BelongsTo
     {
-        return $this->belongsTo(Incoming::class);
+        return $this->belongsTo(product_transaction::class);
     }
 
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function qualifier(): BelongsTo
+    {
+        return $this->belongsTo(Qualifier::class);
     }
 }

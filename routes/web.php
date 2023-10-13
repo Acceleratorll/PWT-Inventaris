@@ -3,13 +3,16 @@
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MaterialController;
+use App\Http\Controllers\Admin\OutgoingProductController;
 use App\Http\Controllers\Admin\ProcessPlanController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTypeController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\QualifierController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\ChartManageController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,10 +21,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('/category', CategoryProductController::class);
     Route::resource('/product', ProductController::class);
     Route::resource('/rpp', ProcessPlanController::class);
+    Route::resource('/supplier', SupplierController::class);
+    Route::resource('/customer', CustomerController::class);
 });
 
 Route::resource('/dashboard', AdminDashboardController::class);
 Route::get('/get-profiles', [ProfileController::class, 'getProfiles'])->name('get-profiles');
+Route::get('/get-suppliers', [SupplierController::class, 'getSuppliers'])->name('get-suppliers');
+Route::get('/get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
 Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rpps');
 Route::get('/get-all-products', [ProductController::class, 'getAllProducts'])->name('get-all-products');
 Route::get('/get-warning-products', [ProductController::class, 'getWarningProducts'])->name('get-warning-products');
@@ -40,15 +47,20 @@ Route::get('/export/process-plans', [ProcessPlanController::class, 'exportProces
 Route::post('/import/process-plans', [ProcessPlanController::class, 'importProcessPlans'])->name('import.processplans');
 
 Route::prefix('/json')->group(function () {
+    Route::get('/get-customers', [CustomerController::class, 'getJsonCustomers'])->name('get-json-customers');
     Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');
     Route::get('/get-products', [ProductController::class, 'getJsonProducts'])->name('get-json-products');
     Route::get('/get-products/{category}', [ProductController::class, 'getJsonProductsByCategory'])->name('get-json-products-by-category');
-    Route::get('/get-product/{product}', [ProductController::class, 'getJsonProduct'])->name('get-json-product');
+    Route::get('/get-product/{product_id}', [ProductController::class, 'getJsonProduct'])->name('get-json-product');
+    Route::get('/get-outgoingProducts', [OutgoingProductController::class, 'getJsonOutgoingProducts'])->name('get-json-outgoing-products');
+    Route::get('/get-outgoingProduct/{outgoingProduct}', [OutgoingProductController::class, 'getJsonOutgoingProduct'])->name('get-json-outgoing-product');
     Route::get('/get-product-types', [ProductTypeController::class, 'getJsonProductTypes'])->name('get-json-product-types');
     Route::get('/get-materials', [MaterialController::class, 'getJsonMaterials'])->name('get-json-materials');
     Route::get('/get-categories', [CategoryProductController::class, 'getJsonCategories'])->name('get-json-categories');
     Route::get('/get-category/{category}', [CategoryProductController::class, 'getJsonCategory'])->name('get-json-category');
     Route::get('/get-qualifiers', [QualifierController::class, 'getJsonQualifiers'])->name('get-json-qualifiers');
+    Route::get('/get-qualifier/{qualifier}', [QualifierController::class, 'getJsonQualifier'])->name('get-json-qualifier');
+    Route::get('/get-qualifiers-by-product/{product}', [QualifierController::class, 'getJsonQualifierByProduct'])->name('get-json-qualifiers-by-product');
     Route::get('/get-roles', [RoleController::class, 'getJsonRoles'])->name('get-json-roles');
     Route::prefix('/chart')->group(function () {
         Route::get('/tinta', [ChartManageController::class, 'tintaMonthly'])->name('monthly.tinta.chart');

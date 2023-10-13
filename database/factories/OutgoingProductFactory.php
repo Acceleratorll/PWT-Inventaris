@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\ProcessPlan;
 use App\Models\Product;
+use App\Models\Qualifier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

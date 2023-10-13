@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\ProcessPlan;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,6 +17,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             MaterialSeeder::class,
             ProductTypeSeeder::class,
+            CustomerSeeder::class,
+            SupplierSeeder::class,
             UnitGroupSeeder::class,
             CategoryProductSeeder::class,
             UserSeeder::class,

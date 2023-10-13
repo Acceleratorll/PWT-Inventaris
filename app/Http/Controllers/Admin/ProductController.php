@@ -206,7 +206,7 @@ class ProductController extends Controller
             ];
             event(new UpdateDataEvent($data, 'Product'));
         }
-        return redirect()->route('product.index')->with('success', 'Product updated successfully');
+        return redirect()->route('product.index')->with('success', 'Product Updated Successfully');
     }
 
     public function destroy(string $id)
@@ -244,9 +244,9 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
-    public function getJsonProduct(string $id): JsonResponse
+    public function getJsonProduct($product_id): JsonResponse
     {
-        $product = $this->productRepository->find($id);
+        $product = $this->productRepository->find($product_id);
         return response()->json($product);
     }
 
