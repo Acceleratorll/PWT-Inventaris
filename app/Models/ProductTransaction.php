@@ -12,10 +12,15 @@ class ProductTransaction extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'purchase_date' => 'datetime'
+    ];
+
     protected $fillable = [
         'supplier_id',
         'incoming_product_id',
-        'incoming_product_id',
+        'code',
+        'purchase_date',
     ];
 
     public function supplier(): BelongsTo

@@ -71,6 +71,7 @@
 </div>
 
 @stop
+@section('plugins.Select2', true)
     
     @section('css')
     <style>
@@ -92,7 +93,7 @@
         const products_url = '{{ route("get-json-products") }}';
         const customer_ph = "Pilih Customer";
         const customer_url = '{{ route("get-json-customers") }}';
-        $(document).ready(function() {
+        jQuery(document).ready(function() {
             selectInput(products, products_url, products_ph);
             selectInput(customer, customer_url, customer_ph);
         });
@@ -107,7 +108,7 @@
                 var productName = product.text;
                 
                 $.ajax({
-                    url: '{{ route("get-json-product", ["product" => ":product"]) }}'.replace(':product', productId),
+                    url: '{{ route("get-json-product", ["product_id" => ":product"]) }}'.replace(':product', productId),
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {

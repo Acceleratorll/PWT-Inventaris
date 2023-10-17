@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit RPP')
+@section('title', 'Edit productTransaction')
 
 @section('content_header')
     <h1>Edit Barang</h1>
@@ -30,31 +30,33 @@
 </div>
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('rpp.update',['rpp' =>$rpp->id]) }}" method="post">
+        <form action="{{ route('productTransaction.update',['productTransaction' =>$productTransaction->id]) }}" method="post">
             @csrf
             @method('PUT')
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="customer_id">Customer</label>
-                        <input type="text" value="{{ $rpp->customer->name }}" class="form-control mb-3" name="customer_id" placeholder="Masukkan Nama Customer" required/>
+                        <label for="supplier_id">Supplier</label>
+                        <select name="supplier_id" id="supplier_id" class="form-control" required>
+                            <option value="{{ $productTransaction->supplier_id }}">{{ $productTransaction->supplier->name }}</option>
+                        </select>
                     </div>
-                    <div class="col-md-6">
-                        <label for="code">Kode RPP</label>
-                        <input type="number" value="{{ $rpp->code }}" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode RPP" required/>
+                        <div class="col-md-6">
+                        <label for="code">Kode</label>
+                        <input type="number" value="{{ $productTransaction->code }}" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode productTransaction" required/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="order_type">Jenis Orderan</label>
-                        <input name="order_type" value="{{ $rpp->order_type }}" id="order_type" class="form-control mb-3" placeholder="Masukkan Jenis Orderan" required/>
+                        <label for="purchase_date">Tanggal Beli</label>
+                        <input type="datetime-local" name="purchase_date" value="{{ $productTransaction->purchase_date }}" id="purchase_date" class="form-control mb-3" placeholder="Masukkan Tanggal Pembelian" required/>
                     </div>
                     <div class="col-md-8">
                         <label for="products">Barang (Bisa pilih lebih dari 1)</label>
                         <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple>
-                            @if($rpp->outgoing_products)
-                                @foreach($rpp->outgoing_products as $outgoing_product)
-                                    <option value="{{ $outgoing_product->product_id }}" selected>{{ $outgoing_product->product->name }}</option>
+                            @if($productTransaction->incoming_products)
+                                @foreach($productTransaction->incoming_products as $incoming_product)
+                                    <option value="{{ $incoming_product->product_id }}" selected>{{ $incoming_product->product->name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -64,7 +66,7 @@
                 </div>
                 <div class="row justify-content-end">
                     <div class="col-md-3">
-                        <button class="form-control btn btn-success" type="submit">Save</button>
+                        <button class="form-control btn btn-outline-success" type="submit">Save</button>
                     </div>
                 </div>
             </div>
@@ -89,27 +91,47 @@
 <script src="{{ asset('/js/customSelect2.js') }}"></script>
 <script>
     $(document).ready(function () {
-        const productsSelect = $("#products");
-        const selectedProductsDiv = $("#selected-products");
+        const supplier = document.getElementById("supplier_id");
+        const products = document.getElementById("products");
+        const products_ph = "Pilih Barang";
+        const products_url = '{{ route("get-json-products") }}';
+        const supplier_ph = "Pilih Supplier";
+        const supplier_url = '{{ route("get-json-suppliers") }}';
+        $(document).ready(function() {
+            selectInput(supplier, supplier_url, supplier_ph);
+            selectInput(products, products_url, products_ph);
+        });
 
-        function getProductQty(productId) {
-            @foreach($rpp->outgoing_products as $outgoing_product)
-                if ({{ $outgoing_product->product_id }} == productId) {
-                    return {{ $outgoing_product->qty }};
+        // console.log(select2());
+         function getProductQty(productId) {
+            @foreach($productTransaction->incoming_products as $incoming_product)
+                if ({{ $incoming_product->product_id }} == productId) {
+                    return {{ $incoming_product->qty }};
                 }
             @endforeach
         }
 
+        const productsSelect = $("#products");
+        const selectedProductsDiv = $("#selected-products");
+        
         function updateSelectedProducts() {
             selectedProductsDiv.empty();
             const selectedProducts = productsSelect.select2("data");
 
             selectedProducts.forEach(function (product) {
-                var productId = product.id;
-                console.log();
-                var productName = product.text;
-                var qualifier = product.qualifier_id;
-                        var inputHtml = `
+                const productId = product.id;
+                const productName = product.text;
+
+                console.log(product);
+
+                $.ajax({
+                    url: `{{ route("get-json-product", ["product_id" => ":product"]) }}}`.replace(':product', productId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        const qualifier = data.qualifier;
+
+                        const inputHtml = `
                             <div class="row justify-end">
                                 <div class="col-md-4"></div>
                                 <div class="col-md-2">
@@ -118,19 +140,21 @@
                                     <input type="text" class="form-control mb-3" value="${productName}" disabled>
                                 </div>
                                 <div class="col-md-2">
-                                    <label>QTY</label>
+                                    <label>Qty</label>
                                     <input type="number" name="selected_products[${productId}][qty]" value="${getProductQty(productId)}" class="form-control mb-3" placeholder="Quantity" required>
                                 </div>
                                 <div class="col-md-2">
                                     <label>Qualifier</label>
-                                    <select name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" required>
-                                        <option value="${qualifier.id}" selected>${qualifier.name}</option>).join('')}
-                                    </select>
+                                    <input type="text" name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" value="${qualifier.name}" placeholder="Qualifier" required>
                                 </div>
                             </div>
                         `;
-
                         selectedProductsDiv.append(inputHtml);
+                    },
+                    error: function (error) {
+                        console.error("Error fetching qualifier data:", error);
+                    }
+                });
             });
         }
 

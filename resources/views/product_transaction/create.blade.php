@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Tambah RPP')
+@section('title', 'Tambah Transaksi Barang')
 
 @section('content_header')
-    <h1>Tambah Barang</h1>
+    <h1>Tambah Transaksi Barang</h1>
 @stop
 
 @section('content')
@@ -36,23 +36,23 @@
 </div>
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('rpp.store') }}" method="post">
+        <form action="{{ route('productTransaction.store') }}" method="post">
             @csrf
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <label for="customer_id">Customer</label>
-                    <select class="form-control mb-3" name="customer_id" id="customer_id" required></select>
+                    <label for="supplier_id">Supplier</label>
+                    <select class="form-control mb-3" name="supplier_id" id="supplier_id" required></select>
                 </div>
                 <div class="col-md-6">
-                    <label for="product_code">Kode RPP</label>
+                    <label for="product_code">Kode</label>
                     <input type="number" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode RPP" required/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <label for="order_type">Jenis Orderan</label>
-                    <input name="order_type" id="order_type" class="form-control mb-3" placeholder="Masukkan Jenis Orderan" required/>
+                    <label for="purchase_date">Tanggal Beli</label>
+                    <input name="purchase_date" type="datetime-local" id="purchase_date" class="form-control mb-3" placeholder="Masukkan Tanggal Pembelian" required/>
                 </div>
                 <div class="col-md-8">
                     <label for="products">Barang (Bisa pilih lebih dari 1)</label>
@@ -62,7 +62,7 @@
                 <div id="selected-products"></div>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-success" type="submit">Save</button>
+                    <button class="form-control btn-success" type="submit">Save</button>
                 </div>
             </div>
         </div>
@@ -87,14 +87,14 @@
     <script src="{{ asset('/js/customSelect2.js') }}"></script>
     <script>
         const products = document.getElementById("products");
-        const customers = document.getElementById("customer_id");
+        const suppliers = document.getElementById("supplier_id");
         const products_ph = "Pilih Barang";
         const products_url = '{{ route("get-json-products") }}';
-        const customer_ph = "Pilih Customer";
-        const customer_url = '{{ route("json-get-customers") }}';
+        const supplier_ph = "Pilih Supplier";
+        const supplier_url = '{{ route("get-json-suppliers") }}';
         $(document).ready(function() {
             selectInput(products, products_url, products_ph);
-            selectInput(customers, customer_url, customer_ph);
+            selectInput(suppliers, supplier_url, supplier_ph);
         });
 
         $(products).on("change", function () {
@@ -106,7 +106,7 @@
             var productId = product.id;
             var productName = product.text;
             $.ajax({
-            url: '{{ route("get-json-qualifiers-by-product", ["product" => ":productId"]) }}'.replace(':productId', productId),
+            url: '{{ route("get-json-product", ["product_id" => ":product"]) }}'.replace(':product', productId),
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -124,11 +124,11 @@
                         <input type="number" name="selected_products[${productId}][qty]" class="form-control mb-3" placeholder="Quantity" required>
                     </div>
                     <div class="col-md-2">
-                        <label>Qualifier</label>
-                        <select name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" required>
-                            ${qualifiers.map(q => `<option value="${q.id}" selected>${q.name}</option>`).join('')}
-                        </select>
-                    </div>
+                                <label>Qualifier</label>
+                                <select name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" required>
+                                    <option value="${data.qualifier_id}" selected>${data.qualifier.name}</option>
+                                </select>
+                            </div>
                 </div>
                 `;
             $("#selected-products").append(inputHtml);

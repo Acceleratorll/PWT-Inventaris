@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('supplier_id')->constrained();
             $table->string('code');
-            $table->date('purchase_date');
+            $table->dateTime('purchase_date');
             $table->softDeletes();
             $table->timestamps();
         });

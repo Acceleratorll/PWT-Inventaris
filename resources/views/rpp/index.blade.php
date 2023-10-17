@@ -90,12 +90,9 @@
         </div>
     </div>
 </div>
-
-
     @stop
     
     @section('css')
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
     @stop
     
     @section('js')
@@ -115,7 +112,7 @@
                     { data: 'formatted_created_at', name: 'formatted_created_at' },
                     { data: 'action', name: 'action', orderable: false },
                 ],
-                order:[[0, 'desc']],
+                order: [[0, 'desc']],
             });
 
             $('#table tbody').on('click', '#show-outgoing-products', function () {

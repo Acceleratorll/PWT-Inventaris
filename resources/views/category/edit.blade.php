@@ -37,7 +37,7 @@
 <div class="row">
     <div class="card col-md-12">
         <div class="card-body">
-            <form action="{{ route('category.edit', ['category' => $category->id]) }}" method="post">
+            <form action="{{ route('category.update', ['category' => $category->id]) }}" method="post">
                 @csrf
                 @method('PUT')
             <div class="row">
@@ -48,7 +48,7 @@
                     <x-adminlte-input fgroup-class="mb-3" name="max" label="Max Tahun" value="{{ $category->max }}" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
                 </div>
             </div>
-            <button class="form-control btn btn-success" type="submit">Save</button>
+            <button class="form-control btn btn-outline-success" type="submit">Save</button>
             </form>
         </div>
     </div>

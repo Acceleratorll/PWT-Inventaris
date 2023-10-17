@@ -16,14 +16,14 @@ class OutgoingProductController extends Controller
         $this->outgoingProductRepository = $outgoingProductRepository;
     }
 
-    public function getJsonOutProductsByProduct($product): JsonResponse
-    {
-        $outgoing_product = $this->outgoingProductRepository;
-        return response()->json();
-    }
-
     public function getJsonOutProduct($outgoingProduct): JsonResponse
     {
         return response()->json($this->outgoingProductRepository->find($outgoingProduct));
+    }
+
+    public function getJsonOutProductsRpp($rpp): JsonResponse
+    {
+        $outgoingProducts = $this->outgoingProductRepository->allByRpp($rpp);
+        return response()->json($outgoingProducts);
     }
 }

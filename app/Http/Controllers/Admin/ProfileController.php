@@ -101,19 +101,15 @@ class ProfileController extends Controller
         }
     }
 
-    public function destroy(string $id)
+    public function destroy($profile)
     {
-        try {
-            $deleted = $this->userRepository->delete($id);
+        $deleted = $this->userRepository->delete($profile);
 
-            if (!$deleted) {
-                return redirect()->route('profile.index')->with('error', 'User not found.');
-            }
-
-            return redirect()->route('profile.index')->with('success', 'User Deleted Successfully!');
-        } catch (\Exception $e) {
-            return redirect()->route('profile.index')->with('error', 'Deleting User Failed: ' . $e->getMessage());
+        if (!$deleted) {
+            return redirect()->route('profile.index')->with('error', 'User not found.');
         }
+
+        return redirect()->route('profile.index')->with('success', 'User Deleted Successfully!');
     }
 
     public function exportProfiles()

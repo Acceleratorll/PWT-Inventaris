@@ -187,11 +187,11 @@ class ProductController extends Controller
         return view('product.edit', compact('product'));
     }
 
-    public function update($id, ProductRequest $request): RedirectResponse
+    public function update($product, ProductRequest $request): RedirectResponse
     {
         $input = $request->validated();
-        $product = $this->productRepository->find($id);
-        $this->productRepository->update($id, $input);
+        $this->productRepository->update($product, $input);
+        $product = $this->productRepository->find($product);
         if ($request->category_product_id != $product->category_product_id) {
             $category_old = $this->categoryProductRepository->find($product->category_product_id);
             $category = $this->categoryProductRepository->find($request->category_product_id);
@@ -209,11 +209,11 @@ class ProductController extends Controller
         return redirect()->route('product.index')->with('success', 'Product Updated Successfully');
     }
 
-    public function destroy(string $id)
+    public function destroy($product)
     {
-        $product = $this->productRepository->find($id);
+        $product = $this->productRepository->find($product);
+        $this->productRepository->delete($product->id);
         $category = $this->categoryProductRepository->find($product->category_product_id);
-        $this->productRepository->delete($id);
 
         $data = [
             'id' => $category->id,

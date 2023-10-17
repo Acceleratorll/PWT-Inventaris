@@ -44,10 +44,10 @@
                     <x-adminlte-input fgroup-class="mb-3" name="name" label="Name" placeholder="Masukkan Nama Kategori" disable-feedback/>
                 </div>
                 <div class="col-md-6">
-                    <x-adminlte-input fgroup-class="mb-3" name="max" label="Max Tahun" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
+                    <x-adminlte-input type="number" fgroup-class="mb-3" name="max" label="Max Tahun" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
                 </div>
             </div>
-            <button class="form-control btn btn-success" type="submit">Save</button>
+            <input value="Submit" class="form-control btn btn-outline-success" type="submit"/>
             </form>
         </div>
     </div>

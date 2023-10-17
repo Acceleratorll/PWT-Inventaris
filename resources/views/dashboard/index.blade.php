@@ -642,7 +642,7 @@
                 })
 
                 Toast.fire({
-                    icon: 'warning',
+                    type: 'warning',
                     title: data.name+' Deleted'
                 })
             }
@@ -660,7 +660,7 @@
                     }
                 })
                 Toast.fire({
-                    icon: 'success',
+                    type: 'success',
                     title: data.name+' Updated'
                 })
             }
@@ -678,7 +678,7 @@
                     }
                 })
                 Toast.fire({
-                    icon: 'success',
+                    type: 'success',
                     title: data.name+' Added'
                 })
             }

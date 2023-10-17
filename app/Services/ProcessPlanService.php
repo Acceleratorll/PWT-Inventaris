@@ -2,86 +2,94 @@
 
 namespace App\Services;
 
-use App\Events\UpdateChartEvent;
-use App\Repositories\MaterialRepository;
 use App\Repositories\OutgoingProductRepository;
-use App\Repositories\ProcessPlanRepository;
 use App\Repositories\ProductRepository;
-use App\Repositories\QualifierRepository;
+use App\Repositories\MaterialRepository;
+use App\Events\UpdateChartEvent;
 
 class ProcessPlanService
 {
-    private $productRepository;
-    private $outgoingProductRepository;
-    private $qualifierRepository;
-    private $materialRepository;
+    protected $outgoingProductRepository;
+    protected $productRepository;
+    protected $materialRepository;
 
-    public function setControllerDependencies(
-        ProductRepository $productRepository,
+    public function __construct(
         OutgoingProductRepository $outgoingProductRepository,
-        QualifierRepository $qualifierRepository,
+        ProductRepository $productRepository,
         MaterialRepository $materialRepository
     ) {
-        $this->productRepository = $productRepository;
         $this->outgoingProductRepository = $outgoingProductRepository;
-        $this->qualifierRepository = $qualifierRepository;
+        $this->productRepository = $productRepository;
         $this->materialRepository = $materialRepository;
     }
 
-    public function updateOutgoingProducts($processPlan, $selectedProducts)
-    {
-        foreach ($selectedProducts as $productId => $productData) {
-            // $product = $this->productRepository->find($productId);
-            $outgoingProduct = $processPlan->outgoing_products->firstWhere('product_id', $productId);
-
-            $conversionFactor = $this->qualifierRepository->find($productData['qualifier_id'])->conversion_factor ?? 1;
-            $convertedQuantity = $productData['qty'] * $conversionFactor;
-
-            if ($outgoingProduct) {
-                $outgoingProduct->update([
-                    'qty' => $convertedQuantity,
-                    'qualifier_id' => $productData['qualifier_id'],
-                ]);
-                dd('updated', $outgoingProduct);
-            } else {
-                $outgoing = $this->outgoingProductRepository->create([
-                    'process_plan_id' => $processPlan->id,
-                    'product_id' => $productId,
-                    'qty' => $convertedQuantity,
-                    'qualifier_id' => $productData['qualifier_id'],
-                ]);
-
-                dd('created', $outgoing);
-
-                $netChange = $productData['qty'];
-                if (!isset($amountChanges[$productId])) {
-                    $amountChanges[$productId] = 0;
-                }
-                $amountChanges[$productId] += $netChange;
-            }
-        }
-    }
-
-    public function updateProductAmounts($selectedProducts)
+    public function updateOutgoingProducts($rpp, $selectedProducts)
     {
         $amountChanges = [];
 
-        foreach ($selectedProducts as $productId => $productData) {
-            $netChange = $productData['qty'];
-            if (!isset($amountChanges[$productId])) {
-                $amountChanges[$productId] = 0;
+        // Loop through existing outgoing_products
+        foreach ($rpp->outgoing_products as $outgoingProduct) {
+            $productId = $outgoingProduct->product_id;
+
+            // Check if the product is not present in the selectedProducts
+            if (!isset($selectedProducts[$productId])) {
+                // Delete the outgoing_product
+                $this->deleteOutgoingProduct($outgoingProduct, $amountChanges);
+            } else {
+                // Update the existing outgoing_product
+                $this->updateOutgoingProduct($outgoingProduct, $selectedProducts[$productId], $amountChanges);
             }
-            $amountChanges[$productId] += $netChange;
         }
 
+        // Loop through selected products
+        foreach ($selectedProducts as $productId => $productData) {
+            if (!$rpp->outgoing_products->contains('product_id', $productId)) {
+                // Product is not in the existing outgoing_products, create it
+                $this->createOutgoingProduct($rpp, $productId, $productData, $amountChanges);
+            }
+        }
+
+        return $amountChanges;
+    }
+
+    private function deleteOutgoingProduct($outgoingProduct, &$amountChanges)
+    {
+        $amountChanges[$outgoingProduct->product_id] = -$outgoingProduct->qty;
+        $outgoingProduct->delete();
+    }
+
+    private function updateOutgoingProduct($outgoingProduct, $productData, &$amountChanges)
+    {
+        $netChange = $productData['qty'] - $outgoingProduct->qty;
+        $amountChanges[$outgoingProduct->product_id] = $netChange;
+
+        $outgoingProduct->qty = $productData['qty'];
+        $outgoingProduct->save();
+    }
+
+    private function createOutgoingProduct($rpp, $productId, $productData, &$amountChanges)
+    {
+        $inputOutPro = [
+            'process_plan_id' => $rpp->id,
+            'product_id' => $productId,
+            'qty' => $productData['qty'],
+        ];
+
+        $this->outgoingProductRepository->create($inputOutPro);
+
+        $amountChanges[$productId] = $productData['qty'];
+    }
+
+    public function updateProductAmounts($amountChanges)
+    {
         foreach ($amountChanges as $productId => $netChange) {
             $product = $this->productRepository->find($productId);
-            $product->amount += $netChange;
+            $product->amount -= $netChange;
             $product->save();
         }
     }
 
-    public function updateChart($processPlan)
+    public function updateChart($rpp)
     {
         $materials = $this->materialRepository->all();
 
@@ -89,7 +97,7 @@ class ProcessPlanService
         $labels = [];
 
         foreach ($materials as $material) {
-            $totalSalesQty = $processPlan->outgoing_products
+            $totalSalesQty = $rpp->outgoing_products
                 ->where('product.material.id', $material->id)
                 ->sum('qty');
             $data[] = $totalSalesQty;
@@ -97,11 +105,19 @@ class ProcessPlanService
         }
 
         $addedData = [
-            'name' => $processPlan->customer,
+            'name' => $rpp->customer,
             'qty' => $data,
             'context' => 'update'
         ];
 
         event(new UpdateChartEvent('tChart', $addedData));
+    }
+
+    private function updateAmountChanges(&$amountChanges, $productId, $netChange)
+    {
+        if (!isset($amountChanges[$productId])) {
+            $amountChanges[$productId] = 0;
+        }
+        $amountChanges[$productId] += $netChange;
     }
 }

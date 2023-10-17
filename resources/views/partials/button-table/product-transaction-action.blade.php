@@ -1,26 +1,22 @@
-
-<a href="{{ route('product.edit', ['product' => $id]) }}"class="edit btn btn-success edit">
-    Edit
-</a>
-@csrf
-@method("DELETE")
-<button id="delete" data-id="{{ $id }}" data-name="{{ $name }}" data-original-title="Delete" class="delete btn btn-danger">
+    <a href="{{ route('productTransaction.edit', ['productTransaction' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
+        Edit
+    </a>
+    <button id="show-incoming-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+        Details
+    </button>
+    <button id="delete" data-id="{{ $id }}" data-supplier="{{ $supplier_id }}" data-original-title="Delete" class="delete btn btn-danger">
 Delete
 </button>
-<form action="{{ route('product.destroy',['product' => $id]) }}" id="deleteForm" method="post">
-    @csrf
-    @method("DELETE")
-</form>
 
 <script>
-    $(document).ready(function(){
+        $(document).ready(function(){
         $('.delete').on('click', function () {
             var deleteButton = $(this);
             var defaultId = deleteButton.data('id');
     
             Swal.fire({
-                title: 'Delete Product',
-                text: 'Are you sure you want to delete this product?',
+                title: 'Delete Transaction Product',
+                text: 'Are you sure you want to delete this product transaction?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
@@ -31,14 +27,14 @@ Delete
                     console.log('confirmed');
                     $.ajax({
                         type: 'POST',
-                        url: `{{ route("product.destroy", ["product" => ":productId"]) }}`.replace(':productId', defaultId),
+                        url: `{{ route("productTransaction.destroy", ["productTransaction" => ":Id"]) }}`.replace(':Id', defaultId),
                         data: {
                             _token: '{{ csrf_token() }}',
                             _method: 'DELETE'
                         },
                         success: function (response) {
                             Swal.fire({
-                                title: 'product Deleted Successfully',
+                                title: 'Product Transaction Deleted Successfully',
                                 type: 'success',
                                 timer: 1700,
                             });
@@ -48,11 +44,11 @@ Delete
                         },
                         error: function (error) {
                             console.error('Error:', error);
-                            Swal.fire('Error', 'Failed to delete product', 'error');
+                            Swal.fire('Error', 'Failed to delete product transaction', 'error');
                         },
                     });
                 }
             });
         });
     });
-    </script>
+</script>

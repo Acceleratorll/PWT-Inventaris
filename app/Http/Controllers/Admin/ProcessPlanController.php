@@ -18,6 +18,7 @@ use App\Repositories\MaterialRepository;
 use App\Repositories\OutgoingProductRepository;
 use App\Repositories\ProcessPlanRepository;
 use App\Repositories\ProductRepository;
+use App\Services\ProcessPlanService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -29,17 +30,20 @@ class ProcessPlanController extends Controller
     protected $outgoingProductRepository;
     protected $productRepository;
     protected $materialRepository;
+    protected $processPlanService;
 
     public function __construct(
         ProcessPlanRepository $processPlanRepository,
         OutgoingProductRepository $outgoingProductRepository,
         ProductRepository $productRepository,
-        MaterialRepository $materialRepository
+        MaterialRepository $materialRepository,
+        ProcessPlanService $processPlanService,
     ) {
         $this->processPlanRepository = $processPlanRepository;
         $this->outgoingProductRepository = $outgoingProductRepository;
         $this->productRepository = $productRepository;
         $this->materialRepository = $materialRepository;
+        $this->processPlanService = $processPlanService;
     }
 
     public function index(): View
@@ -84,107 +88,11 @@ class ProcessPlanController extends Controller
     public function store(ProcessPlanRequest $processPlanRequest)
     {
         $input = $processPlanRequest->validated();
-        $user = auth()->user();
-        if ($input) {
-            $rpp = $this->processPlanRepository->create($input);
-            $currentMonth = now()->month;
-            $currentYear = now()->year;
-            $formattedCurrentMonth = now()->format('M');
+        $rpp = $this->processPlanRepository->create($input);
 
-            $datasets = [];
-            $amountChanges = [];
-
-            foreach ($input['selected_products'] as $productId => $productData) {
-                $inputOutPro = [
-                    'process_plan_id' => $rpp->id,
-                    'product_id' => $productId,
-                    'qty' => $productData['qty'],
-                ];
-
-                $netChange = $productData['qty'];
-
-                if (!isset($amountChanges[$productId])) {
-                    $amountChanges[$productId] = 0;
-                }
-
-                $amountChanges[$productId] += $netChange;
-
-                $this->outgoingProductRepository->create($inputOutPro);
-                $product = $this->productRepository->find($productId);
-
-                DB::beginTransaction();
-
-                try {
-                    if ($product->amount - $productData['qty'] >= 0) {
-                        $this->productRepository->update($productId, ['amount' => $product->amount - $productData['qty']]);
-                        DB::commit();
-                    } else {
-                        throw new \Exception('Stock ' . $product->name . ' Kurang.');
-                    }
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    return back()->with('error', $e->getMessage());
-                }
-            }
-
-            foreach ($rpp->outgoing_products as $oProduct) {
-                $cproduct = $this->productRepository->find($oProduct->product_id);
-                if ($cproduct->amount < (0.1 * $cproduct->max_amount)) {
-                    $user->notify(new CriticalProduct($cproduct));
-                    event(new ProductNotificationEvent('critical', $cproduct));
-                } else if ($cproduct->amount < (0.3 * $cproduct->max_amount)) {
-                    $user->notify(new WarningProduct($cproduct));
-                    event(new ProductNotificationEvent('warning', $cproduct));
-                }
-            }
-
-            $qty = $this->processPlanRepository->qtyCurrentMonth($currentMonth, $currentYear);
-
-            $rppChart = [
-                'id' => $rpp->id,
-                'name' => $formattedCurrentMonth,
-                'qty' => $qty,
-                'context' => 'add'
-            ];
-
-            event(new UpdateChartEvent('rChart', $rppChart));
-
-
-            $materials = $this->materialRepository->all();
-
-            $data = [];
-            $labels = [];
-
-            foreach ($materials as $material) {
-                $totalSalesQty = $rpp->outgoing_products
-                    ->where('product.material.id', $material->id)
-                    ->sum('qty');
-                $data[] = $totalSalesQty;
-                $labels[] = $material->name;
-            }
-
-            $datasets[] = [
-                'labels' => $labels,
-                'qty' => $data,
-            ];
-
-            $addedData = [
-                'name' => $rpp->customer,
-                'qty' => $data,
-                'context' => 'create'
-            ];
-
-            $toastData = [
-                'name' => $rpp->customer,
-                'qty' => $data,
-                'context' => 'create'
-            ];
-
-            event(new AddChartEvent('tChart', $addedData));
-            event(new DataAddedEvent($toastData, 'Rpp'));
-            return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
-        }
-        return redirect()->back()->with('error', 'Data isnt correct !');
+        $amountChanges = $this->processPlanService->updateOutgoingProducts($rpp, $input['selected_products']);
+        $this->processPlanService->updateProductAmounts($amountChanges);
+        return redirect()->back()->with('success', 'RPP created successfully !');
     }
 
     public function show(string $id)
@@ -205,19 +113,33 @@ class ProcessPlanController extends Controller
         $this->processPlanRepository->update($id, $input);
         $rpp = $this->processPlanRepository->find($id);
 
-        $amountChanges = [];
-
-        $this->updateOutgoingProducts($rpp, $input['selected_products'], $amountChanges);
-
-        $this->updateProductAmounts($amountChanges);
-
-        $this->updateChart($rpp);
+        $amountChanges = $this->processPlanService->updateOutgoingProducts($rpp, $input['selected_products']);
+        $this->processPlanService->updateProductAmounts($amountChanges);
 
         return redirect()->route('rpp.index')->with('success', 'RPP berhasil diupdate!');
     }
 
+
+
     private function updateOutgoingProducts($rpp, $selectedProducts, &$amountChanges)
     {
+        $selectedProductIds = array_keys($selectedProducts);
+
+        // Loop through existing outgoing_products
+        foreach ($rpp->outgoing_products as $outgoingProduct) {
+            $productId = $outgoingProduct->product_id;
+
+            // Check if the product is not present in the selectedProducts
+            if (!in_array($productId, $selectedProductIds)) {
+                // Delete the outgoing_product
+                $outgoingProduct->delete();
+
+                // Update amount changes
+                $netChange = +$outgoingProduct->qty; // subtracting the existing quantity
+                $this->updateAmountChanges($amountChanges, $productId, $netChange);
+            }
+        }
+
         foreach ($selectedProducts as $productId => $productData) {
             $outgoingProduct = $rpp->outgoing_products->firstWhere('product_id', $productId);
 
@@ -248,7 +170,7 @@ class ProcessPlanController extends Controller
     {
         foreach ($amountChanges as $productId => $netChange) {
             $product = $this->productRepository->find($productId);
-            $product->amount += $netChange;
+            $product->amount -= $netChange;
             $product->save();
         }
     }
@@ -276,7 +198,6 @@ class ProcessPlanController extends Controller
 
         event(new UpdateChartEvent('tChart', $addedData));
     }
-
 
     private function updateAmountChanges(&$amountChanges, $productId, $netChange)
     {

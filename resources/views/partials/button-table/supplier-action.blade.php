@@ -53,7 +53,7 @@ id="edit"
         Swal.fire({
             title: 'Delete Supplier',
             text: 'Are you sure you want to delete this supplier?',
-            icon: 'warning',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Delete',
             cancelButtonText: 'Cancel',
@@ -69,7 +69,7 @@ id="edit"
                     success: function (response) {
                         Swal.fire({
                             title: 'Supplier Deleted Successfully',
-                            icon: 'success',
+                            type: 'success',
                             timer: 1700,
                         });
                         Swal.showLoading();
@@ -99,7 +99,7 @@ function update(name, defaultId)
     success: function (response) {
         Swal.fire({
             title: `Supplier Name "${name}" Updated Successfully`, 
-            icon: 'success',
+            type: 'success',
             timer: 1700,
         });
         Swal.showLoading();

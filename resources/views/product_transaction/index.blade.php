@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'RPP')
+@section('title', 'Product Transaction')
 
 @section('content_header')
-    <h1>RPP</h1>
+    <h1>Product Transaction</h1>
 @stop
 
 @section('content')
@@ -18,11 +18,15 @@
             {{ $message }}
         </div>
         @endif
-        <div class="row" style="height: 10px"></div>
+    </div>
+</div>
+<div class="row" style="height: 10px"></div>
+<div class="row" >
+    <div class="col-md-12">
         <div class="card">
             <div class="card-body">
                 <div class="button-action" style="margin-bottom: 20px">
-                    <a class="btn btn-primary" href="{{ route('rpp.create') }}">
+                    <a class="btn btn-primary" href="{{ route('productTransaction.create') }}">
                         <span>+ Add</span>
                     </a>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
@@ -34,14 +38,13 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table">
-                        <caption>List of Rpps</caption>
+                        <caption>List of Product Transactions</caption>
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
                                 <th scope="col" class="text-center">Code</th>
-                                <th scope="col" class="text-center">Customer</th>
-                                <th scope="col" class="text-center">Order Type</th>
-                                <th scope="col" class="text-center">Description</th>
+                                <th scope="col" class="text-center">Supplier</th>
+                                <th scope="col" class="text-center">Tanggal Beli</th>
                                 <th scope="col" class="text-center">Last Updated</th>
                                 <th scope="col" class="text-center">Dibuat</th>
                                 <th scope="col" class="text-center" width="14%">Action</th>
@@ -49,15 +52,15 @@
                         </thead>
                     </table>
                 </div>
-                <div class="modal fade" id="outgoingProductsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="incomingProductsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Outgoing Products</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Incoming Products</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <ul id="outgoing-products-list"></ul>
+                                <ul id="incoming-products-list"></ul>
                             </div>
                         </div>
                     </div>
@@ -106,13 +109,12 @@
                 processing: true,
                 serverSide: true,
                 searchable: true,
-                ajax: '{{ route('get-rpps') }}',
+                ajax: '{{ route('get-product-transactions') }}',
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'code', name: 'code' },
-                    { data: 'customer', name: 'customer' },
-                    { data: 'order_type', name: 'order_type' },
-                    { data: 'desc', name: 'desc' },
+                    { data: 'supplier', name: 'supplier' },
+                    { data: 'formatted_purchase_date', name: 'formatted_purchase_date' },
                     { data: 'formatted_updated_at', name: 'formatted_updated_at' },
                     { data: 'formatted_created_at', name: 'formatted_created_at' },
                     { data: 'action', name: 'action', orderable: false },
@@ -120,24 +122,20 @@
                 order:[[0, 'desc']],
             });
 
-            $('#table tbody').on('click', '#show-outgoing-products', function () {
+            $('#table tbody').on('click', '#show-incoming-products', function () {
                 var data = $('#table').DataTable().row($(this).parents('tr')).data();
-                var outgoingProducts = data.outgoing_products;
+                var incomingProducts = data.incoming_products;
                 
-                var modal = $('#outgoingProductsModal');
-                var modalList = modal.find('#outgoing-products-list');
+                var modal = $('#incomingProductsModal');
+                var modalList = modal.find('#incoming-products-list');
                 modalList.empty();
                 
-                console.log(outgoingProducts);
-                $.each(outgoingProducts, function(index, product) {
-                    console.log(product.product.qualifiers[0]);
-                    let qualifiersArray = product.product.qualifiers || []; // Check if qualifiers array exists
-                    let firstQualifier = qualifiersArray.length > 0 ? qualifiersArray[0] : null;
-                
-                    console.log(firstQualifier ? firstQualifier.id : null);
+                console.log(incomingProducts);
+                $.each(incomingProducts, function(index, product) {
+                    let qualifier = product.product.qualifier;
                 
                     modalList.append('<li>' + product.product.name + ' : ' + product.qty +
-                        (firstQualifier ? ' ' + firstQualifier.name : '') +'</li>');
+                        (' ' + qualifier.name ?? 'N/A') +'</li>');
                 });
                 
                 modal.modal('show');

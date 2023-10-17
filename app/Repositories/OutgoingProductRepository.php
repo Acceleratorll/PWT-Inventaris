@@ -32,6 +32,14 @@ class OutgoingProductRepository
             ->get();
     }
 
+    public function allByRpp($rpp)
+    {
+        return $this->model
+            ->with('product', 'process_plan')
+            ->where('process_plan_id', $rpp)
+            ->get();
+    }
+
     public function all()
     {
         return $this->model->with('product', 'process_plan')->get();

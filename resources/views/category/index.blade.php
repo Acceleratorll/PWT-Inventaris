@@ -117,7 +117,6 @@
                     { data: 'action', name: 'action', orderable: false },
                 ]
             });
-            console.log(data);
         });
     </script>
 

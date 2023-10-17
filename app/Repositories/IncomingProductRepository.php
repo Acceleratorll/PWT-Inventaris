@@ -24,24 +24,39 @@ class IncomingProductRepository
             ->with('product', 'incoming')
             ->where('qty', 'LIKE', '%' . $term . '%')
             ->orWhereHas('product', function ($query) use ($term) {
-                $query->where('name', 'LIKE', '%' . $term . '%')
-                    ->orWhere('product_code', 'LIKE', '%' . $term . '%')
-                    ->orWhere('note', 'LIKE', '%' . $term . '%');
+                $query->where('name', 'LIKE', '%' . $term . '%');
+                $query->where('product_code', 'LIKE', '%' . $term . '%');
+                $query->where('note', 'LIKE', '%' . $term . '%');
             })
-            ->orWhereHas('incoming', function ($query) use ($term) {
-                $query->where('code', 'LIKE', '%' . $term . '%');
-            })
+            ->get();
+    }
+
+    public function allByTransaction($transaction)
+    {
+        return $this->model
+            ->with('product', 'product_transaction')
+            ->where('product_transaction_id', $transaction)
             ->get();
     }
 
     public function all()
     {
-        return $this->model->with('product', 'incoming')->get();
+        return $this->model->with([
+            'product.material',
+            'product.qualifier',
+            'product.category_product',
+            'product.product_type',
+        ])->get();
     }
 
     public function paginate()
     {
-        return $this->model->with('product', 'incoming')->paginate(10);
+        return $this->model->with([
+            'product.material',
+            'product.qualifier',
+            'product.category_product',
+            'product.product_type',
+        ])->paginate(10);
     }
 
     public function create($data)

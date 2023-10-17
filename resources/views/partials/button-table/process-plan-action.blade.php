@@ -1,39 +1,57 @@
-<form action="{{ route('rpp.destroy',['rpp' => $id]) }}" method="post" id="delete-form">
     <a href="{{ route('rpp.edit', ['rpp' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
         Edit
     </a>
-    <button id="show-outgoing-products" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+    <button id="show-outgoing-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
         Details
     </button>
+    <button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
+Delete
+</button>
+<form action="{{ route('rpp.destroy',['rpp' => $id]) }}" id="deleteForm" method="post">
     @csrf
     @method("DELETE")
-    <button
-        type="submit"
-        id="delete-company"
-        {{-- data-original-title="Delete" --}}
-        class="delete btn btn-danger"
-        {{-- onclick="confirmDelete('{{ route('rpp.destroy', ['rpp' => $id]) }}')" --}}
-    >
-    Delete
-    </button>
 </form>
 
 <script>
-    document.getElementById('delete-company').addEventListener('click', function (event) {
-        event.preventDefault();
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('delete-form').submit();
-            }
+    $(document).ready(function(){
+        $('.delete').on('click', function () {
+            var deleteButton = $(this);
+            var defaultId = deleteButton.data('id');
+            Swal.fire({
+                title: 'Delete RPP',
+                text: 'Are you sure you want to delete this RPP?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                console.log(result);
+                if (result.value == true) {
+                    console.log('confirmed');
+                    $.ajax({
+                        type: 'POST',
+                        url: `{{ route("rpp.destroy", ["rpp" => ":rppId"]) }}`.replace(':rppId', defaultId),
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            _method: 'DELETE'
+                        },
+                        success: function (response) {
+                            Swal.fire({
+                                title: 'RPP Deleted Successfully',
+                                type: 'success',
+                                timer: 1700,
+                            });
+                            Swal.showLoading();
+    
+                            $('#table').DataTable().ajax.reload();
+                        },
+                        error: function (error) {
+                            console.error('Error:', error);
+                            Swal.fire('Error', 'Failed to delete RPP', 'error');
+                        },
+                    });
+                }
+            });
         });
     });
 </script>

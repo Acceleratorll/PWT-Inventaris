@@ -83,4 +83,17 @@ class SupplierController extends Controller
             ->addIndexColumn()
             ->make(true);
     }
+
+    public function getJsonSuppliers(Request $request): JsonResponse
+    {
+        $term = $request->term;
+        $suppliers = $this->supplierRepository->search($term);
+        $formattedSuppliers = $suppliers->map(function ($supplier) {
+            return [
+                'id' => $supplier->id,
+                'text' => $supplier->name,
+            ];
+        });
+        return response()->json($formattedSuppliers);
+    }
 }

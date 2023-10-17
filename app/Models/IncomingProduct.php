@@ -14,7 +14,6 @@ class IncomingProduct extends Model
     protected $fillable = [
         'product_transaction_id',
         'product_id',
-        'qualifier_id',
         'qty',
     ];
 
@@ -26,10 +25,5 @@ class IncomingProduct extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
-    }
-
-    public function qualifier(): BelongsTo
-    {
-        return $this->belongsTo(Qualifier::class);
     }
 }

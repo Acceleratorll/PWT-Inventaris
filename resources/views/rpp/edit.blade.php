@@ -43,7 +43,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="customer_id">Customer</label>
-                    <select class="form-control mb-3" name="customer_id" required>
+                    <select name="customer_id" id="customer_id" class="form-control" required>
                         <option value="{{ $rpp->customer_id }}">{{ $rpp->customer->name }}</option>
                     </select>
                 </div>
@@ -62,7 +62,7 @@
                     <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple>
                         @if($rpp->outgoing_products)
                         @foreach($rpp->outgoing_products as $outgoing_product)
-                        <option value="{{ $outgoing_product->product_id }}" selected>{{ $outgoing_product->product->name }}</option>
+                        <option value="{{ $outgoing_product->product_id }}" selected>{{ $outgoing_product->product->name ?? 'Product Deleted' }}</option>
                         @endforeach
                         @endif
                     </select>
@@ -98,6 +98,16 @@
     <script>
     $(document).ready(function () {
 
+        const customer = document.getElementById("customer_id");
+        const products = document.getElementById("products");
+        const products_ph = "Pilih Barang";
+        const products_url = '{{ route("get-json-products") }}';
+        const customer_ph = "Pilih Customer";
+        const customer_url = '{{ route("get-json-customers") }}';
+        
+        selectInput(customer, customer_url, customer_ph);
+        selectInput(products, products_url, products_ph);
+
          function getProductQty(productId) {
             @foreach($rpp->outgoing_products as $outgoing_product)
                 if ({{ $outgoing_product->product_id }} == productId) {
@@ -108,7 +118,7 @@
 
         const productsSelect = $("#products");
         const selectedProductsDiv = $("#selected-products");
-
+        
         function updateSelectedProducts() {
             selectedProductsDiv.empty();
             const selectedProducts = productsSelect.select2("data");
@@ -158,6 +168,7 @@
             multiple: true,
             placeholder: "Tambah Barang",
         }).on("change", function () {
+            // console.log(productsSelect.select2("data"));
             updateSelectedProducts();
         });
 

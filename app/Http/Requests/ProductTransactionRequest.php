@@ -22,9 +22,10 @@ class ProductTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => 'required',
+            'supplier_id' => 'required',
             'code' => 'required',
             'purchase_date' => 'required',
+            'selected_products' => 'required|array',
         ];
     }
 }
