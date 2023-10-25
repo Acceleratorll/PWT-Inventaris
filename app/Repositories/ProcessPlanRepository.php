@@ -30,6 +30,19 @@ class ProcessPlanRepository
             ->count();
     }
 
+    public function getByCustomerName($data)
+    {
+        $current_month = now()->month;
+        $current_year = now()->year;
+        return $this->model->with('outgoing_products.product.qualifier', 'customer')
+            ->whereHas('customer', function ($query) use ($data) {
+                $query->where('name', $data);
+            })
+            ->whereMonth('created_at', $current_month)
+            ->whereYear('created_at', $current_year)
+            ->get();
+    }
+
     public function find($id)
     {
         return $this->model->findOrFail($id);

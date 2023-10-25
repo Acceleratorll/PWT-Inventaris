@@ -9,6 +9,8 @@ use App\Repositories\ProductRepository;
 use App\Repositories\ProductTransactionRepository;
 use App\Services\ProductTransactionService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -67,22 +69,22 @@ class ProductTransactionController extends Controller
             ->make(true);
     }
 
-    public function create()
+    public function create(): View
     {
         return view('product_transaction.create');
     }
 
-    public function store(ProductTransactionRequest $productTransactionRequest)
+    public function store(ProductTransactionRequest $productTransactionRequest): RedirectResponse
     {
         $input = $productTransactionRequest->validated();
         $transaction = $this->productTransactionRepository->create($input);
-
         $amountChanges = $this->productTransactionService->updateIncomingProducts($transaction, $input['selected_products']);
         $this->productTransactionService->updateProductAmounts($amountChanges);
+        $this->productTransactionService->addChart($transaction);
         return redirect()->back()->with('success', 'Product Transaction created successfully !');
     }
 
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         $productTransaction = $this->productTransactionRepository->find($id);
         return response()->json($productTransaction);
@@ -102,78 +104,9 @@ class ProductTransactionController extends Controller
 
         $amountChanges = $this->productTransactionService->updateIncomingProducts($transaction, $input['selected_products']);
         $this->productTransactionService->updateProductAmounts($amountChanges);
+        $this->productTransactionService->updateChart($transaction);
 
         return redirect()->route('productTransaction.index')->with('success', 'PRODUCTTRANSACTION berhasil diupdate!');
-    }
-
-    private function updateOutgoingProducts($productTransaction, $selectedProducts, &$amountChanges)
-    {
-        foreach ($selectedProducts as $productId => $productData) {
-            $outgoingProduct = $productTransaction->outgoing_products->firstWhere('product_id', $productId);
-
-            if ($outgoingProduct) {
-                $netChange = $productData['qty'] - $outgoingProduct->qty;
-                if ($netChange <= 0) {
-                    $this->updateAmountChanges($amountChanges, $productId, $netChange);
-                }
-
-                $outgoingProduct->qty = $productData['qty'];
-                $outgoingProduct->save();
-            } else {
-                $inputOutPro = [
-                    'process_plan_id' => $productTransaction->id,
-                    'product_id' => $productId,
-                    'qty' => $productData['qty'],
-                ];
-
-                $this->outgoingProductRepository->create($inputOutPro);
-
-                $netChange = $productData['qty'];
-                $this->updateAmountChanges($amountChanges, $productId, $netChange);
-            }
-        }
-    }
-
-    private function updateProductAmounts($amountChanges)
-    {
-        foreach ($amountChanges as $productId => $netChange) {
-            $product = $this->productRepository->find($productId);
-            $product->amount += $netChange;
-            $product->save();
-        }
-    }
-
-    private function updateChart($productTransaction)
-    {
-        $materials = $this->materialRepository->all();
-
-        $data = [];
-        $labels = [];
-
-        foreach ($materials as $material) {
-            $totalSalesQty = $productTransaction->outgoing_products
-                ->where('product.material.id', $material->id)
-                ->sum('qty');
-            $data[] = $totalSalesQty;
-            $labels[] = $material->name;
-        }
-
-        $addedData = [
-            'name' => $productTransaction->customer,
-            'qty' => $data,
-            'context' => 'update'
-        ];
-
-        // event(new UpdateChartEvent('tChart', $addedData));
-    }
-
-
-    private function updateAmountChanges(&$amountChanges, $productId, $netChange)
-    {
-        if (!isset($amountChanges[$productId])) {
-            $amountChanges[$productId] = 0;
-        }
-        $amountChanges[$productId] += $netChange;
     }
 
     public function destroy(string $id)
@@ -201,26 +134,33 @@ class ProductTransactionController extends Controller
         return redirect()->back()->with('success', 'productTransaction berhasil dihapus');
     }
 
-    public function exportproductTransactions()
+    // public function exportproductTransactions()
+    // {
+    //     $productTransactions = $this->productTransactionRepository->all();
+
+    //     return (new productTransactionsExport($productTransactions))->download('process_plans.xlsx');
+    // }
+
+    // public function importproductTransactions()
+    // {
+    //     try {
+    //         DB::beginTransaction();
+
+    //         Excel::import(new productTransactionsImport, request()->file('file'));
+    //         DB::commit();
+
+    //         return redirect()->back()->with('success', 'Import successful');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+
+    //         return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
+    //     }
+    // }
+
+    public function getJsonProductTransactionBySupplierName($supplierName)
     {
-        $productTransactions = $this->productTransactionRepository->all();
+        $productTransaction = $this->productTransactionRepository->getBySupplierName((string)$supplierName);
 
-        return (new productTransactionsExport($productTransactions))->download('process_plans.xlsx');
-    }
-
-    public function importproductTransactions()
-    {
-        try {
-            DB::beginTransaction();
-
-            Excel::import(new productTransactionsImport, request()->file('file'));
-            DB::commit();
-
-            return redirect()->back()->with('success', 'Import successful');
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
-        }
+        return response()->json($productTransaction);
     }
 }

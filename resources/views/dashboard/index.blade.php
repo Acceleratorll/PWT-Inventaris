@@ -116,20 +116,21 @@
         </x-adminlte-card>
     </div>
     <div class="col-md-8">
-        <x-adminlte-card title="Barang Setiap RPP" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow justify-center" id="chart-tinta">
-                <canvas id="tintaChart"></canvas>
+        <x-adminlte-card title="Barang Masuk" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-productTransaction">
+                <canvas id="productTransactionChart"></canvas>
             </div>
         </x-adminlte-card>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-
-    </div>
-    <div class="col-md-8">
-        
+    <div class="col-md-12">
+        <x-adminlte-card title="Barang Keluar RPP" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="chart-container" style="position: relative; height:55vh;">
+                <canvas id="tintaChart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
     </div>
 </div>
 
@@ -152,6 +153,7 @@
             let tChart;
             let rChart;
             let cChart;
+            let pChart;
             let labels;
             let datas;
             
@@ -286,14 +288,13 @@
                 return color;
             }
             
+            // Chart
             function tintaChart() {
                 $.ajax({
                     url: "{{route('monthly.tinta.chart')}}",
                     method: 'GET',
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data.datasets);
-                        
                         const ctx = document.getElementById("tintaChart");
                         
                         if (tChart) {
@@ -311,20 +312,102 @@
                                     y: {
                                         beginAtZero: true
                                     }
-                                }
+                                },
+                                onClick: (e, rpp) => {
+                                    console.log("Clicked !");
+                                    if (rpp && rpp.length > 0) {
+                                        const clickedElement = rpp[0];
+                                        const datasetIndex = clickedElement.datasetIndex;
+                                        const index = clickedElement.index;
+                                        const clickedLabel = tChart.data.labels[index];
+                                        console.log(clickedLabel);
+                                        const clickedData = tChart.data.datasets[datasetIndex].data[index];
+                                        const url = '{{ route("get-json-rpp-by-customer-name", ["customer" => ":customer"]) }}'. replace(":customer", clickedLabel);
+                                        
+                                        $.ajax({
+                                            url: url,
+                                            method: 'GET',
+                                            success: function (data) {
+                                                console.log(data);
+                                                showRPPData(data);
+                                            },
+                                            error: function (error) {
+                                                console.error('Error fetching data:', error);
+                                            }
+                                        });
+                                    }
+                                },
+                                maintainAspectRatio: true,
+                                responsive: true,
                             }
                         });
                     }
                 })
             }
             
+            function productTransactionChart() {
+                $.ajax({
+                    url: "{{route('monthly.productTransaction.chart')}}",
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        const ctx = document.getElementById("productTransactionChart");
+
+                        if (pChart) {
+                            pChart.destroy();
+                        }
+                        
+                        pChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: data.labels,
+                                datasets: data.datasets,
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
+                                onClick: (e, elements) => {
+                                    console.log("Clicked !");
+                                    if (elements && elements.length > 0) {
+                                        const clickedElement = elements[0];
+                                        const datasetIndex = clickedElement.datasetIndex;
+                                        const index = clickedElement.index;
+                                        const clickedLabel = pChart.data.labels[index];
+                                        console.log(clickedLabel);
+                                        const clickedData = pChart.data.datasets[datasetIndex].data[index];
+                                        const url = '{{ route("get-json-product-transaction-by-supplier-name", ["supplier" => ":supplier"]) }}'. replace(":supplier", clickedLabel);
+                                        
+                                        $.ajax({
+                                            url: url,
+                                            method: 'GET',
+                                            success: function (data) {
+                                                console.log(data);
+                                                showProductTransactionData(data);
+                                            },
+                                            error: function (error) {
+                                                console.error('Error fetching data:', error);
+                                            }
+                                        });
+                                    }
+                                },
+                                maintainAspectRatio: true,
+                                responsive: true,
+                            }
+                        });
+                    }
+                })
+            }
+
             function rppChart(){
                 $.ajax({    
                     url: "{{route('yearly.rpp.chart')}}",
                     method:'GET',
                     dataType: 'json',
                     success: function(data){
-                        console.log(data);
                         labels = data.labels,
                         datas = data.datas;
                         const ctx = document.getElementById("rppChart");
@@ -364,7 +447,6 @@
                     method:'GET',
                     dataType: 'json',
                     success: function(data){
-                        console.log(data);
                         var labels = data.labels;
                         var datas = data.datas;
                         const ctx = document.getElementById("categoryChart");
@@ -416,15 +498,17 @@
                     dataType: 'json',
                     success: function (data) {
                         console.log(data);
-                        let modalContent = '<strong>Products for Category:</strong> ' + category + '<br><br>';
+                        let modalContent = 'Products for Category: <strong>' + category + '</strong><br><br>';
                         
                         data.forEach((product) => {
                             modalContent += `
                                 <hr>
                                 <div class="dropdown-divider"></div>
-                                <p>Product Code: <strong>${product.product_code}</strong></p>
-                                <p>Name : ${product.name}</p>
-                                <p>${product.amount} ${product.qualifier.name}</p>
+                                <div style="text-align: left">
+                                    <p>Product Code: <strong>${product.product_code}</strong></p>
+                                    <p>Name : ${product.name}</p>
+                                    <p>Amount : <strong>${product.amount}</strong> ${product.qualifier.name}</p>
+                                </div>
                             `;
                         });
 
@@ -440,7 +524,7 @@
                             icon: 'info',
                             html: modalContent,
                             showCancelButton: true,
-                            confirmButtonText: '<a href="' + "{{ route('product.index') }}" + '">More Details</a>',
+                            confirmButtonText: '<a href="' + "{{ route('product.index') }}" + '">SeeMore</a>',
                             cancelButtonText: 'No, cancel!',
                             reverseButtons: true,
                             focusConfirm: false,
@@ -558,6 +642,8 @@
                     chartInstance = tChart;
                 }else if(data.chart == 'rChart'){
                     chartInstance = rChart;
+                }else if(data.chart == 'pChart'){
+                    chartInstance = pChart;
                 }
 
                 console.log('Data Label ', data.data.name, 'QTY : ', data.data.qty);
@@ -590,6 +676,8 @@
                     chartInstance = cChart;
                 }else if(data.chart == 'tChart'){
                     chartInstance = tChart;
+                }else if(data.chart == 'pChart'){
+                    chartInstance = pChart;
                 }
 
                 console.log(data.data.qty);
@@ -615,6 +703,8 @@
                     chartInstance = tChart;
                 }else if(data.chart == 'rChart'){
                     chartInstance = rChart;
+                }else if(data.chart == 'pChart'){
+                    chartInstance = pChart;
                 }
                 
                 var labelIndex = chartInstance.data.labels.indexOf(data.data.name);
@@ -643,6 +733,8 @@
 
                 Toast.fire({
                     type: 'warning',
+                    icon: 'warning',
+                    icon: 'warning',
                     title: data.name+' Deleted'
                 })
             }
@@ -661,6 +753,8 @@
                 })
                 Toast.fire({
                     type: 'success',
+                    icon: 'success',
+                    icon: 'success',
                     title: data.name+' Updated'
                 })
             }
@@ -678,7 +772,7 @@
                     }
                 })
                 Toast.fire({
-                    type: 'success',
+                    icon: 'success',
                     title: data.name+' Added'
                 })
             }
@@ -718,11 +812,66 @@
                     }
                 });
             }
-            
+
+            // Limit Text
+            function limitText(text, maxLength) {
+                if (text.length > maxLength) {
+                    return text.substring(0, maxLength) + '...';
+                }
+                return text;
+            }
+                
+            // Modals
+            function showProductTransactionData(data) {
+                let modalContent = '<div>';
+                    data.forEach(dataItem => {
+                        modalContent += `
+                        <p>Tanggal <strong>${new Date(dataItem.purchase_date).toLocaleDateString('id-ID',{ weekday:"long", year:"numeric", month:"short", day:"numeric"})}</strong></p>`;
+                        dataItem.incoming_products.forEach(iProduct => {
+                            const limitedProductName = limitText(iProduct.product.name, 30);
+                            modalContent += `
+                            <li>${limitedProductName} : ${iProduct.qty} ${iProduct.product.qualifier.abbreviation}</li>`;
+                        });
+                        modalContent += `<br>`
+                    });
+                    
+                    modalContent += '</div>';
+                
+                Swal.fire({
+                    title: 'Product Transaction Data',
+                    html: modalContent,
+                    type: 'info',
+                    icon: 'info',
+                });
+            }
+
+            function showRPPData(data) {
+                let modalContent = '<div>';
+                    data.forEach(dataItem => {
+                        modalContent += `
+                        <p>Tanggal <strong>${new Date(dataItem.created_at).toLocaleDateString('id-ID')}</strong></p>`;
+                        dataItem.outgoing_products.forEach(iProduct => {
+                            modalContent += `
+                            <li>${limitText(iProduct.product.name,30)}: ${iProduct.qty} ${iProduct.product.qualifier.abbreviation}</li>`;
+                        });
+                        modalContent += `<br>`
+                    });
+                    
+                    modalContent += '</div>';
+                
+                Swal.fire({
+                    title: 'Data Product Yang Terpakai (Outgoing Product)',
+                    html: modalContent,
+                    type: 'info',
+                    icon: 'info',
+                });
+            }
+                
             $(function() {
                 categoryChart();
                 rppChart();
                 tintaChart();
+                productTransactionChart();
                 
                 $('#table').DataTable({
                     processing: true,

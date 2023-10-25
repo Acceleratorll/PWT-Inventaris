@@ -40,7 +40,16 @@ class ProductRepository
 
     public function all()
     {
-        return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->get();
+        return $this->model
+            ->with(
+                'product_type',
+                'qualifier',
+                'material',
+                'category_product',
+                'incoming_products',
+                'outgoing_products'
+            )
+            ->get();
     }
 
     public function getProductsByCategory($category)

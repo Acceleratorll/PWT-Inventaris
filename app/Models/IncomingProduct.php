@@ -19,7 +19,7 @@ class IncomingProduct extends Model
 
     public function product_transaction(): BelongsTo
     {
-        return $this->belongsTo(product_transaction::class);
+        return $this->belongsTo(ProductTransaction::class);
     }
 
     public function product(): BelongsTo

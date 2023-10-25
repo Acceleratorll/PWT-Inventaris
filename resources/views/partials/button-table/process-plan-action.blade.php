@@ -21,6 +21,8 @@ Delete
                 title: 'Delete RPP',
                 text: 'Are you sure you want to delete this RPP?',
                 type: 'warning',
+icon: 'warning',
+icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
                 cancelButtonText: 'Cancel',
@@ -39,6 +41,8 @@ Delete
                             Swal.fire({
                                 title: 'RPP Deleted Successfully',
                                 type: 'success',
+icon: 'success',
+                                icon: 'success',
                                 timer: 1700,
                             });
                             Swal.showLoading();

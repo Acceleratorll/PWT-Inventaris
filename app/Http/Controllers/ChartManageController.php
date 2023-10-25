@@ -6,19 +6,30 @@ use App\Models\ProcessPlan;
 use App\Models\Product;
 use App\Repositories\CategoryProductRepository;
 use App\Repositories\MaterialRepository;
+use App\Services\ChartService;
+use App\Services\ChartServiceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ChartManageController extends Controller
 {
-
     protected $categoryRepository;
     protected $materialRepository;
+    protected $chartService;
 
-    public function __construct(CategoryProductRepository $categoryRepository, MaterialRepository $materialRepository)
-    {
+    public function __construct(
+        CategoryProductRepository $categoryRepository,
+        MaterialRepository $materialRepository,
+        ChartService $chartService,
+    ) {
         $this->categoryRepository = $categoryRepository;
         $this->materialRepository = $materialRepository;
+        $this->chartService = $chartService;
+    }
+
+    public function productTransactionMonthly(): JsonResponse
+    {
+        return $this->chartService->productTransactionMonthly();
     }
 
     public function tintaMonthly(): JsonResponse
@@ -39,9 +50,9 @@ class ChartManageController extends Controller
             foreach ($processPlans as $processPlan) {
                 $totalSalesQty = $processPlan->outgoing_products
                     ->where('product.material.id', $material->id)
-                    ->sum('qty'); // Sum quantity for this specific material
+                    ->sum('qty');
                 $data[] = $totalSalesQty;
-                $labels[] = $processPlan->customer;
+                $labels[] = $processPlan->customer->name;
             }
 
             $datasets[] = [
@@ -53,7 +64,6 @@ class ChartManageController extends Controller
 
         return response()->json(['datasets' => $datasets, 'labels' => $labels]);
     }
-
 
     public function rppYearly(): JsonResponse
     {

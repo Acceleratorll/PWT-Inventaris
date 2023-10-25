@@ -18,6 +18,8 @@ Delete
                 title: 'Delete Transaction Product',
                 text: 'Are you sure you want to delete this product transaction?',
                 type: 'warning',
+icon: 'warning',
+                icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
                 cancelButtonText: 'Cancel',
@@ -36,6 +38,8 @@ Delete
                             Swal.fire({
                                 title: 'Product Transaction Deleted Successfully',
                                 type: 'success',
+icon: 'success',
+                                icon: 'success',
                                 timer: 1700,
                             });
                             Swal.showLoading();

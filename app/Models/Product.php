@@ -47,11 +47,11 @@ class Product extends Model
 
     public function outgoing_products(): HasMany
     {
-        return $this->hasMany(OutgoingProducts::class);
+        return $this->hasMany(OutgoingProduct::class);
     }
 
     public function incoming_products(): HasMany
     {
-        return $this->hasMany(IncomingProducts::class);
+        return $this->hasMany(IncomingProduct::class);
     }
 }

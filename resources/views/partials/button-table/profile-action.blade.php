@@ -21,6 +21,8 @@ Delete
             title: 'Delete Profile',
             text: 'Are you sure you want to delete this profile?',
             type: 'warning',
+icon: 'warning',
+icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Delete',
             cancelButtonText: 'Cancel',
@@ -36,6 +38,8 @@ Delete
                         Swal.fire({
                             title: 'Profile Deleted Successfully',
                             type: 'success',
+icon: 'success',
+                            icon: 'success',
                             timer: 1700,
                         });
                         Swal.showLoading();

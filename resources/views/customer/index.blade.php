@@ -113,7 +113,9 @@
             },
             success: function () {
                 Swal.fire({
-                    title: `customer Name "${name}" created successfully`, type: 'success',
+                    title: `customer Name "${name}" created successfully`, 
+                    type: 'success',
+icon: 'success',
                     icon: "success",
                     timer: 1700,
                 });

@@ -15,7 +15,28 @@ class ProductTransactionRepository
 
     public function find($id)
     {
-        return $this->model->find($id);
+        return $this->model->with(['incoming_products'])->findOrFail($id);
+    }
+
+    public function getByMonth($month)
+    {
+        return $this->model
+            ->with(['incoming_products.product', 'supplier'])
+            ->whereMonth('purchase_date', $month)
+            ->get();
+    }
+
+    public function getBySupplierName($data)
+    {
+        $current_month = now()->month;
+        $current_year = now()->year;
+        return $this->model->with('incoming_products.product.qualifier', 'supplier')
+            ->whereHas('supplier', function ($query) use ($data) {
+                $query->where('name', $data);
+            })
+            ->whereMonth('created_at', $current_month)
+            ->whereYear('created_at', $current_year)
+            ->get();
     }
 
     public function qtyCurrentMonth($month, $year)

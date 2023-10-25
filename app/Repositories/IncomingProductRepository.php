@@ -39,6 +39,14 @@ class IncomingProductRepository
             ->get();
     }
 
+    public function getByMonth($month)
+    {
+        return $this->model
+        ->with(['product_transaction.supplier'])
+        ->whereMonth('created_at', $month)
+        ->get();
+    }
+
     public function all()
     {
         return $this->model->with([

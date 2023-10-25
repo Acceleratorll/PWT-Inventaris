@@ -52,7 +52,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="purchase_date">Tanggal Beli</label>
-                    <input name="purchase_date" type="datetime-local" id="purchase_date" class="form-control mb-3" placeholder="Masukkan Tanggal Pembelian" required/>
+                    <input name="purchase_date" type="datetime-local" id="purchase_date" class="form-control mb-3" placeholder="Masukkan Tanggal Pembelian" value="{{ now() }}" required/>
                 </div>
                 <div class="col-md-8">
                     <label for="products">Barang (Bisa pilih lebih dari 1)</label>

@@ -58,6 +58,8 @@ Route::prefix('/json')->group(function () {
     Route::get('/get-products', [ProductController::class, 'getJsonProducts'])->name('get-json-products');
     Route::get('/get-products/{category}', [ProductController::class, 'getJsonProductsByCategory'])->name('get-json-products-by-category');
     Route::get('/get-product/{product_id}', [ProductController::class, 'getJsonProduct'])->name('get-json-product');
+    Route::get('/get-rpp/{customer}', [ProcessPlanController::class, 'getRppsByCustomerName'])->name('get-json-rpp-by-customer-name');
+    Route::get('/get-productTransaction/{supplier}', [ProductTransactionController::class, 'getJsonProductTransactionBySupplierName'])->name('get-json-product-transaction-by-supplier-name');
     Route::get('/get-incomingProducts', [IncomingProductController::class, 'getJsonIncomingProducts'])->name('get-json-incoming-products');
     Route::get('/get-incomingProduct/{incomingProduct}', [IncomingProductController::class, 'getJsonIncomingProduct'])->name('get-json-incoming-product');
     Route::get('/get-incomingProducts/{transaction}', [IncomingProductController::class, 'getJsonIncomingProductsByTransaction'])->name('get-json-incoming-products-by-transaction');
@@ -73,6 +75,7 @@ Route::prefix('/json')->group(function () {
     Route::get('/get-qualifiers-by-product/{product}', [QualifierController::class, 'getJsonQualifierByProduct'])->name('get-json-qualifiers-by-product');
     Route::get('/get-roles', [RoleController::class, 'getJsonRoles'])->name('get-json-roles');
     Route::prefix('/chart')->group(function () {
+        Route::get('/productTransaction', [ChartManageController::class, 'productTransactionMonthly'])->name('monthly.productTransaction.chart');
         Route::get('/tinta', [ChartManageController::class, 'tintaMonthly'])->name('monthly.tinta.chart');
         Route::get('/rpp', [ChartManageController::class, 'rppYearly'])->name('yearly.rpp.chart');
         Route::get('/category', [ChartManageController::class, 'categoryOverall'])->name('category.overall.chart');
@@ -85,8 +88,8 @@ Route::prefix('/notifications')->group(function () {
     Route::post('/markAsRead', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
 });
 
-Route::fallback(function () {
-    return redirect()->route('dashboard.index');
-});
+// Route::fallback(function () {
+//     return redirect()->route('dashboard.index');
+// });
 
 require __DIR__ . '/auth.php';

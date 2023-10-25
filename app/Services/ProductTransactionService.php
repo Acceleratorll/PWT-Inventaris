@@ -2,32 +2,48 @@
 
 namespace App\Services;
 
+use App\Events\AddChartEvent;
+use App\Events\DataAddedEvent;
+use App\Events\ProductNotificationEvent;
 use App\Events\UpdateChartEvent;
+use App\Events\UpdateDataEvent;
+use App\Notifications\CriticalProduct;
+use App\Notifications\WarningProduct;
 use App\Repositories\IncomingProductRepository;
 use App\Repositories\MaterialRepository;
 use App\Repositories\ProductRepository;
+use App\Repositories\ProductTransactionRepository;
 
 class ProductTransactionService
 {
     protected $incomingProductRepository;
     protected $productRepository;
     protected $materialRepository;
+    protected $productTransactionRepository;
 
     public function __construct(
         IncomingProductRepository $incomingProductRepository,
         ProductRepository $productRepository,
-        MaterialRepository $materialRepository
+        MaterialRepository $materialRepository,
+        ProductTransactionRepository $productTransactionRepository,
     ) {
         $this->incomingProductRepository = $incomingProductRepository;
         $this->productRepository = $productRepository;
         $this->materialRepository = $materialRepository;
+        $this->productTransactionRepository = $productTransactionRepository;
     }
 
     public function updateIncomingProducts($transaction, $selectedProducts)
     {
         $amountChanges = [];
 
-        // Loop through existing incoming_products
+        foreach ($selectedProducts as $productId => $productData) {
+            if (!$transaction->incoming_products->contains('product_id', $productId)) {
+                // Product is not in the existing incoming_products, create it
+                $this->createIncomingProduct($transaction, $productId, $productData, $amountChanges);
+            }
+        }
+
         foreach ($transaction->incoming_products as $incomingProduct) {
             $productId = $incomingProduct->product_id;
 
@@ -38,14 +54,6 @@ class ProductTransactionService
             } else {
                 // Update the existing incoming_product
                 $this->updateIncomingProduct($incomingProduct, $selectedProducts[$productId], $amountChanges);
-            }
-        }
-
-        // Loop through selected products
-        foreach ($selectedProducts as $productId => $productData) {
-            if (!$transaction->incoming_products->contains('product_id', $productId)) {
-                // Product is not in the existing incoming_products, create it
-                $this->createIncomingProduct($transaction, $productId, $productData, $amountChanges);
             }
         }
 
@@ -75,7 +83,8 @@ class ProductTransactionService
             'qty' => $productData['qty'],
         ];
 
-        $this->incomingProductRepository->create($inputOutPro);
+        $income = $this->incomingProductRepository->create($inputOutPro);
+        $transaction->incoming_products()->save($income);
 
         $amountChanges[$productId] = $productData['qty'];
     }
@@ -86,31 +95,89 @@ class ProductTransactionService
             $product = $this->productRepository->find($productId);
             $product->amount += $netChange;
             $product->save();
+
+            if ($product->amount > (0.3 * $product->max_amount)) {
+                $product->update(['category_product_id']);
+            } else if ($product->amount > (0.1 * $product->max_amount)) {
+            }
         }
     }
 
-    public function updateChart($transaction)
+    public function addChart($transaction)
     {
         $materials = $this->materialRepository->all();
-
+        $transaction_find = $this->productTransactionRepository->find($transaction->id);
         $data = [];
         $labels = [];
-
         foreach ($materials as $material) {
-            $totalSalesQty = $transaction->incoming_products
-                ->where('product.material.id', $material->id)
+            $totalSalesQty = $transaction_find->incoming_products
+                ->where('product.material_id', $material->id)
                 ->sum('qty');
             $data[] = $totalSalesQty;
             $labels[] = $material->name;
         }
 
-        $addedData = [
-            'name' => $transaction->supplier,
+        $datasets[] = [
+            'labels' => $labels,
+            'qty' => $data,
+        ];
+
+        $chartData = [
+            'name' => $transaction_find->supplier->name,
+            'qty' => $data,
+            'context' => 'create'
+        ];
+        event(new AddChartEvent('pChart', $chartData));
+        event(new DataAddedEvent($chartData, 'Transaction'));
+    }
+
+    public function updateChart($transaction)
+    {
+        $materials = $this->materialRepository->all();
+        $transaction_find = $this->productTransactionRepository->find($transaction->id);
+        $data = [];
+        $labels = [];
+        foreach ($materials as $material) {
+            $totalSalesQty = $transaction_find->incoming_products
+                ->where('product.material_id', $material->id)
+                ->sum('qty');
+            $data[] = $totalSalesQty;
+            $labels[] = $material->name;
+        }
+
+        $datasets[] = [
+            'labels' => $labels,
+            'qty' => $data,
+        ];
+
+        $chartData = [
+            'name' => $transaction_find->supplier->name,
             'qty' => $data,
             'context' => 'update'
         ];
+        event(new UpdateChartEvent('pChart', $chartData));
+        event(new UpdateDataEvent($chartData, 'Transaction'));
+        $this->notifyProduct($transaction_find);
+    }
 
-        event(new UpdateChartEvent('tChart', $addedData));
+    public function getProductTransactionBySupplierName($label)
+    {
+        return $this->productTransactionRepository->getBySupplierName($label);
+    }
+
+    public function notifyProduct($transaction)
+    {
+        $user = auth()->user();
+        foreach ($transaction->incoming_products as $iProduct) {
+            $product = $this->productRepository->find($iProduct->product_id);
+            if ($product->amount < (0.1 * $product->max_amount)) {
+                $user->notify(new CriticalProduct($product));
+                event(new ProductNotificationEvent('critical', $product));
+            } else if ($product->amount < (0.3 * $product->max_amount)) {
+                $user->notify(new WarningProduct($product));
+                event(new ProductNotificationEvent('warning', $product));
+            }
+        }
     }
 
     private function updateAmountChanges(&$amountChanges, $productId, $netChange)

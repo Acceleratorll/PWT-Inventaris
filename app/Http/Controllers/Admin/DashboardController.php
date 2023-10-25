@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ProcessPlan;
 use App\Models\Product;
 use App\Repositories\CategoryProductRepository;
+use App\Repositories\ProductTransactionRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -17,10 +18,14 @@ use Yajra\DataTables\Facades\DataTables;
 class DashboardController extends Controller
 {
     protected $categoryRepository;
+    protected $productTransactionRepository;
 
-    public function __construct(CategoryProductRepository $categoryRepository)
-    {
+    public function __construct(
+        CategoryProductRepository $categoryRepository,
+        ProductTransactionRepository $productTransactionRepository
+    ) {
         $this->categoryRepository = $categoryRepository;
+        $this->productTransactionRepository = $productTransactionRepository;
     }
 
     public function index(): View
@@ -54,32 +59,6 @@ class DashboardController extends Controller
         }
 
         return DataTables::of($data)->make(true);
-
-
-        // =========>> JS for View
-        // $(function() {
-        //        $('#results-table').DataTable({
-        //        processing: true,
-        //        serverSide: true,
-        //        ajax: '{{ route('get-report-process-plan') }}',
-        //        columns: [
-        //            { data: 'customer', name: 'customer' },
-        //            { data: 'January', name: 'January' },
-        //            { data: 'February', name: 'February' },
-        //            { data: 'March', name: 'March' },
-        //            { data: 'April', name: 'April' },
-        //            { data: 'May', name: 'May' },
-        //            { data: 'June', name: 'June' },
-        //            { data: 'July', name: 'July' },
-        //            { data: 'August', name: 'August' },
-        //            { data: 'September', name: 'September' },
-        //            { data: 'October', name: 'October' },
-        //            { data: 'November', name: 'November' },
-        //            { data: 'December', name: 'December' },
-        //         ]
-        //     });
-        //     console.log(data);
-        //  });
     }
 
     public function getUnusedProducts()

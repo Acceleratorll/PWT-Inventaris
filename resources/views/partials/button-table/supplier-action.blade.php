@@ -54,6 +54,8 @@ id="edit"
             title: 'Delete Supplier',
             text: 'Are you sure you want to delete this supplier?',
             type: 'warning',
+icon: 'warning',
+icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Delete',
             cancelButtonText: 'Cancel',
@@ -70,6 +72,8 @@ id="edit"
                         Swal.fire({
                             title: 'Supplier Deleted Successfully',
                             type: 'success',
+icon: 'success',
+                            icon: 'success',
                             timer: 1700,
                         });
                         Swal.showLoading();
@@ -100,6 +104,8 @@ function update(name, defaultId)
         Swal.fire({
             title: `Supplier Name "${name}" Updated Successfully`, 
             type: 'success',
+icon: 'success',
+            icon: 'success',
             timer: 1700,
         });
         Swal.showLoading();

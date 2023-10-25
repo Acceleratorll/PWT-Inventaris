@@ -27,24 +27,18 @@ class ProcessPlanService
     {
         $amountChanges = [];
 
-        // Loop through existing outgoing_products
         foreach ($rpp->outgoing_products as $outgoingProduct) {
             $productId = $outgoingProduct->product_id;
 
-            // Check if the product is not present in the selectedProducts
             if (!isset($selectedProducts[$productId])) {
-                // Delete the outgoing_product
                 $this->deleteOutgoingProduct($outgoingProduct, $amountChanges);
             } else {
-                // Update the existing outgoing_product
                 $this->updateOutgoingProduct($outgoingProduct, $selectedProducts[$productId], $amountChanges);
             }
         }
 
-        // Loop through selected products
         foreach ($selectedProducts as $productId => $productData) {
             if (!$rpp->outgoing_products->contains('product_id', $productId)) {
-                // Product is not in the existing outgoing_products, create it
                 $this->createOutgoingProduct($rpp, $productId, $productData, $amountChanges);
             }
         }
@@ -105,7 +99,7 @@ class ProcessPlanService
         }
 
         $addedData = [
-            'name' => $rpp->customer,
+            'name' => $rpp->customer->name,
             'qty' => $data,
             'context' => 'update'
         ];
