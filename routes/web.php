@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/productTransaction', ProductTransactionController::class);
 });
 
+Route::get('/get-table/unread-notifications', [NotificationController::class, 'getTableUnreadNotifications'])->name('get-table.unread-notifications');
+Route::get('/get-table/read-notifications', [NotificationController::class, 'getTableReadNotifications'])->name('get-table.read-notifications');
 Route::resource('/dashboard', AdminDashboardController::class);
 Route::get('/get-profiles', [ProfileController::class, 'getProfiles'])->name('get-profiles');
 Route::get('/get-suppliers', [SupplierController::class, 'getSuppliers'])->name('get-suppliers');

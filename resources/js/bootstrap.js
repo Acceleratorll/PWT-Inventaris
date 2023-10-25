@@ -13,10 +13,10 @@ import moment from "moment";
 import "datatables.net-searchpanes-bs4";
 import "datatables.net-responsive-dt";
 
+window.DataTable = DataTable;
 window.moment = moment;
 window.select2 = select2;
 window.Swal = Swal;
-window.DataTable = DataTable;
 window.Chart = Chart;
 window.Pusher = Pusher;
 window.Swal = Swal;

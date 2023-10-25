@@ -231,37 +231,35 @@
                 toastDeleteData(data);
             });
 
-            $('#warning-dropdown').on('click', function () {
-                markNotificationsAsRead('warning');
-            });
+            // $('#warning-dropdown').on('click', function () {
+            //     markNotificationsAsRead('warning');
+            // });
             
-            $('#critical-dropdown').on('click', function () {
-                markNotificationsAsRead('critical');
-            });
+            // $('#critical-dropdown').on('click', function () {
+            //     markNotificationsAsRead('critical');
+            // });
 
-            function markNotificationsAsRead(type) {
-                $.ajax({
-                    url: '{{ route("notification.markAsRead") }}',
-                    type: 'POST',
-                    data: { type: type, _token: '{{ csrf_token() }}' },
-                    success: function (data) {
-                        console.log('Notifications marked as read');
-                    },
-                    error: function (error) {
-                        console.error('Error marking notifications as read');
-                    }
-                });
-            }
+            // function markNotificationsAsRead(type) {
+            //     $.ajax({
+            //         url: '{{ route("notification.markAsRead") }}',
+            //         type: 'POST',
+            //         data: { type: type, _token: '{{ csrf_token() }}' },
+            //         success: function (data) {
+            //             console.log('Notifications marked as read');
+            //         },
+            //         error: function (error) {
+            //             console.error('Error marking notifications as read');
+            //         }
+            //     });
+            // }
 
             function handleNotification(data, type) {
                 
-                // Update the notification count
                 const countElement = document.getElementById(`${type}-notification-count`);
                 countElement.textContent = parseInt(countElement.textContent) + 1;
                 
-                // Add the new notification above the "See All Products" link
                 const listElement = document.getElementById(`${type}-notification-list`);
-                const seeAllProductsLink = listElement.querySelector('.dropdown-footer'); // Reference to "See All Products" link
+                const seeAllProductsLink = listElement.querySelector('.dropdown-footer');
                 const notificationItem = document.createElement('div');
                 const iconClass = type === 'warning' ? 'fas fa-exclamation-triangle text-warning' : 'fas fa-exclamation-circle text-danger';
                 

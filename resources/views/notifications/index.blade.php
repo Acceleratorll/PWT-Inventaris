@@ -1,22 +1,95 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Notifications</title>
-    <!-- Include your CSS and JavaScript dependencies here -->
-</head>
-<body>
-    <!-- ... rest of your HTML ... -->
-<button id="send-notification-btn">Send Notification</button>
-<!-- ... rest of your HTML ... -->
+@extends('adminlte::page')
 
-    <h1>Notifications</h1>
-    <ul id="notifications-list">
-        <!-- Notifications will be added dynamically here -->
-    </ul>
+@section('title', 'Notification')
+
+@section('content_header')
+    <h1>Notification</h1>
+@stop
+
+@section('content')
+    <div class="row">
+        <div class="card col-md-12">
+            <div class="card-body">
+                @if (auth()->user()->unreadNotifications->isEmpty())
+                <p>No unread notifications available.</p>
+                @else
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="table">
+                        <caption>Table Notifications</caption>
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="text-center">Name</th>
+                                <th scope="col" class="text-center">Status</th>
+                                <th scope="col" class="text-center">Updated</th>
+                                <th scope="col" class="text-center">Created</th>
+                                <th scope="col" class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center"></tbody>
+                    </table>
+                </div>
+                @endif
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <h1>History</h1>
+            </div>
+        </div>
+        <div class="card col-md-12">
+            <div class="card-body">
+                @if (auth()->user()->readNotifications->isEmpty())
+                <p>No history notifications available.</p>
+                @else
+                <div class="table-responsive">
+                    <table class="table  table-bordered" id="table-history">
+                        <caption>History Notifications</caption>
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="text-center">Name</th>
+                                <th scope="col" class="text-center">Status</th>
+                                <th scope="col" class="text-center">Updated</th>
+                                <th scope="col" class="text-center">Created</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center"></tbody>
+                    </table>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+@endsection
     
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script>
 
-    </script>
-</body>
-</html>
+@section('css')
+@stop
+    
+@section('js')
+<script>
+    $('#table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('get-table.unread-notifications') }}',
+        columns: [
+            { data: 'name', name: 'name' },
+            { data: 'type', name: 'type' },
+            { data: 'formatted_updated_at', name: 'formatted_updated_at' },
+            { data: 'formatted_created_at', name: 'formatted_created_at' },
+            { data: 'action', name: 'action', orderable: false },
+        ],
+    });
+
+    $('#table-history').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('get-table.read-notifications') }}',
+        columns: [
+            { data: 'name', name: 'name' },
+            { data: 'type', name: 'type' },
+            { data: 'formatted_updated_at', name: 'formatted_updated_at' },
+            { data: 'formatted_created_at', name: 'formatted_created_at' },
+        ],
+    });
+</script>
+@stop
