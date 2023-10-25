@@ -9,9 +9,11 @@ import Pusher from "pusher-js";
 import Chart from "chart.js/auto";
 import Swal from "sweetalert2";
 import select2 from "select2";
+import moment from "moment";
 import "datatables.net-searchpanes-bs4";
 import "datatables.net-responsive-dt";
 
+window.moment = moment;
 window.select2 = select2;
 window.Swal = Swal;
 window.DataTable = DataTable;

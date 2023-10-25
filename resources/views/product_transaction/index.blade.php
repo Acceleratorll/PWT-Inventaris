@@ -32,7 +32,7 @@
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
                     </a>
-                    <a class="btn btn-secondary" href="{{ route('export.processplans') }}">
+                    <a class="btn btn-secondary" href="{{ route('export.producttransactions') }}">
                         <span>Excel</span>
                     </a>
                 </div>
@@ -76,7 +76,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('import.processplans') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('import.producttransactions') }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
                             @csrf
                             <div class="form-group">
@@ -85,8 +85,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Import</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-primary">Import</button>
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </form>
                 </div>

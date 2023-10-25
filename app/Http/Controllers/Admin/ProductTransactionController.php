@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ProductTransactionExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductTransactionRequest;
+use App\Imports\ProductTransactionImport;
 use App\Repositories\IncomingProductRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\ProductTransactionRepository;
@@ -134,28 +136,15 @@ class ProductTransactionController extends Controller
         return redirect()->back()->with('success', 'productTransaction berhasil dihapus');
     }
 
-    // public function exportproductTransactions()
-    // {
-    //     $productTransactions = $this->productTransactionRepository->all();
+    public function exportProductTransactions()
+    {
+        return $this->productTransactionService->exportAll();
+    }
 
-    //     return (new productTransactionsExport($productTransactions))->download('process_plans.xlsx');
-    // }
-
-    // public function importproductTransactions()
-    // {
-    //     try {
-    //         DB::beginTransaction();
-
-    //         Excel::import(new productTransactionsImport, request()->file('file'));
-    //         DB::commit();
-
-    //         return redirect()->back()->with('success', 'Import successful');
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-
-    //         return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
-    //     }
-    // }
+    public function importProductTransactions()
+    {
+        return $this->productTransactionService->import();
+    }
 
     public function getJsonProductTransactionBySupplierName($supplierName)
     {

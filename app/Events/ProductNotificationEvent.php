@@ -16,10 +16,12 @@ class ProductNotificationEvent implements ShouldBroadcast
 
     protected $data;
     protected $type;
+    protected $message;
 
-    public function __construct($type, $data)
+    public function __construct($type, $data, $message)
     {
         $this->type = $type;
+        $this->message = $message;
         $this->data = $data;
     }
 
@@ -40,6 +42,7 @@ class ProductNotificationEvent implements ShouldBroadcast
         return [
             'type' => $this->type,
             'data' => $this->data,
+            'message' => $this->message,
         ];
     }
 }

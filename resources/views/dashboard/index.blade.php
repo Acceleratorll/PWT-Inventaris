@@ -163,6 +163,7 @@
             
             var productNotif = pusher.subscribe('public.product.notification.1')
             .bind("product.notification", (data) => {
+                console.log('Data : ', data);
                 console.log('Data Message : ', data.message);
                 console.log('Data Type : ', data.type);
                 if (data.type === 'warning' || data.type === 'critical') {

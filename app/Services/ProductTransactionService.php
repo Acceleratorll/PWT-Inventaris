@@ -7,12 +7,16 @@ use App\Events\DataAddedEvent;
 use App\Events\ProductNotificationEvent;
 use App\Events\UpdateChartEvent;
 use App\Events\UpdateDataEvent;
+use App\Exports\ProductTransactionExport;
+use App\Imports\ProductTransactionImport;
 use App\Notifications\CriticalProduct;
 use App\Notifications\WarningProduct;
 use App\Repositories\IncomingProductRepository;
 use App\Repositories\MaterialRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\ProductTransactionRepository;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductTransactionService
 {
@@ -186,5 +190,28 @@ class ProductTransactionService
             $amountChanges[$productId] = 0;
         }
         $amountChanges[$productId] += $netChange;
+    }
+
+    public function exportAll()
+    {
+        $productTransaction = $this->productTransactionRepository->all();
+
+        return (new ProductTransactionExport($productTransaction))->download('product_transaction.xlsx');
+    }
+
+    public function import()
+    {
+        try {
+            DB::beginTransaction();
+
+            Excel::import(new ProductTransactionImport, request()->file('file'));
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Import successful');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Import failed: Supplier or Product values arent exist in database. Please input first and try again');
+        }
     }
 }

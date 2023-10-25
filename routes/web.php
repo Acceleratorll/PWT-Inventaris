@@ -50,6 +50,8 @@ Route::get('/export/products', [ProductController::class, 'exportProducts'])->na
 Route::post('/import/products', [ProductController::class, 'importProducts'])->name('import.products');
 Route::get('/export/process-plans', [ProcessPlanController::class, 'exportProcessPlans'])->name('export.processplans');
 Route::post('/import/process-plans', [ProcessPlanController::class, 'importProcessPlans'])->name('import.processplans');
+Route::get('/export/product-transaction', [ProductTransactionController::class, 'exportProductTransactions'])->name('export.producttransactions');
+Route::post('/import/product-transaction', [ProductTransactionController::class, 'importProductTransactions'])->name('import.producttransactions');
 
 Route::prefix('/json')->group(function () {
     Route::get('/get-customers', [CustomerController::class, 'getJsonCustomers'])->name('get-json-customers');

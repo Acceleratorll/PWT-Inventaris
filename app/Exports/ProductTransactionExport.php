@@ -12,26 +12,26 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, WithColumnWidths, ShouldAutoSize, WithStyles
+class ProductTransactionExport implements FromCollection, Responsable, WithHeadings, WithColumnWidths, ShouldAutoSize, WithStyles
 {
     use Exportable;
 
-    protected $processPlans;
+    protected $productTransaction;
 
-    public function __construct(Collection $processPlans)
+    public function __construct(Collection $productTransaction)
     {
-        $this->processPlans = $processPlans;
+        $this->productTransaction = $productTransaction;
     }
 
     public function collection()
     {
-        return $this->processPlans->map(function ($processPlan) {
+        return $this->productTransaction->map(function ($productTransaction) {
             return [
-                'Customer' => $processPlan->customer->name,
-                'Code' => $processPlan->code,
-                'Order Type' => $processPlan->order_type,
-                'Outgoing Products' => $this->formatOutgoingProducts($processPlan->outgoing_products),
-                'Description' => $processPlan->desc,
+                'Supplier' => $productTransaction->supplier->name,
+                'Code' => $productTransaction->code,
+                'Purchase Date' => $productTransaction->purchase_date,
+                'Incoming Products' => $this->formatIncomingProducts($productTransaction->incoming_products),
+                'Description' => $productTransaction->desc,
             ];
         });
     }
@@ -39,25 +39,25 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
     public function headings(): array
     {
         return [
-            'Customer',
+            'Supplier',
             'Code',
-            'Order Type',
-            'Outgoing Products',
+            'Purchase Date',
+            'Incoming Products',
             'Description',
         ];
     }
 
-    protected function formatOutgoingProducts($outgoingProducts)
+    protected function formatIncomingProducts($incomingProducts)
     {
-        $formattedOutgoingProducts = $outgoingProducts->map(function ($outgoingProduct) {
-            $productName = $outgoingProduct->product->name;
-            $qualifierAbb = $outgoingProduct->product->qualifier->abbreviation;
-            $qty = $outgoingProduct->qty;
+        $formattedIncomingProducts = $incomingProducts->map(function ($incomingProduct) {
+            $productName = $incomingProduct->product->name;
+            $qualifierAbb = $incomingProduct->product->qualifier->abbreviation;
+            $qty = $incomingProduct->qty;
 
             return "{$productName} [Qty: {$qty} {$qualifierAbb}]";
         })->toArray();
 
-        return implode(', ', $formattedOutgoingProducts);
+        return implode(', ', $formattedIncomingProducts);
     }
 
     public function styles(Worksheet $sheet)
@@ -88,7 +88,7 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
         return [
             'A' => 33.0,
             'B' => 33.0,
-            'C' => 33.0,
+            'C' => 35.0,
             'D' => 130.0,
             'E' => 95.0,
         ];
