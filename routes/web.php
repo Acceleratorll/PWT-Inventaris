@@ -89,7 +89,8 @@ Route::prefix('/json')->group(function () {
 Route::prefix('/notifications')->group(function () {
     Route::get('/', [NotificationController::class, 'index'])->name('notification.index');
     Route::get('/show/{id}', [NotificationController::class, 'show'])->name('notification.show');
-    Route::post('/markAsRead', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
+    Route::post('/markAsRead', [NotificationController::class, 'markAsReads'])->name('notification.markAsReads');
+    Route::post('/markAsRead/{id}', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
 });
 
 // Route::fallback(function () {
