@@ -87,7 +87,8 @@ class ProductRepository
 
     public function update($id, $data)
     {
-        return $this->model->find($id)->update($data);
+        $update = $this->model->find($id);
+        return $update->update($data);
     }
 
     public function delete($id)

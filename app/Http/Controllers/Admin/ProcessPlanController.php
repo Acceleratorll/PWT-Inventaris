@@ -132,12 +132,12 @@ class ProcessPlanController extends Controller
 
             foreach ($rpp->outgoing_products as $oProduct) {
                 $cproduct = $this->productRepository->find($oProduct->product_id);
-                if ($cproduct->amount < (0.1 * $cproduct->max_amount)) {
-                    $user->notify(new CriticalProduct($cproduct));
+                if ($cproduct->amount <= (0.1 * $cproduct->max_amount)) {
+                    auth()->user()->notify(new CriticalProduct($cproduct));
                     $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
-                    event(new ProductNotificationEvent('critical', $cproduct, $notif-> message->data['message']));
-                } else if ($cproduct->amount < (0.3 * $cproduct->max_amount)) {
-                    $user->notify(new WarningProduct($cproduct));
+                    event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
+                } else if ($cproduct->amount <= (0.3 * $cproduct->max_amount)) {
+                    auth()->user()->notify(new WarningProduct($cproduct));
                     $notif = $user->unreadNotifications->where('data.type', 'warning')->last();
                     event(new ProductNotificationEvent('warning', $cproduct, $notif->data['message']));
                 }
@@ -198,12 +198,13 @@ class ProcessPlanController extends Controller
     public function update(ProcessPlanRequest $request, string $id)
     {
         $input = $request->validated();
+        $user = auth()->user();
         $rpp = $this->processPlanRepository->find($id);
         $amountChanges = [];
         foreach ($input['selected_products'] as $productId => $productData) {
             $outgoingProduct = $rpp->outgoing_products->firstWhere('product_id', $productId);
             if ($outgoingProduct) {
-                $netChange = $productData['qty'] - $outgoingProduct['qty'];
+                $netChange = $outgoingProduct['qty'] - $productData['qty'];
                 if (!isset($amountChanges[$productId])) {
                     $amountChanges[$productId] = 0;
                 }
@@ -229,6 +230,20 @@ class ProcessPlanController extends Controller
             $product->amount += $netChange;
             $product->save();
         }
+
+        foreach ($rpp->outgoing_products as $oProduct) {
+            $cproduct = $this->productRepository->find($oProduct->product_id);
+            if ($cproduct->amount <= (0.1 * $cproduct->max_amount)) {
+                auth()->user()->notify(new CriticalProduct($cproduct));
+                $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
+                event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
+            } else if ($cproduct->amount <= (0.3 * $cproduct->max_amount)) {
+                auth()->user()->notify(new WarningProduct($cproduct));
+                $notif = $user->unreadNotifications->where('data.type', 'warning')->last();
+                event(new ProductNotificationEvent('warning', $cproduct, $notif->data['message']));
+            }
+        }
+
         $materials = $this->materialRepository->all();
         $data = [];
         $labels = [];

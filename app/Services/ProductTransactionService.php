@@ -175,10 +175,10 @@ class ProductTransactionService
         foreach ($transaction->incoming_products as $iProduct) {
             $product = $this->productRepository->find($iProduct->product_id);
             if ($product->amount < (0.1 * $product->max_amount)) {
-                $user->notify(new CriticalProduct($product));
+                auth()->user()->notify(new CriticalProduct($product));
                 event(new ProductNotificationEvent('critical', $product));
             } else if ($product->amount < (0.3 * $product->max_amount)) {
-                $user->notify(new WarningProduct($product));
+                auth()->user()->notify(new WarningProduct($product));
                 event(new ProductNotificationEvent('warning', $product));
             }
         }

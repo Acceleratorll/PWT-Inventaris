@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\DataAddedEvent;
 use App\Events\DeletedDataEvent;
+use App\Events\ProductNotificationEvent;
 use App\Events\UpdateChartEvent;
 use App\Events\UpdateDataEvent;
 use App\Exports\ProductsExport;
@@ -11,6 +12,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Imports\ProductsImport;
 use App\Imports\RolesImport;
+use App\Notifications\CriticalProduct;
+use App\Notifications\WarningProduct;
 use App\Repositories\CategoryProductRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Contracts\View\View;
@@ -177,6 +180,16 @@ class ProductController extends Controller
             'context' => 'create',
         ];
 
+        if ($product->amount <= (0.1 * $product->max_amount)) {
+            auth()->user()->notify(new CriticalProduct($product));
+            $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
+            event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
+        } else if ($product->amount <= (0.3 * $product->max_amount)) {
+            auth()->user()->notify(new WarningProduct($product));
+            $notif = auth()->user()->unreadNotifications->where('data.type', 'warning')->last();
+            event(new ProductNotificationEvent('warning', $product, $notif->data['message']));
+        }
+
         event(new DataAddedEvent($data, 'Product'));
         return redirect()->route('product.index')->with('success', 'Product created successfully');
     }
@@ -190,22 +203,41 @@ class ProductController extends Controller
     public function update($product, ProductRequest $request): RedirectResponse
     {
         $input = $request->validated();
-        $this->productRepository->update($product, $input);
         $product = $this->productRepository->find($product);
-        if ($request->category_product_id != $product->category_product_id) {
-            $category_old = $this->categoryProductRepository->find($product->category_product_id);
-            $category = $this->categoryProductRepository->find($request->category_product_id);
-            $data = [
-                'id' => $category->id,
-                'id_old' => $product->category_product_id,
-                'name_old' => $product->category_product->name,
-                'name' => $category->name,
-                'qty_old' => $category_old->products->count(),
-                'qty' => $category->products->count(),
-                'context' => 'update',
-            ];
-            event(new UpdateDataEvent($data, 'Product'));
+        $this->productRepository->update($product->id, $input);
+        $new = $this->productRepository->find($product->id);
+        $category = $this->categoryProductRepository->find($request->category_product_id);
+        $category_old = $product->category_product;
+
+        $data = [
+            'id' => $category->id,
+            'id_old' => $product->category_product_id,
+            'name_old' => $product->category_product->name,
+            'name' => $category->name,
+            'qty_old' => $category_old->products->count(),
+            'qty' => $category->products->count(),
+            'context' => 'update',
+        ];
+
+        $dataPro = [
+            'id' => $new->id,
+            'name' => $new->name,
+            'updated_at' => $new->updated_at,
+            'created_at' => $new->created_at,
+        ];
+
+        if ($new->amount <= (0.1 * $new->max_amount)) {
+            auth()->user()->notify(new CriticalProduct($new));
+            $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
+            event(new ProductNotificationEvent('critical', $dataPro, $notif->data['message']));
+        } else if ($new->amount <= (0.3 * $new->max_amount)) {
+            auth()->user()->notify(new WarningProduct($new));
+            $notif = auth()->user()->unreadNotifications->where('data.type', 'warning')->last();
+            event(new ProductNotificationEvent('warning', $dataPro, $notif->data['message']));
         }
+
+        event(new UpdateDataEvent($data, 'Product'));
+
         return redirect()->route('product.index')->with('success', 'Product Updated Successfully');
     }
 

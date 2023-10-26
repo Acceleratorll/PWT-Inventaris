@@ -23,7 +23,9 @@
         </a>
         <div class="dropdown-divider"></div>
         @endforeach
-        <a href="#" class="dropdown-item dropdown-footer">See All Products</a>
+        <a class="dropdown-item dropdown footer text-center">Latest</a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ route('notification.index') }}" class="dropdown-item dropdown-footer">See All Notification</a>
     </div>
 </li>
 
@@ -35,15 +37,16 @@
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="warning-notification-list">
         <span class="dropdown-header" id="warning-count-notification">{{ auth()->user()->unreadNotifications->where('data.type', 'warning')->count() }} Notifications</span>
         <div class="dropdown-divider"></div>
-            @foreach(auth()->user()->unreadNotifications->where('data.type', 'warning') as $notification)
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-exclamation-triangle mr-2 text-warning"></i>
-                    {{ Illuminate\Support\Str::limit($notification->data['name'], 19) }}
-                    <span class="float-right text-muted text-sm">{{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}</span>
-                </a>
-                <div class="dropdown-divider"></div>
-            @endforeach
-
+        @foreach(auth()->user()->unreadNotifications->where('data.type', 'warning')->take(5) as $notification)
+        <a href="#" class="dropdown-item">
+            <i class="fas fa-exclamation-triangle mr-2 text-warning"></i>
+            {{ Illuminate\Support\Str::limit($notification->data['name'], 19) }}
+            <span class="float-right text-muted text-sm">{{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        @endforeach
+        <a class="dropdown-item dropdown footer text-center">Latest</a>
+        <div class="dropdown-divider"></div>
         <a href="{{ route('notification.index') }}" class="dropdown-item dropdown-footer">See All Notifications</a>
     </div>
 </li>
@@ -231,28 +234,6 @@
                 toastDeleteData(data);
             });
 
-            // $('#warning-dropdown').on('click', function () {
-            //     markNotificationsAsRead('warning');
-            // });
-            
-            // $('#critical-dropdown').on('click', function () {
-            //     markNotificationsAsRead('critical');
-            // });
-
-            // function markNotificationsAsRead(type) {
-            //     $.ajax({
-            //         url: '{{ route("notification.markAsRead") }}',
-            //         type: 'POST',
-            //         data: { type: type, _token: '{{ csrf_token() }}' },
-            //         success: function (data) {
-            //             console.log('Notifications marked as read');
-            //         },
-            //         error: function (error) {
-            //             console.error('Error marking notifications as read');
-            //         }
-            //     });
-            // }
-
             function handleNotification(data, type) {
                 
                 const countElement = document.getElementById(`${type}-notification-count`);
@@ -263,8 +244,10 @@
                 const notificationItem = document.createElement('div');
                 const iconClass = type === 'warning' ? 'fas fa-exclamation-triangle text-warning' : 'fas fa-exclamation-circle text-danger';
                 
-                // Format the timestamp using moment.js
-                const formattedTime = moment(data.created_at).fromNow(); // Adjust the format as per your preference
+                const formattedTime = moment(data.updated_at).fromNow();
+
+                console.log('Updated at ', data.updated_at);
+                console.log('diff ', formattedTime);
                 
                 notificationItem.innerHTML = `
                 <a href="#" class="dropdown-item">
