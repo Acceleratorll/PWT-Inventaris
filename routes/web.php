@@ -93,8 +93,8 @@ Route::prefix('/notifications')->group(function () {
     Route::post('/markAsRead/{id}', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
 });
 
-// Route::fallback(function () {
-//     return redirect()->route('dashboard.index');
-// });
+Route::fallback(function () {
+    return redirect()->route('dashboard.index');
+});
 
 require __DIR__ . '/auth.php';
