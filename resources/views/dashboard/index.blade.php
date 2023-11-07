@@ -184,8 +184,15 @@
             var updateChart = pusher.subscribe('public.update.chart.1')
             .bind("update.chart", (data) => {
                 console.log(data);
-
-                updateDataChart(data);
+                if(data.chart === 'rChart'){
+                    rppChart();
+                }else if(data.chart === 'tChart'){
+                    tintaChart();
+                }else if(data.chart === 'pChart'){
+                    productTransactionChart();
+                }else{
+                    updateDataChart(data);
+                }
             });
             
             var deleteChart = pusher.subscribe('public.delete.chart.1')
@@ -400,15 +407,9 @@
                         
                         rChart = new Chart(ctx,{
                             type: 'line',
-                            data:{
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Total RPP',
-                                    data: datas,
-                                    fill: true,
-                                    borderColor: 'rgb(75, 192, 192)',
-                                    tension: 0.1
-                                }]
+                            data: {
+                                labels: data.labels,
+                                datasets: data.datasets,
                             },
                             options: {
                                 scales: {

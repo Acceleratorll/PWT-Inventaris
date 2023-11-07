@@ -143,11 +143,9 @@ class ProcessPlanController extends Controller
                 }
             }
 
-            $qty = $this->processPlanRepository->qtyCurrentMonth($currentMonth, $currentYear);
             $rppChart = [
                 'id' => $rpp->id,
                 'name' => $formattedCurrentMonth,
-                'qty' => $qty,
                 'context' => 'add'
             ];
             event(new UpdateChartEvent('rChart', $rppChart));
@@ -260,6 +258,7 @@ class ProcessPlanController extends Controller
             'context' => 'update'
         ];
         event(new UpdateChartEvent('tChart', $addedData));
+        event(new UpdateChartEvent('rChart', $addedData));
         return redirect()->route('rpp.index')->with('success', 'RPP berhasil diupdate!');
     }
 
@@ -281,7 +280,7 @@ class ProcessPlanController extends Controller
 
         $this->processPlanRepository->delete($id);
 
-        event(new DeleteChartEvent('tChart', $data));
+        event(new UpdateChartEvent('tChart', $datasets));
         event(new UpdateChartEvent('rChart', $datasets));
         event(new DeletedDataEvent($data, 'Rpp'));
 

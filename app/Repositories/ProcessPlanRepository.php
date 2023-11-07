@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Material;
 use App\Models\ProcessPlan;
 
 class ProcessPlanRepository
@@ -22,13 +23,39 @@ class ProcessPlanRepository
             ->get();
     }
 
-    public function qtyCurrentMonth($month, $year)
+    public function qtyCurrentMonth($year)
     {
-        return $this->model->whereMonth('created_at', $month)
-            ->whereYear('created_at', $year)
-            ->whereHas('outgoing_products.product.material')
-            ->count();
+        $datas = ProcessPlan::whereYear('created_at', $year)->get();
+        $types = Material::all(); // Assuming ProductType is a model for your product types.
+
+        $datasets = [];
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        foreach ($types as $type) {
+            $data = [];
+            foreach ($months as $index => $month) {
+                $totalQty = $datas->filter(function ($item) use ($index, $type) {
+                    return $item->created_at->month == $index + 1 &&
+                        $item->outgoing_products->contains('product.material_id', $type->id);
+                })->sum(function ($item) use ($type) {
+                    return $item->outgoing_products->where('product.material_id', $type->id)->sum('qty');
+                });
+
+                $data[] = $totalQty;
+            }
+
+            $datasets[] = [
+                'labels' => $months,
+                'label' => $type->name,
+                'data' => $data,
+                'fill' => false,
+            ];
+        }
+
+        return $datasets;
     }
+
+
 
     public function getByCustomerName($data)
     {

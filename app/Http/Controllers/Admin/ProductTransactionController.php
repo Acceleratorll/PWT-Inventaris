@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\UpdateChartEvent;
 use App\Exports\ProductTransactionExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductTransactionRequest;
@@ -129,9 +130,7 @@ class ProductTransactionController extends Controller
 
         $this->productTransactionRepository->delete($id);
 
-        // event(new DeleteChartEvent('tChart', $data));
-        // event(new UpdateChartEvent('rChart', $datasets));
-        // event(new DeletedDataEvent($data, 'productTransaction'));
+        event(new UpdateChartEvent('pChart', $datasets));
 
         return redirect()->back()->with('success', 'productTransaction berhasil dihapus');
     }
