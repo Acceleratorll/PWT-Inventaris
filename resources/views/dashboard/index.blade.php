@@ -130,7 +130,7 @@
 <div class="row">
     <div class="col-md-12">
         <x-adminlte-card title="Barang Keluar RPP" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="chart-container" style="position: relative; height:55vh;">
+            <div class="chart-container" style="position: relative; height:85vh;">
                 <canvas id="tintaChart" style="width: 100%;"></canvas>
             </div>
         </x-adminlte-card>

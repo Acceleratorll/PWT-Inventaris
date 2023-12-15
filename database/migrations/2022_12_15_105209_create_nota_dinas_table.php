@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('process_plans', function (Blueprint $table) {
+        Schema::create('nota_dinas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained();
+            $table->string('name');
             $table->string('code')->unique();
-            $table->string('desc')->nullable();
-            $table->softDeletes();
+            $table->text('desc');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('process_plans');
+        Schema::dropIfExists('nota_dinas');
     }
 };
