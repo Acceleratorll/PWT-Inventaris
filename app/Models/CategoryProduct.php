@@ -13,7 +13,7 @@ class CategoryProduct extends Model
 
     protected $fillable = [
         'name',
-        'max',
+        'min',
     ];
 
     public function products(): HasMany

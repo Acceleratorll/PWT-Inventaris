@@ -13,7 +13,7 @@ class OutgoingProduct extends Model
 
     protected $fillable = [
         'process_plan_id',
-        'product_id',
+        'product_transaction_location_id',
         'qty',
     ];
 
@@ -22,8 +22,8 @@ class OutgoingProduct extends Model
         return $this->belongsTo(ProcessPlan::class);
     }
 
-    public function product(): BelongsTo
+    public function product_transaction_location(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(ProductTransactionLocation::class);
     }
 }

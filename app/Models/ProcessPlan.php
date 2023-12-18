@@ -14,7 +14,6 @@ class ProcessPlan extends Model
 
     protected $fillable = [
         'customer_id',
-        'order_type',
         'code',
         'desc',
     ];

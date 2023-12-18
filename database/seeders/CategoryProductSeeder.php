@@ -16,19 +16,19 @@ class CategoryProductSeeder extends Seeder
         $data = [
             [
                 'name' => 'Daily',
-                'max' => '0',
+                'min' => '0',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'Slow Moving',
-                'max' => '1',
+                'min' => '1',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'Unused',
-                'max' => '2',
+                'min' => '2',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

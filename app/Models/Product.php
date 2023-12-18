@@ -45,13 +45,13 @@ class Product extends Model
         return $this->belongsTo(CategoryProduct::class);
     }
 
-    public function outgoing_products(): HasMany
+    public function product_transaction_locations(): HasMany
     {
-        return $this->hasMany(OutgoingProduct::class);
+        return $this->hasMany(ProductTransactionLocation::class);
     }
 
-    public function incoming_products(): HasMany
+    public function product_plannings(): HasMany
     {
-        return $this->hasMany(IncomingProduct::class);
+        return $this->hasMany(ProductPlanning::class);
     }
 }

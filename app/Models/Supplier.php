@@ -15,8 +15,8 @@ class Supplier extends Model
         'name'
     ];
 
-    public function product_transactions(): HasMany
+    public function transactions(): HasMany
     {
-        return $this->hasMany(ProductTransaction::class);
+        return $this->hasMany(Transaction::class);
     }
 }

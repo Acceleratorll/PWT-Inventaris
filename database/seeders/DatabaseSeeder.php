@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             QualifierSeeder::class,
             ProductSeeder::class,
-            ProcessPlanSeeder::class,
+            // ProcessPlanSeeder::class,
         ]);
     }
 }

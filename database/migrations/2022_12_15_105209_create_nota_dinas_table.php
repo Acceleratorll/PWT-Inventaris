@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('nota_dinas', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('code')->unique();
             $table->text('desc');
             $table->timestamps();

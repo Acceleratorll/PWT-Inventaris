@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('category_product_id')->constrained();
             $table->string('product_code')->unique();
             $table->string('name');
-            $table->string('min_amount');
+            $table->string('minimal_amount');
             $table->string('total_amount');
             $table->string('note')->nullable();
             $table->softDeletes();
