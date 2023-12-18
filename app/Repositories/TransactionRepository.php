@@ -2,26 +2,26 @@
 
 namespace App\Repositories;
 
-use App\Models\ProductTransaction;
+use App\Models\ProductTransactionLocation;
 
 class ProductTransactionRepository
 {
     protected $model;
 
-    public function __construct(ProductTransaction $model)
+    public function __construct(ProductTransactionLocation $model)
     {
         $this->model = $model;
     }
 
     public function find($id)
     {
-        return $this->model->with(['incoming_products'])->findOrFail($id);
+        return $this->model->with('supplier', 'product_transactions')->findOrFail($id);
     }
 
     public function getByMonth($month)
     {
         return $this->model
-            ->with(['incoming_products.product', 'supplier'])
+            ->with(['product_transactions.product', 'supplier'])
             ->whereMonth('purchase_date', $month)
             ->get();
     }
@@ -30,7 +30,7 @@ class ProductTransactionRepository
     {
         $current_month = now()->month;
         $current_year = now()->year;
-        return $this->model->with('incoming_products.product.qualifier', 'supplier')
+        return $this->model->with('product_transaction', 'supplier')
             ->whereHas('supplier', function ($query) use ($data) {
                 $query->where('name', $data);
             })
@@ -55,7 +55,7 @@ class ProductTransactionRepository
             ->orWhereHas('supplier', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%');
             })
-            ->orWhereHas('incoming_products', function ($query) use ($term) {
+            ->orWhereHas('product_transactions', function ($query) use ($term) {
                 $query->whereHas('product', function ($subQuery) use ($term) {
                     $subQuery->where('name', 'LIKE', '%' . $term . '%');
                 })
@@ -68,18 +68,18 @@ class ProductTransactionRepository
     {
         return $this->model->with([
             'supplier',
-            'incoming_products.product.qualifier',
-            'incoming_products.product.material'
+            'product_transactions.product.qualifier',
+            'product_transactions.product.material'
         ])->get();
     }
 
-    public function paginate()
+    public function paginate(int $num)
     {
         return $this->model->with([
             'supplier',
-            'incoming_products.product.qualifier',
-            'incoming_products.product.material'
-        ])->paginate(10);
+            'product_transactions.product.qualifier',
+            'product_transactions.product.material'
+        ])->paginate($num);
     }
 
     public function create($data)

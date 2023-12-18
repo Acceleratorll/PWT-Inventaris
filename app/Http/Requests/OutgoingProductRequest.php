@@ -18,8 +18,8 @@ class OutgoingProductRequest extends FormRequest
     {
         return [
             'process_plan_id' => 'required|integer',
-            'product_id' => 'required|integer',
-            'qty' => 'required|numeric',
+            'product_transaction_location_id' => 'required|integer',
+            'amount' => 'required|numeric',
         ];
     }
 }

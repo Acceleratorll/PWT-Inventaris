@@ -13,7 +13,7 @@ class ProductRepository
         $this->model = $model;
     }
 
-    public function find($id)
+    public function find(int $id)
     {
         return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->findOrFail($id);
     }
@@ -46,13 +46,14 @@ class ProductRepository
                 'qualifier',
                 'material',
                 'category_product',
-                'incoming_products',
-                'outgoing_products'
+                'products_transaction',
+                'outgoing_products',
+                'products_planning',
             )
             ->get();
     }
 
-    public function getProductsByCategory($category)
+    public function getByCategory($category)
     {
         return $this->model->with('product_type', 'qualifier', 'material', 'category_product')
             ->whereHas('category_product', function ($query) use ($category) {
@@ -75,7 +76,7 @@ class ProductRepository
         return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->orderByRaw('CAST(' . $col . ' AS SIGNED) ' . $desc)->get();
     }
 
-    public function paginate($number)
+    public function paginate(int $number)
     {
         return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->paginate($number);
     }

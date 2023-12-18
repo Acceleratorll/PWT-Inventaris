@@ -14,25 +14,62 @@ class ProductTransactionLocation extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'product_id',
-        'transaction_id',
+        'product_transaction_id',
         'location_id',
         'amount',
-        'expired',
     ];
 
-    protected $casts = [
-        'expired' => 'datetime'
-    ];
-
-    public function outgoing_product(): HasOne
+    protected static function boot()
     {
-        return $this->hasOne(OutgoingProduct::class);
+        parent::boot();
+
+        // Listen for creating event
+        static::creating(function ($model) {
+            $model->updateRelatedAmounts();
+        });
+
+        // Listen for deleting event
+        static::deleting(function ($model) {
+            $model->updateRelatedAmounts();
+        });
     }
 
-    public function transaction(): BelongsTo
+    public function updateRelatedAmountsOnOutgoingCreate()
     {
-        return $this->belongsTo(Transaction::class);
+        $this->amount -= $this->outgoing_products->sum('amount');
+        $this->save();
+
+        $this->product_transaction->updateAmount();
+        $this->product_transaction->product->updateAmount();
+    }
+
+    public function updateRelatedAmountsOnOutgoingUpdate($amountDifference)
+    {
+        $this->amount += $amountDifference;
+        $this->save();
+
+        $this->product_transaction->updateAmount();
+        $this->product_transaction->product->updateAmount();
+    }
+
+    public function updateRelatedAmountsOnOutgoingDelete()
+    {
+        $this->amount += $this->outgoing_products->sum('amount');
+        $this->save();
+
+        $this->product_transaction->updateAmount();
+        $this->product_transaction->product->updateAmount();
+    }
+
+    public function updateRelatedAmounts()
+    {
+        $this->product_transaction->updateAmount();
+        $this->product_transaction->product->updateAmount();
+    }
+
+    public function outgoing_products(): HasMany
+    {
+        return $this->hasMany(OutgoingProduct::class);
     }
 
     public function location(): BelongsTo
@@ -40,8 +77,8 @@ class ProductTransactionLocation extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function product(): BelongsTo
+    public function product_transaction(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(ProductTransaction::class);
     }
 }

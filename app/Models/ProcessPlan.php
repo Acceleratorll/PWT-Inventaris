@@ -16,6 +16,11 @@ class ProcessPlan extends Model
         'customer_id',
         'code',
         'desc',
+        'outed_date',
+    ];
+
+    protected $casts = [
+        'outed_date' => 'datetime'
     ];
 
     public function outgoing_products(): HasMany

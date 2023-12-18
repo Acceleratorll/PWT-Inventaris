@@ -15,7 +15,7 @@ class SupplierRepository
 
     public function orderBy($col, $desc)
     {
-        return $this->model->with('product_transactions')->orderBy($col, $desc)->get();
+        return $this->model->with('transactions')->orderBy($col, $desc)->get();
     }
 
     public function find($id)
@@ -27,7 +27,7 @@ class SupplierRepository
     {
         return $this->model
             ->where('name', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('product_transactions', function ($query) use ($term) {
+            ->orWhereHas('transactions', function ($query) use ($term) {
                 $query->where('code', 'LIKE', '%' . $term . '%');
             })
             ->get();
@@ -40,7 +40,7 @@ class SupplierRepository
 
     public function paginate()
     {
-        return $this->model->with('product_transactions')->paginate(10);
+        return $this->model->with('transactions')->paginate(10);
     }
 
     public function create($data)

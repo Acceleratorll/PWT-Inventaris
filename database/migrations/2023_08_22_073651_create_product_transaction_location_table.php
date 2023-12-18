@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('product_transaction_location', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained();
-            $table->foreignId('transaction_id')->constrained();
+            $table->foreignId('product_transaction_id')->constrained();
             $table->foreignId('location_id')->constrained();
             $table->float('amount');
-            $table->dateTime('expired');
             $table->softDeletes();
             $table->timestamps();
         });

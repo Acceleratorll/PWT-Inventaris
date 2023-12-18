@@ -20,10 +20,16 @@ class Product extends Model
         'category_product_id',
         'product_code',
         'name',
-        'max_amount',
-        'amount',
+        'minimal_amount',
+        'total_amount',
         'note',
     ];
+
+    public function updateAmount()
+    {
+        $this->amount = $this->product_transactions->sum('amount');
+        $this->save();
+    }
 
     public function material(): BelongsTo
     {
@@ -45,9 +51,9 @@ class Product extends Model
         return $this->belongsTo(CategoryProduct::class);
     }
 
-    public function product_transaction_locations(): HasMany
+    public function product_transactions(): HasMany
     {
-        return $this->hasMany(ProductTransactionLocation::class);
+        return $this->hasMany(ProductTransaction::class);
     }
 
     public function product_plannings(): HasMany

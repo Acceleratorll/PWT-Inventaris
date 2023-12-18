@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained();
             $table->string('code')->unique();
+            $table->datetime('outed_date');
             $table->string('desc')->nullable();
             $table->softDeletes();
             $table->timestamps();

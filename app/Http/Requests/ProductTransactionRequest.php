@@ -26,6 +26,7 @@ class ProductTransactionRequest extends FormRequest
             'code' => 'required',
             'purchase_date' => 'required',
             'selected_products' => 'required|array',
+            'code' => '',
         ];
     }
 }

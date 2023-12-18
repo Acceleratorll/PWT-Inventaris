@@ -16,10 +16,10 @@ class ProcessPlanRepository
 
     public function currentMonth($month, $year)
     {
-        return $this->model->whereHas('outgoing_products.product.material')
+        return $this->model
             ->whereMonth('created_at', $month)
             ->whereYear('created_at', $year)
-            ->whereHas('outgoing_products.product.material')
+            ->whereHas('outgoing_products.product_transaction_location.product.material')
             ->get();
     }
 
@@ -55,13 +55,11 @@ class ProcessPlanRepository
         return $datasets;
     }
 
-
-
     public function getByCustomerName($data)
     {
         $current_month = now()->month;
         $current_year = now()->year;
-        return $this->model->with('outgoing_products.product.qualifier', 'customer')
+        return $this->model->with('outgoing_products.product_transaction_location.product.qualifier', 'customer')
             ->whereHas('customer', function ($query) use ($data) {
                 $query->where('name', $data);
             })
@@ -70,7 +68,7 @@ class ProcessPlanRepository
             ->get();
     }
 
-    public function find($id)
+    public function find(int $id)
     {
         return $this->model->findOrFail($id);
     }
@@ -78,13 +76,15 @@ class ProcessPlanRepository
     public function search($term)
     {
         return $this->model
-            ->with('outgoing_products')
+            ->with('outgoing_products.product_transaction_location.product.qualifier.unit_group', 'customer')
             ->where('customer', 'LIKE', '%' . $term . '%')
             ->orWhere('order_type', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
             ->orWhereHas('outgoing_products', function ($query) use ($term) {
-                $query->whereHas('product', function ($query) use ($term) {
-                    $query->where('name', 'LIKE', '%' . $term . '%');
+                $query->whereHas('product_transaction_location', function ($query) use ($term) {
+                    $query->whereHas('product', function ($query) use ($term) {
+                        $query->where('name', 'LIKE', '%' . $term . '%');
+                    });
                 });
             })
             ->get();
@@ -92,12 +92,12 @@ class ProcessPlanRepository
 
     public function all()
     {
-        return $this->model->with('outgoing_products.product.qualifier.unit_group')->get();
+        return $this->model->with('outgoing_products.product_transaction_location.product.qualifier.unit_group', 'customer')->get();
     }
 
-    public function paginate()
+    public function paginate(int $num)
     {
-        return $this->model->with('outgoing_products')->paginate(10);
+        return $this->model->with('outgoing_products.product_transaction_location.product.qualifier.unit_group', 'customer')->paginate($num);
     }
 
     public function create($data)

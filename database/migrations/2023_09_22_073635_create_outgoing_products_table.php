@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('process_plan_id')->constrained();
             $table->foreignId('product_transaction_location_id')->constrained('product_transaction_location');
-            $table->integer('qty');
+            $table->float('amount');
+            $table->float('product_amount');
             $table->softDeletes();
             $table->timestamps();
         });

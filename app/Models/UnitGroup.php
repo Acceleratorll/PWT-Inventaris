@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UnitGroup extends Model
 {
@@ -15,7 +16,7 @@ class UnitGroup extends Model
         'desc',
     ];
 
-    public function qualifiers()
+    public function qualifiers(): HasMany
     {
         return $this->hasMany(Qualifier::class);
     }

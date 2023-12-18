@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('nota_dinas', function (Blueprint $table) {
+        Schema::create('product_transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->boolean('authorized')->default(0);
-            $table->text('desc');
+            $table->foreignId('product_id')->constrained();
+            $table->foreignId('transaction_id')->constrained();
+            $table->float('amount');
+            $table->float('product_amount');
+            $table->dateTime('expired');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('nota_dinas');
+        Schema::dropIfExists('product_transactions');
     }
 };
