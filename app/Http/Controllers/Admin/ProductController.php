@@ -42,7 +42,7 @@ class ProductController extends Controller
 
     public function getProductsByCategory($category)
     {
-        $products = $this->productRepository->getProductsByCategory($category);
+        $products = $this->productRepository->getByCategory($category);
         return DataTables::of($products)
             ->addColumn('material_name', function ($product) {
                 return $product->material ? $product->material->name : 'N/A';

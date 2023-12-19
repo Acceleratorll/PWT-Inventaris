@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\{{ $name }};
+use App\Models\ProductPlanning;
 
-class {{ $name }}
+class ProductPlanningRepository
 {
     protected $model;
 
-    public function __construct({{ $name }} $model)
+    public function __construct(ProductPlanning $model)
     {
         $this->model = $model;
     }
@@ -23,7 +23,7 @@ class {{ $name }}
         return $this->model
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('qualifier', function ($query) use ($term) {
+            ->orWhereHas('product', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%');
             })
             ->get();
@@ -36,7 +36,7 @@ class {{ $name }}
 
     public function paginate(int $num)
     {
-        return $this->model->with('qualifier')->paginate($num);
+        return $this->model->with('product')->paginate($num);
     }
 
     public function create($data)

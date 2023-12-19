@@ -40,8 +40,8 @@ class CategoryProductController extends Controller
             ->addColumn('name', function ($category) {
                 return $category->name;
             })
-            ->addColumn('max', function ($category) {
-                return $category->max;
+            ->addColumn('min', function ($category) {
+                return $category->min;
             })
             ->addColumn('created_at', function ($category) {
                 return $category->created_at->format('d-m-Y');

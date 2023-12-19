@@ -7,34 +7,34 @@ use App\Events\DataAddedEvent;
 use App\Events\ProductNotificationEvent;
 use App\Events\UpdateChartEvent;
 use App\Events\UpdateDataEvent;
-use App\Exports\ProductTransactionExport;
-use App\Imports\ProductTransactionImport;
+use App\Exports\TransactionExport;
+use App\Imports\TransactionImport;
 use App\Notifications\CriticalProduct;
 use App\Notifications\WarningProduct;
 use App\Repositories\IncomingProductRepository;
 use App\Repositories\MaterialRepository;
 use App\Repositories\ProductRepository;
-use App\Repositories\ProductTransactionRepository;
+use App\Repositories\TransactionRepository;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ProductTransactionService
+class TransactionService
 {
     protected $incomingProductRepository;
     protected $productRepository;
     protected $materialRepository;
-    protected $productTransactionRepository;
+    protected $transactionRepository;
 
     public function __construct(
         IncomingProductRepository $incomingProductRepository,
         ProductRepository $productRepository,
         MaterialRepository $materialRepository,
-        ProductTransactionRepository $productTransactionRepository,
+        TransactionRepository $transactionRepository,
     ) {
         $this->incomingProductRepository = $incomingProductRepository;
         $this->productRepository = $productRepository;
         $this->materialRepository = $materialRepository;
-        $this->productTransactionRepository = $productTransactionRepository;
+        $this->transactionRepository = $transactionRepository;
     }
 
     public function updateIncomingProducts($transaction, $selectedProducts)
@@ -110,7 +110,7 @@ class ProductTransactionService
     public function addChart($transaction)
     {
         $materials = $this->materialRepository->all();
-        $transaction_find = $this->productTransactionRepository->find($transaction->id);
+        $transaction_find = $this->transactionRepository->find($transaction->id);
         $data = [];
         $labels = [];
         foreach ($materials as $material) {
@@ -138,7 +138,7 @@ class ProductTransactionService
     public function updateChart($transaction)
     {
         $materials = $this->materialRepository->all();
-        $transaction_find = $this->productTransactionRepository->find($transaction->id);
+        $transaction_find = $this->transactionRepository->find($transaction->id);
         $data = [];
         $labels = [];
         foreach ($materials as $material) {
@@ -164,9 +164,9 @@ class ProductTransactionService
         $this->notifyProduct($transaction_find);
     }
 
-    public function getProductTransactionBySupplierName($label)
+    public function getTransactionBySupplierName($label)
     {
-        return $this->productTransactionRepository->getBySupplierName($label);
+        return $this->transactionRepository->getBySupplierName($label);
     }
 
     public function notifyProduct($transaction)
@@ -194,9 +194,9 @@ class ProductTransactionService
 
     public function exportAll()
     {
-        $productTransaction = $this->productTransactionRepository->all();
+        $transaction = $this->transactionRepository->all();
 
-        return (new ProductTransactionExport($productTransaction))->download('product_transaction.xlsx');
+        return (new TransactionExport($transaction))->download('product_transaction.xlsx');
     }
 
     public function import()
@@ -204,7 +204,7 @@ class ProductTransactionService
         try {
             DB::beginTransaction();
 
-            Excel::import(new ProductTransactionImport, request()->file('file'));
+            Excel::import(new TransactionImport, request()->file('file'));
             DB::commit();
 
             return redirect()->back()->with('success', 'Import successful');

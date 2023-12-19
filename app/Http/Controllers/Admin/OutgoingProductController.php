@@ -23,7 +23,7 @@ class OutgoingProductController extends Controller
 
     public function getJsonOutProductsRpp($rpp): JsonResponse
     {
-        $outgoingProducts = $this->outgoingProductRepository->allByRpp($rpp);
+        $outgoingProducts = $this->outgoingProductRepository->getByRpp($rpp);
         return response()->json($outgoingProducts);
     }
 }

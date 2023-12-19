@@ -15,7 +15,7 @@ class ProcessPlanRequest extends FormRequest
     {
         return [
             'customer_id' => 'required',
-            'order_type' => 'required|string',
+            'order_type_id' => 'required|string',
             'code' => 'required|string',
             'desc' => 'nullable|string',
             'selected_products' => 'required|array'

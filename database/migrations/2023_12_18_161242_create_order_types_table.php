@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('nota_dinas', function (Blueprint $table) {
+        Schema::create('order_types', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->boolean('authorized')->default(0);
-            $table->date('from_date');
-            $table->date('to_date');
-            $table->text('desc');
             $table->timestamps();
         });
     }
@@ -27,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('nota_dinas');
+        Schema::dropIfExists('order_types');
     }
 };

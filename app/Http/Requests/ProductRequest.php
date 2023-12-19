@@ -28,8 +28,8 @@ class ProductRequest extends FormRequest
             'category_product_id' => 'required',
             'product_code' => 'required',
             'name' => 'required',
-            'max_amount' => 'required',
-            'amount' => 'required',
+            'minimal_amount' => 'required',
+            'total_amount' => 'required',
             'note' => '',
         ];
     }

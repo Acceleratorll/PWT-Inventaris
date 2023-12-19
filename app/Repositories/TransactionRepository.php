@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\ProductTransactionLocation;
+use App\Models\Transaction;
 
-class ProductTransactionRepository
+class TransactionRepository
 {
     protected $model;
 
-    public function __construct(ProductTransactionLocation $model)
+    public function __construct(Transaction $model)
     {
         $this->model = $model;
     }

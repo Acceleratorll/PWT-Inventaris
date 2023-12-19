@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductTransactionRequest extends FormRequest
+class NotaDinasRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,14 +17,16 @@ class ProductTransactionRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'transaction_id' => 'required',
-            'expired' => 'required',
-            'selected_products' => 'required|array',
+            'code' => 'unique|required',
+            'authorized' => '',
+            'from_date' => 'required|datetime',
+            'to_date' => 'required|datetime',
+            'desc' => 'nullable',
         ];
     }
 }

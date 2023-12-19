@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\{{ $name }};
+use App\Models\OrderType;
 
-class {{ $name }}
+class OrderTypeRepository
 {
     protected $model;
 
-    public function __construct({{ $name }} $model)
+    public function __construct(OrderType $model)
     {
         $this->model = $model;
     }
@@ -23,8 +23,8 @@ class {{ $name }}
         return $this->model
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('qualifier', function ($query) use ($term) {
-                $query->where('name', 'LIKE', '%' . $term . '%');
+            ->orWhereHas('process_plans', function ($query) use ($term) {
+                $query->where('code', 'LIKE', '%' . $term . '%');
             })
             ->get();
     }
@@ -34,9 +34,9 @@ class {{ $name }}
         return $this->model->all();
     }
 
-    public function paginate(int $num)
+    public function paginate()
     {
-        return $this->model->with('qualifier')->paginate($num);
+        return $this->model->with('process_plans')->paginate(10);
     }
 
     public function create($data)

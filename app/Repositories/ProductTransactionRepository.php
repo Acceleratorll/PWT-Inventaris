@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\{{ $name }};
+use App\Models\ProductTransaction;
 
-class {{ $name }}
+class ProductTransactionRepository
 {
     protected $model;
 
-    public function __construct({{ $name }} $model)
+    public function __construct(ProductTransaction $model)
     {
         $this->model = $model;
     }
@@ -34,9 +34,9 @@ class {{ $name }}
         return $this->model->all();
     }
 
-    public function paginate(int $num)
+    public function paginate()
     {
-        return $this->model->with('qualifier')->paginate($num);
+        return $this->model->with('qualifiers')->paginate(10);
     }
 
     public function create($data)

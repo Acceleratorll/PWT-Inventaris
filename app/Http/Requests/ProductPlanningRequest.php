@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IncomingRequest extends FormRequest
+class ProductPlanningRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,15 +14,14 @@ class IncomingRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
-     */
     public function rules(): array
     {
         return [
-            'code' => 'required|unique',
+            'product_id' => 'required',
+            'nota_dinas_id' => 'required',
+            'requirement_amount' => 'required',
+            'product_amount ' => 'required',
+            'procurement_plan_amount ' => 'required',
         ];
     }
 }

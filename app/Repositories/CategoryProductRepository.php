@@ -23,7 +23,7 @@ class CategoryProductRepository
         return $this->model
             ->with('products')
             ->where('name', 'LIKE', '%' . $term . '%')
-            ->orWhere('max', 'LIKE', '%' . $term . '%')
+            ->orWhere('min', 'LIKE', '%' . $term . '%')
             ->orWhereHas('products', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%');
             })

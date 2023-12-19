@@ -20,6 +20,7 @@ class OutgoingProductRequest extends FormRequest
             'process_plan_id' => 'required|integer',
             'product_transaction_location_id' => 'required|integer',
             'amount' => 'required|numeric',
+            'product_amount' => 'required|numeric',
         ];
     }
 }

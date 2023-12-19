@@ -15,7 +15,7 @@ class MakeService extends Command
         $name = $this->argument('name');
         $serviceClassName = $name;
 
-        $servicePath = app_path("Services/{$serviceClassName}.php");
+        $servicePath = app_path("Services/{$serviceClassName}Service.php");
 
         // Create service file
         $this->createService($servicePath, $serviceClassName);

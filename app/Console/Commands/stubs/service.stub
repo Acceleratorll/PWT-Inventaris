@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Repositories\{{ $name }}Repository;
+
 class {{ $name }}Service
 {
     protected $repository;

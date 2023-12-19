@@ -13,6 +13,8 @@ class NotaDinas extends Model
     protected $fillable = [
         'code',
         'authorized',
+        'from_date',
+        'to_date',
         'desc',
     ];
 
