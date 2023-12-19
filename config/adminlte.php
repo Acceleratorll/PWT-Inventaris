@@ -389,12 +389,12 @@ return [
             'submenu' => [
                 [
                     'text'    => 'All Data',
-                    'route'     => 'productTransaction.index',
+                    'route'     => 'transaction.index',
                     'icon' => 'nav-icon fas fa-book',
                 ],
                 [
                     'text'    => 'Add Transaction',
-                    'route'     => 'productTransaction.create',
+                    'route'     => 'transaction.create',
                     'icon' => 'nav-icon fas fa-edit',
                 ],
             ],

@@ -2,10 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\IncomingProduct;
 use App\Models\ProductTransactionLocation;
 
-class IncomingProductRepository
+class ProductTransactionLocationRepository
 {
     protected $model;
 

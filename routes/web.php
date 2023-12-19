@@ -3,18 +3,21 @@
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MaterialController;
+use App\Http\Controllers\Admin\NotaDinasController;
+use App\Http\Controllers\Admin\OrderTypeController;
 use App\Http\Controllers\Admin\OutgoingProductController;
 use App\Http\Controllers\Admin\ProcessPlanController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductTransactionController;
+use App\Http\Controllers\Admin\ProductTransactionLocationController;
 use App\Http\Controllers\Admin\ProductTypeController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\QualifierController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ChartManageController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\IncomingProductController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('/rpp', ProcessPlanController::class);
     Route::resource('/supplier', SupplierController::class);
     Route::resource('/customer', CustomerController::class);
+    Route::resource('/orderType', OrderTypeController::class);
+    Route::resource('/notaDinas', NotaDinasController::class);
+    Route::resource('/transaction', TransactionController::class);
     Route::resource('/productTransaction', ProductTransactionController::class);
+    Route::resource('/productTransactionLocation', ProductTransactionLocationController::class);
 });
 
 Route::get('/get-table/unread-notifications', [NotificationController::class, 'getTableUnreadNotifications'])->name('get-table.unread-notifications');
@@ -64,9 +71,6 @@ Route::prefix('/json')->group(function () {
     Route::get('/get-product/{product_id}', [ProductController::class, 'getJsonProduct'])->name('get-json-product');
     Route::get('/get-rpp/{customer}', [ProcessPlanController::class, 'getRppsByCustomerName'])->name('get-json-rpp-by-customer-name');
     Route::get('/get-productTransaction/{supplier}', [ProductTransactionController::class, 'getJsonProductTransactionBySupplierName'])->name('get-json-product-transaction-by-supplier-name');
-    Route::get('/get-incomingProducts', [IncomingProductController::class, 'getJsonIncomingProducts'])->name('get-json-incoming-products');
-    Route::get('/get-incomingProduct/{incomingProduct}', [IncomingProductController::class, 'getJsonIncomingProduct'])->name('get-json-incoming-product');
-    Route::get('/get-incomingProducts/{transaction}', [IncomingProductController::class, 'getJsonIncomingProductsByTransaction'])->name('get-json-incoming-products-by-transaction');
     Route::get('/get-outgoingProducts', [OutgoingProductController::class, 'getJsonOutgoingProducts'])->name('get-json-outgoing-products');
     Route::get('/get-outgoingProduct/{outgoingProduct}', [OutgoingProductController::class, 'getJsonOutgoingProduct'])->name('get-json-outgoing-product');
     Route::get('/get-outgoingProducts/{rpp}', [OutgoingProductController::class, 'getJsonOutgoingProductsByRpp'])->name('get-json-outgoing-products-by-rpp');

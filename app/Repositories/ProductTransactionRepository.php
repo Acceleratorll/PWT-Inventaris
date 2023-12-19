@@ -23,7 +23,7 @@ class ProductTransactionRepository
         return $this->model
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('qualifier', function ($query) use ($term) {
+            ->orWhereHas('product', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%');
             })
             ->get();
@@ -34,9 +34,9 @@ class ProductTransactionRepository
         return $this->model->all();
     }
 
-    public function paginate()
+    public function paginate(int $num)
     {
-        return $this->model->with('qualifiers')->paginate(10);
+        return $this->model->with('product')->paginate($num);
     }
 
     public function create($data)

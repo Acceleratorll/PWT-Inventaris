@@ -32,4 +32,9 @@ class ProcessPlan extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function order_type(): BelongsTo
+    {
+        return $this->belongsTo(OrderType::class);
+    }
 }
