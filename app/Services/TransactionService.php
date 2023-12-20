@@ -14,25 +14,26 @@ use App\Notifications\WarningProduct;
 use App\Repositories\IncomingProductRepository;
 use App\Repositories\MaterialRepository;
 use App\Repositories\ProductRepository;
+use App\Repositories\ProductTransactionRepository;
 use App\Repositories\TransactionRepository;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionService
 {
-    protected $incomingProductRepository;
     protected $productRepository;
+    protected $productTransactionRepository;
     protected $materialRepository;
     protected $transactionRepository;
 
     public function __construct(
-        IncomingProductRepository $incomingProductRepository,
         ProductRepository $productRepository,
+        ProductTransactionRepository $productTransactionRepository,
         MaterialRepository $materialRepository,
         TransactionRepository $transactionRepository,
     ) {
-        $this->incomingProductRepository = $incomingProductRepository;
         $this->productRepository = $productRepository;
+        $this->productTransactionRepository = $productTransactionRepository;
         $this->materialRepository = $materialRepository;
         $this->transactionRepository = $transactionRepository;
     }
@@ -42,13 +43,13 @@ class TransactionService
         $amountChanges = [];
 
         foreach ($selectedProducts as $productId => $productData) {
-            if (!$transaction->incoming_products->contains('product_id', $productId)) {
+            if ($transaction->product_transactions == null || !$transaction->product_transactions->contains('product_id', $productId)) {
                 // Product is not in the existing incoming_products, create it
                 $this->createIncomingProduct($transaction, $productId, $productData, $amountChanges);
             }
         }
 
-        foreach ($transaction->incoming_products as $incomingProduct) {
+        foreach ($transaction->product_transactions as $incomingProduct) {
             $productId = $incomingProduct->product_id;
 
             // Check if the product is not present in the selectedProducts
@@ -66,29 +67,33 @@ class TransactionService
 
     private function deleteIncomingProduct($incomingProduct, &$amountChanges)
     {
-        $amountChanges[$incomingProduct->product_id] = -$incomingProduct->qty;
+        $amountChanges[$incomingProduct->product_id] = -$incomingProduct->amount;
         $incomingProduct->delete();
     }
 
     private function updateIncomingProduct($incomingProduct, $productData, &$amountChanges)
     {
-        $netChange = $productData['qty'] - $incomingProduct->qty;
+        $netChange = $productData['qty'] - $incomingProduct->amount;
         $amountChanges[$incomingProduct->product_id] = $netChange;
 
-        $incomingProduct->qty = $productData['qty'];
+        $incomingProduct->amount = $productData['qty'];
         $incomingProduct->save();
     }
 
     private function createIncomingProduct($transaction, $productId, $productData, &$amountChanges)
     {
+        $product = $this->productRepository->find($productId);
+
         $inputOutPro = [
-            'product_transaction_id' => $transaction->id,
+            'transaction_id' => $transaction->id,
             'product_id' => $productId,
-            'qty' => $productData['qty'],
+            'amount' => $productData['qty'],
+            'product_amount' => $product->total_amount,
+            'expired' => $productData['expired'],
         ];
 
-        $income = $this->incomingProductRepository->create($inputOutPro);
-        $transaction->incoming_products()->save($income);
+        $income = $this->productTransactionRepository->create($inputOutPro);
+        $transaction->product_transactions()->save($income);
 
         $amountChanges[$productId] = $productData['qty'];
     }
@@ -97,12 +102,11 @@ class TransactionService
     {
         foreach ($amountChanges as $productId => $netChange) {
             $product = $this->productRepository->find($productId);
-            $product->amount += $netChange;
+            $product->total_amount += $netChange;
             $product->save();
 
-            if ($product->amount > (0.3 * $product->max_amount)) {
+            if ($product->total_amount <= $product->minimal_amount) {
                 $product->update(['category_product_id']);
-            } else if ($product->amount > (0.1 * $product->max_amount)) {
             }
         }
     }
@@ -114,9 +118,7 @@ class TransactionService
         $data = [];
         $labels = [];
         foreach ($materials as $material) {
-            $totalSalesQty = $transaction_find->incoming_products
-                ->where('product.material_id', $material->id)
-                ->sum('qty');
+            $totalSalesQty = $material->products()->sum('total_amount');
             $data[] = $totalSalesQty;
             $labels[] = $material->name;
         }

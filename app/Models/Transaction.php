@@ -23,7 +23,7 @@ class Transaction extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    public function product_transaction(): HasMany
+    public function product_transactions(): HasMany
     {
         return $this->hasMany(ProductTransaction::class);
     }

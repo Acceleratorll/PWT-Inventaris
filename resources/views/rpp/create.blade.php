@@ -46,7 +46,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="product_code">Kode RPP</label>
-                    <input type="number" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode RPP" required/>
+                    <input type="text" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode RPP" required/>
                 </div>
             </div>
             <div class="row">

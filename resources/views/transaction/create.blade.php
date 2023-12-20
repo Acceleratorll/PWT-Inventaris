@@ -36,7 +36,7 @@
 </div>
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('productTransaction.store') }}" method="post">
+        <form action="{{ route('transaction.store') }}" method="post">
             @csrf
         <div class="card-body">
             <div class="row">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="product_code">Kode</label>
-                    <input type="number" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode RPP" required/>
+                    <input type="text" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode Transaksi" required/>
                 </div>
             </div>
             <div class="row">
@@ -59,6 +59,12 @@
                     <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple></select>
                 </div>
             </div><br>
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="note">Catatan</label>
+                    <textarea name="note"class="form-control mb-3" placeholder="Masukkan Catatan Pembelian"></textarea>
+                </div>
+            </div>
                 <div id="selected-products"></div>
             <div class="row justify-content-end">
                 <div class="col-md-3">
@@ -87,9 +93,12 @@
     <script src="{{ asset('/js/customSelect2.js') }}"></script>
     <script>
         const products = document.getElementById("products");
+        const locations = document.getElementById("locations");
         const suppliers = document.getElementById("supplier_id");
         const products_ph = "Pilih Barang";
         const products_url = '{{ route("get-json-products") }}';
+        const location_ph = "Pilih Location";
+        const locations_url = '{{ route("get-json-locations") }}';
         const supplier_ph = "Pilih Supplier";
         const supplier_url = '{{ route("get-json-suppliers") }}';
         $(document).ready(function() {
@@ -111,33 +120,43 @@
             dataType: 'json',
             success: function (data) {
                 var qualifiers = data.qualifiers;
-            var inputHtml = `
-                <div class="row justify-end">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-2">
-                        <label>Nama Barang</label>
-                        <input type="hidden" name="selected_products[${productId}][product_id]" value="${productId}">
-                        <input type="text" class="form-control mb-3" value="${productName}" disabled>
+                var uniqueLocationId = "location_id_" + productId;
+                var inputHtml = `
+                    <div class="row justify-center">
+                        <div class="col-md-3">
+                            <label>Nama Barang</label>
+                            <input type="hidden" name="selected_products[${productId}][product_id]" value="${productId}">
+                            <input type="text" class="form-control mb-3" value="${productName}" disabled>
+                        </div>
+                        <div class="col-md-2">
+                            <label>QTY</label>
+                            <input type="number" name="selected_products[${productId}][qty]" class="form-control mb-3" placeholder="Quantity" required>
+                        </div>
+                        <div class="col-md-3">
+                                    <label>Expired</label>
+                                    <input type="date" name="selected_products[${productId}][expired]" id="expired" class="form-control mb-3" required/>
+                                </div>
+                        <div class="col-md-2">
+                                    <label>Location</label>
+                                    <select name="selected_products[${productId}][location_id]" id="${uniqueLocationId}" class="form-control mb-3" required></select>
+                                </div>
+                        <div class="col-md-2">
+                                    <label>Qualifier</label>
+                                    <select name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" required>
+                                        <option value="${data.qualifier_id}" selected>${data.qualifier.name}</option>
+                                    </select>
+                                </div>
                     </div>
-                    <div class="col-md-2">
-                        <label>QTY</label>
-                        <input type="number" name="selected_products[${productId}][qty]" class="form-control mb-3" placeholder="Quantity" required>
-                    </div>
-                    <div class="col-md-2">
-                                <label>Qualifier</label>
-                                <select name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" required>
-                                    <option value="${data.qualifier_id}" selected>${data.qualifier.name}</option>
-                                </select>
-                            </div>
-                </div>
-                `;
-            $("#selected-products").append(inputHtml);
+                    `;
+                
+                $("#selected-products").append(inputHtml);
+                selectInput($("#" + uniqueLocationId), locations_url, location_ph);
         },
+        error: function (error) {
+            console.error('Error retrieving data for product:', error);
+        }
+    });
 
-            error: function (error) {
-                console.error('Error retrieving data for product:', error);
-            }
-        });
     });
 });
     </script>

@@ -26,13 +26,13 @@
         <div class="card">
             <div class="card-body">
                 <div class="button-action" style="margin-bottom: 20px">
-                    <a class="btn btn-primary" href="{{ route('productTransaction.create') }}">
+                    <a class="btn btn-primary" href="{{ route('transaction.create') }}">
                         <span>+ Add</span>
                     </a>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
                     </a>
-                    <a class="btn btn-secondary" href="{{ route('export.producttransactions') }}">
+                    <a class="btn btn-secondary" href="{{ route('export.transactions') }}">
                         <span>Excel</span>
                     </a>
                 </div>
@@ -45,6 +45,7 @@
                                 <th scope="col" class="text-center">Code</th>
                                 <th scope="col" class="text-center">Supplier</th>
                                 <th scope="col" class="text-center">Tanggal Beli</th>
+                                <th scope="col" class="text-center">Barang</th>
                                 <th scope="col" class="text-center">Last Updated</th>
                                 <th scope="col" class="text-center">Dibuat</th>
                                 <th scope="col" class="text-center" width="14%">Action</th>
@@ -76,7 +77,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('import.producttransactions') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('import.transactions') }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
                             @csrf
                             <div class="form-group">
@@ -109,12 +110,13 @@
                 processing: true,
                 serverSide: true,
                 searchable: true,
-                ajax: '{{ route('get-product-transactions') }}',
+                ajax: '{{ route('get-transactions') }}',
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'code', name: 'code' },
                     { data: 'supplier', name: 'supplier' },
                     { data: 'formatted_purchase_date', name: 'formatted_purchase_date' },
+                    { data: 'products', name: 'products' },
                     { data: 'formatted_updated_at', name: 'formatted_updated_at' },
                     { data: 'formatted_created_at', name: 'formatted_created_at' },
                     { data: 'action', name: 'action', orderable: false },

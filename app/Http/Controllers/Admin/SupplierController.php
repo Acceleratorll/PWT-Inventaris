@@ -33,7 +33,7 @@ class SupplierController extends Controller
     public function store(SupplierRequest $supplierRequest)
     {
         $input = $supplierRequest->validated();
-        $supplier = $this->supplierRepository->create($input);
+        $this->supplierRepository->create($input);
         return back();
     }
 

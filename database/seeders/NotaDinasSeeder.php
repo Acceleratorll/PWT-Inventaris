@@ -19,16 +19,6 @@ class NotaDinasSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [
-                'name' => 'Transcrip',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Rapot',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
         ];
 
         DB::table('nota_dinas')->insert($data);

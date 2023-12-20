@@ -24,7 +24,8 @@ class ProductRepository
             ->with('product_type', 'qualifier', 'material', 'category_product')
             ->where('name', 'LIKE', '%' . $term . '%')
             ->orWhere('product_code', 'LIKE', '%' . $term . '%')
-            ->orWhere('amount', 'LIKE', '%' . $term . '%')
+            ->orWhere('minimal_amount', 'LIKE', '%' . $term . '%')
+            ->orWhere('total_amount', 'LIKE', '%' . $term . '%')
             ->orWhere('note', 'LIKE', '%' . $term . '%')
             ->orWhereHas('material', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%');
@@ -33,6 +34,9 @@ class ProductRepository
                 $query->where('name', 'LIKE', '%' . $term . '%');
             })
             ->orWhereHas('product_type', function ($query) use ($term) {
+                $query->where('name', 'LIKE', '%' . $term . '%');
+            })
+            ->orWhereHas('category_product', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%');
             })
             ->get();
@@ -88,13 +92,11 @@ class ProductRepository
 
     public function update($id, $data)
     {
-        $update = $this->model->find($id);
-        return $update->update($data);
+        return $this->model->find($id)->update($data);
     }
 
     public function delete($id)
     {
-        $data = $this->model->find($id);
-        return $data->delete();
+        return $this->model->find($id)->delete();
     }
 }

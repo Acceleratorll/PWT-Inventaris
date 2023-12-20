@@ -22,21 +22,19 @@ class LocationRepository
     {
         return $this->model
             ->where('name', 'LIKE', '%' . $term . '%')
+            ->orWhere('location', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('qualifier', function ($query) use ($term) {
-                $query->where('name', 'LIKE', '%' . $term . '%');
-            })
             ->get();
     }
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('product_transaction_locations')->get();
     }
 
-    public function paginate()
+    public function paginate(int $num)
     {
-        return $this->model->with('qualifiers')->paginate(10);
+        return $this->model->with('product_transaction_locations')->paginate($num);
     }
 
     public function create($data)

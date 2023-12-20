@@ -44,4 +44,10 @@ class LocationController extends Controller
         $this->locationService->getById($id)->delete();
         return response()->json(['message' => 'Data has been found!'], 200);
     }
+
+    public function selectLocations(Request $request)
+    {
+        $term = $request->term;
+        return $this->locationService->selectLocations($term);
+    }
 }

@@ -15,12 +15,17 @@ class RoleSeeder extends Seeder
     {
         $data = [
             [
-                'name' => 'Staff',
+                'name' => 'Staff Gudang',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Kadev',
+                'name' => 'Kadev Logistik',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'PPIC',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

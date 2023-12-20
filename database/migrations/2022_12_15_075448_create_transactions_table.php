@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('supplier_id')->constrained();
             $table->string('code')->unique();
             $table->dateTime('purchase_date');
-            $table->string('note');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

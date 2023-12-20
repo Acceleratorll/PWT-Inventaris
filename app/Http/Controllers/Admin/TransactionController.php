@@ -70,7 +70,7 @@ class TransactionController extends Controller
 
     public function create(): View
     {
-        return view('product_transaction.create');
+        return view('transaction.create');
     }
 
     public function store(TransactionRequest $transactionRequest): RedirectResponse
@@ -92,7 +92,7 @@ class TransactionController extends Controller
     public function edit(string $id): View
     {
         $transaction = $this->transactionRepository->find($id);
-        return view('product_transaction.edit', compact('transaction'));
+        return view('transaction.edit', compact('transaction'));
     }
 
     public function update(TransactionRequest $request, string $id)
