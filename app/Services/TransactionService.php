@@ -14,6 +14,7 @@ use App\Notifications\WarningProduct;
 use App\Repositories\IncomingProductRepository;
 use App\Repositories\MaterialRepository;
 use App\Repositories\ProductRepository;
+use App\Repositories\ProductLocationRepository;
 use App\Repositories\ProductTransactionRepository;
 use App\Repositories\TransactionRepository;
 use Illuminate\Support\Facades\DB;
@@ -23,17 +24,20 @@ class TransactionService
 {
     protected $productRepository;
     protected $productTransactionRepository;
+    protected $productLocationRepository;
     protected $materialRepository;
     protected $transactionRepository;
 
     public function __construct(
         ProductRepository $productRepository,
         ProductTransactionRepository $productTransactionRepository,
+        ProductLocationRepository $productLocationRepository,
         MaterialRepository $materialRepository,
         TransactionRepository $transactionRepository,
     ) {
         $this->productRepository = $productRepository;
         $this->productTransactionRepository = $productTransactionRepository;
+        $this->productLocationRepository = $productLocationRepository;
         $this->materialRepository = $materialRepository;
         $this->transactionRepository = $transactionRepository;
     }
@@ -51,8 +55,6 @@ class TransactionService
 
         foreach ($transaction->product_transactions as $incomingProduct) {
             $productId = $incomingProduct->product_id;
-
-            // Check if the product is not present in the selectedProducts
             if (!isset($selectedProducts[$productId])) {
                 // Delete the incoming_product
                 $this->deleteIncomingProduct($incomingProduct, $amountChanges);
@@ -91,9 +93,16 @@ class TransactionService
             'product_amount' => $product->total_amount,
             'expired' => $productData['expired'],
         ];
-
         $income = $this->productTransactionRepository->create($inputOutPro);
         $transaction->product_transactions()->save($income);
+
+        $inputOutLoc = [
+            'product_id' => $income->id,
+            'location_id' => $productData['location_id'],
+            'amount' => $income->amount,
+        ];
+        $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
+        $income->product_transaction_location()->save($incomeLoc);
 
         $amountChanges[$productId] = $productData['qty'];
     }

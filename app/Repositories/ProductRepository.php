@@ -13,7 +13,7 @@ class ProductRepository
         $this->model = $model;
     }
 
-    public function find(int $id)
+    public function find($id)
     {
         return $this->model->with('product_type', 'qualifier', 'material', 'category_product')->findOrFail($id);
     }

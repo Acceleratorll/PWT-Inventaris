@@ -47,7 +47,7 @@ class productTransactionImport implements ToModel, WithHeadingRow
             $qty = $match[2];
 
             $incomingProduct = IncomingProduct::create([
-                'product_transaction_id' => $this->productTransaction->id,
+                'product_id' => $this->productTransaction->id,
                 'product_id' => $productId, // You need to retrieve the product ID based on $productName
                 'qty' => $qty,
             ]);

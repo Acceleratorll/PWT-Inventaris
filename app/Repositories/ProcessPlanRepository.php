@@ -68,7 +68,7 @@ class ProcessPlanRepository
             ->get();
     }
 
-    public function find(int $id)
+    public function find($id)
     {
         return $this->model->findOrFail($id);
     }

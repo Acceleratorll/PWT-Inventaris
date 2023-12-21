@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_transaction_location', function (Blueprint $table) {
+        Schema::create('product_location', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_transaction_id')->constrained();
+            $table->foreignId('product_id')->constrained();
             $table->foreignId('location_id')->constrained();
             $table->float('amount');
+            $table->date('purchase_date');
+            $table->date('expired');
             $table->softDeletes();
             $table->timestamps();
         });

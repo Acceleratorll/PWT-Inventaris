@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('transaction_id')->constrained();
             $table->float('amount');
             $table->float('product_amount');
-            $table->dateTime('expired');
             $table->timestamps();
         });
     }

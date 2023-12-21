@@ -10,6 +10,7 @@ use App\Imports\TransactionImport;
 use App\Repositories\ProductRepository;
 use App\Repositories\TransactionRepository;
 use App\Services\TransactionService;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -54,7 +55,15 @@ class TransactionController extends Controller
                 return $transaction->supplier->name;
             })
             ->addColumn('formatted_purchase_date', function ($transaction) {
-                return $transaction->purchase_date->format('D, d-m-y, G:i');
+                return Carbon::parse($transaction->purchase_date)->format('D, d-m-y, G:i');
+            })
+            ->addColumn('products', function ($transaction) {
+                $productList = '<ul>';
+                foreach ($transaction->product_transactions as $product) {
+                    $productList .= '<li>' . $product->product->name . ' | (Qty: ' . $product->amount . ')</li>';
+                }
+                $productList .= '</ul>';
+                return $productList;
             })
             ->addColumn('formatted_created_at', function ($transaction) {
                 return $transaction->created_at->format('D, d-m-y, G:i');
@@ -63,7 +72,7 @@ class TransactionController extends Controller
                 return $transaction->updated_at->format('D, d-m-y, G:i');
             })
             ->addColumn('action', 'partials.button-table.product-transaction-action')
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'products'])
             ->addIndexColumn()
             ->make(true);
     }

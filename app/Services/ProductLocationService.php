@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Repositories\ProductTransactionLocationRepository;
+use App\Repositories\ProductLocationRepository;
 
-class ProductTransactionLocationService
+class ProductLocationService
 {
     protected $repository;
 
-    public function __construct(ProductTransactionLocationRepository $repository)
+    public function __construct(ProductLocationRepository $repository)
     {
         $this->repository = $repository;
     }

@@ -16,8 +16,8 @@ class Location extends Model
         'desc',
     ];
 
-    public function product_transaction_locations(): HasMany
+    public function product_locations(): HasMany
     {
-        return $this->hasMany(ProductTransactionLocation::class);
+        return $this->hasMany(ProductLocation::class);
     }
 }

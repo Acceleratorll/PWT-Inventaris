@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\ProductTransactionLocationService;
+use App\Services\ProductLocationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ProductTransactionLocationController extends Controller
+class ProductLocationController extends Controller
 {
     protected $productPlanningService;
 
     public function __construct(
-        ProductTransactionLocationService $productPlanningService,
+        ProductLocationService $productPlanningService,
     ) {
         $this->productPlanningService = $productPlanningService;
     }

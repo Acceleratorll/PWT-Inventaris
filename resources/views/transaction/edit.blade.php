@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit productTransaction')
+@section('title', 'Edit transaction')
 
 @section('content_header')
     <h1>Edit Barang</h1>
@@ -30,7 +30,7 @@
 </div>
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('productTransaction.update',['productTransaction' =>$productTransaction->id]) }}" method="post">
+        <form action="{{ route('transaction.update',['transaction' =>$transaction->id]) }}" method="post">
             @csrf
             @method('PUT')
             <div class="card-body">
@@ -38,25 +38,25 @@
                     <div class="col-md-6">
                         <label for="supplier_id">Supplier</label>
                         <select name="supplier_id" id="supplier_id" class="form-control" required>
-                            <option value="{{ $productTransaction->supplier_id }}">{{ $productTransaction->supplier->name }}</option>
+                            <option value="{{ $transaction->supplier_id }}">{{ $transaction->supplier->name }}</option>
                         </select>
                     </div>
                         <div class="col-md-6">
                         <label for="code">Kode</label>
-                        <input type="number" value="{{ $productTransaction->code }}" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode productTransaction" required/>
+                        <input type="number" value="{{ $transaction->code }}" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode transaction" required/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <label for="purchase_date">Tanggal Beli</label>
-                        <input type="datetime-local" name="purchase_date" value="{{ $productTransaction->purchase_date }}" id="purchase_date" class="form-control mb-3" placeholder="Masukkan Tanggal Pembelian" required/>
+                        <input type="datetime-local" name="purchase_date" value="{{ $transaction->purchase_date }}" id="purchase_date" class="form-control mb-3" placeholder="Masukkan Tanggal Pembelian" required/>
                     </div>
                     <div class="col-md-8">
                         <label for="products">Barang (Bisa pilih lebih dari 1)</label>
                         <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple>
-                            @if($productTransaction->incoming_products)
-                                @foreach($productTransaction->incoming_products as $incoming_product)
-                                    <option value="{{ $incoming_product->product_id }}" selected>{{ $incoming_product->product->name }}</option>
+                            @if($transaction->product_transactions)
+                                @foreach($transaction->product_transactions as $product_transaction)
+                                    <option value="{{ $product_transaction->product_id }}" selected>{{ $product_transaction->product->name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -104,13 +104,21 @@
 
         // console.log(select2());
          function getProductQty(productId) {
-            @foreach($productTransaction->incoming_products as $incoming_product)
-                if ({{ $incoming_product->product_id }} == productId) {
-                    return {{ $incoming_product->qty }};
+            @foreach($transaction->product_transactions as $product_transaction)
+                if ({{ $product_transaction->product_id }} == productId) {
+                    return {{ $product_transaction->amount }};
                 }
             @endforeach
         }
 
+        function getLocation(productId) {
+            @foreach($transaction->product_transactions as $product_transaction)
+                if ({{ $product_transaction->product_id }} == productId) {
+                    return {{ $product_transaction->amount }};
+                }
+            @endforeach
+        }
+            
         const productsSelect = $("#products");
         const selectedProductsDiv = $("#selected-products");
         
@@ -132,9 +140,8 @@
                         const qualifier = data.qualifier;
 
                         const inputHtml = `
-                            <div class="row justify-end">
-                                <div class="col-md-4"></div>
-                                <div class="col-md-2">
+                            <div class="row justify-center">
+                                <div class="col-md-3">
                                     <label>Nama Barang</label>
                                     <input type="hidden" name="selected_products[${productId}][product_id]" value="${productId}">
                                     <input type="text" class="form-control mb-3" value="${productName}" disabled>
@@ -142,6 +149,14 @@
                                 <div class="col-md-2">
                                     <label>Qty</label>
                                     <input type="number" name="selected_products[${productId}][qty]" value="${getProductQty(productId)}" class="form-control mb-3" placeholder="Quantity" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Expired</label>
+                                    <input type="date" name="selected_products[${productId}][expired]" id="expired" class="form-control mb-3" required/>
+                                </div>
+                        <div class="col-md-2">
+                                    <label>Location</label>
+                                    <select name="selected_products[${productId}][location_id]" id="${uniqueLocationId}" class="form-control mb-3" required></select>
                                 </div>
                                 <div class="col-md-2">
                                     <label>Qualifier</label>

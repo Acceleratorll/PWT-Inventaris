@@ -2,18 +2,18 @@
 
 namespace App\Repositories;
 
-use App\Models\ProductTransactionLocation;
+use App\Models\ProductLocation;
 
-class ProductTransactionLocationRepository
+class ProductLocationRepository
 {
     protected $model;
 
-    public function __construct(ProductTransactionLocation $model)
+    public function __construct(ProductLocation $model)
     {
         $this->model = $model;
     }
 
-    public function find(int $id)
+    public function find($id)
     {
         return $this->model->find($id);
     }
@@ -21,28 +21,32 @@ class ProductTransactionLocationRepository
     public function search($term)
     {
         return $this->model
-            ->with('location', 'product_transaction')
+            ->with('location', 'product')
             ->where('amount', 'LIKE', '%' . $term . '%')
             ->orWhereHas('location', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%')
                     ->orWhere('location', 'LIKE', '%' . $term . '%')
                     ->orWhere('desc', 'LIKE', '%' . $term . '%');
             })
+            ->orWhereHas('product', function ($query) use ($term) {
+                $query->where('name', 'LIKE', '%' . $term . '%')
+                    ->orWhere('product_code', 'LIKE', '%' . $term . '%');
+            })
             ->get();
     }
 
-    public function allByTransaction($transaction)
+    public function allByProduct($data)
     {
         return $this->model
-            ->with('location', 'product_transaction')
-            ->where('product_transaction_id', $transaction)
+            ->with('location', 'product')
+            ->where('product_id', $data)
             ->get();
     }
 
     public function getByMonth($month)
     {
         return $this->model
-            ->with(['product_transaction.transaction.supplier'])
+            ->with(['product.product_transaction.transaction.supplier'])
             ->whereMonth('created_at', $month)
             ->get();
     }
@@ -50,20 +54,20 @@ class ProductTransactionLocationRepository
     public function all()
     {
         return $this->model->with([
-            'product_transaction.product.material',
-            'product_transaction.product.qualifier',
-            'product_transaction.product.category_product',
-            'product_transaction.product.product_type',
+            'product.material',
+            'product.qualifier',
+            'product.category_product',
+            'product.product_type',
         ])->get();
     }
 
     public function paginate(int $num)
     {
         return $this->model->with([
-            'product_transaction.product.material',
-            'product_transaction.product.qualifier',
-            'product_transaction.product.category_product',
-            'product_transaction.product.product_type',
+            'product.material',
+            'product.qualifier',
+            'product.category_product',
+            'product.product_type',
         ])->paginate($num);
     }
 
@@ -79,7 +83,6 @@ class ProductTransactionLocationRepository
 
     public function delete($id)
     {
-        $data = $this->model->find($id);
-        return $data->delete();
+        return $this->model->find($id)->delete();
     }
 }

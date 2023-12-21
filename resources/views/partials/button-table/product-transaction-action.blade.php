@@ -1,4 +1,4 @@
-    <a href="{{ route('productTransaction.edit', ['productTransaction' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
+    <a href="{{ route('transaction.edit', ['transaction' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
         Edit
     </a>
     <button id="show-incoming-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
@@ -15,10 +15,9 @@ Delete
             var defaultId = deleteButton.data('id');
     
             Swal.fire({
-                title: 'Delete Transaction Product',
+                title: 'Delete Product Transaction',
                 text: 'Are you sure you want to delete this product transaction?',
                 type: 'warning',
-icon: 'warning',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
@@ -29,7 +28,7 @@ icon: 'warning',
                     console.log('confirmed');
                     $.ajax({
                         type: 'POST',
-                        url: `{{ route("productTransaction.destroy", ["productTransaction" => ":Id"]) }}`.replace(':Id', defaultId),
+                        url: `{{ route("transaction.destroy", ["transaction" => ":Id"]) }}`.replace(':Id', defaultId),
                         data: {
                             _token: '{{ csrf_token() }}',
                             _method: 'DELETE'
@@ -38,7 +37,6 @@ icon: 'warning',
                             Swal.fire({
                                 title: 'Product Transaction Deleted Successfully',
                                 type: 'success',
-icon: 'success',
                                 icon: 'success',
                                 timer: 1700,
                             });

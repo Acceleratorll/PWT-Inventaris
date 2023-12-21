@@ -18,6 +18,10 @@ class Transaction extends Model
         'note',
     ];
 
+    protected $casts = [
+        'purchase_date' => 'date',
+    ];
+
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);

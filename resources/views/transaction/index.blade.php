@@ -51,6 +51,17 @@
                                 <th scope="col" class="text-center" width="14%">Action</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th scope="col" class="text-center">ID</th>
+                                <th scope="col" class="text-center">Code</th>
+                                <th scope="col" class="text-center">Supplier</th>
+                                <th scope="col" class="text-center">Tanggal Beli</th>
+                                <th scope="col" class="text-center">Barang</th>
+                                <th scope="col" class="text-center">Last Updated</th>
+                                <th scope="col" class="text-center">Dibuat</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div class="modal fade" id="incomingProductsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -106,10 +117,20 @@
     @section('js')
     <script>
         $(function() {
+
+            $('#table tfoot th').each( function (i) {
+                var title = $('#table thead th').eq( $(this).index() ).text();
+                $(this).html( '<input type="text" placeholder="'+title+'" data-index="'+i+'" />' );
+            });
+
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
                 searchable: true,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 350,
+                columnDefs: [{ width: 550, targets: 4 }],
                 ajax: '{{ route('get-transactions') }}',
                 columns: [
                     { data: 'id', name: 'id' },
@@ -122,6 +143,14 @@
                     { data: 'action', name: 'action', orderable: false },
                 ],
                 order:[[0, 'desc']],
+            });
+
+            $(table.table().container() ).on( 'keyup', 'tfoot input', function () {
+                table
+                    .column( $(this).data('index') )
+                    .search( this.value )
+                    .order([])
+                    .draw();
             });
 
             $('#table tbody').on('click', '#show-incoming-products', function () {

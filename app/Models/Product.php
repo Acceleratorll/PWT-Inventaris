@@ -27,7 +27,7 @@ class Product extends Model
 
     public function updateAmount()
     {
-        $this->amount = $this->product_transactions->sum('amount');
+        $this->amount = $this->product_locations->sum('amount');
         $this->save();
     }
 
@@ -56,8 +56,18 @@ class Product extends Model
         return $this->hasMany(ProductTransaction::class);
     }
 
+    public function product_locations(): HasMany
+    {
+        return $this->hasMany(ProductLocation::class);
+    }
+
     public function product_plannings(): HasMany
     {
         return $this->hasMany(ProductPlanning::class);
+    }
+
+    public function outgoing_products(): HasMany
+    {
+        return $this->hasMany(OutgoingProduct::class);
     }
 }
