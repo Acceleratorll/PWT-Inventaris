@@ -10,7 +10,6 @@ use App\Http\Controllers\Admin\OutgoingProductController;
 use App\Http\Controllers\Admin\ProcessPlanController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TransactionController;
-use App\Http\Controllers\Admin\TransactionLocationController;
 use App\Http\Controllers\Admin\ProductTypeController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\QualifierController;
@@ -44,7 +43,7 @@ Route::get('/get-profiles', [ProfileController::class, 'getProfiles'])->name('ge
 Route::get('/get-suppliers', [SupplierController::class, 'getSuppliers'])->name('get-suppliers');
 Route::get('/get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
 Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rpps');
-Route::get('/get-transactions', [TransactionController::class, 'getTransactions'])->name('get-transactions');
+Route::get('/get-transactions', [TransactionController::class, 'allTransactions'])->name('get-transactions');
 Route::get('/get-transaction/{transaction}', [TransactionController::class, 'getTransaction'])->name('get-transaction');
 Route::get('/get-all-products', [ProductController::class, 'getAllProducts'])->name('get-all-products');
 Route::get('/get-warning-products', [ProductController::class, 'getWarningProducts'])->name('get-warning-products');
@@ -68,6 +67,8 @@ Route::prefix('/json')->group(function () {
     Route::get('/get-customers', [CustomerController::class, 'getJsonCustomers'])->name('get-json-customers');
     Route::get('/get-suppliers', [SupplierController::class, 'getJsonsuppliers'])->name('get-json-suppliers');
     Route::get('/get-locations', [LocationController::class, 'selectLocations'])->name('get-json-locations');
+    Route::get('/select-transactions', [LocationController::class, 'selectTransactions'])->name('select-transactions');
+    Route::get('/get-transactions', [TransactionController::class, 'getTransactions'])->name('get-json-transactions');
     Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');
     Route::get('/get-products', [ProductController::class, 'getJsonProducts'])->name('get-json-products');
     Route::get('/get-products/{category}', [ProductController::class, 'getJsonProductsByCategory'])->name('get-json-products-by-category');

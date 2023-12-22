@@ -39,7 +39,9 @@ icon: 'warning',
                             title: 'Profile Deleted Successfully',
                             type: 'success',
 icon: 'success',
+type: 'success',
                             icon: 'success',
+type: 'success',
                             timer: 1700,
                         });
                         Swal.showLoading();

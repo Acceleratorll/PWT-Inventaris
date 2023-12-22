@@ -19,7 +19,7 @@ class ProcessPlanRepository
         return $this->model
             ->whereMonth('created_at', $month)
             ->whereYear('created_at', $year)
-            ->whereHas('outgoing_products.product_transaction_location.product.material')
+            ->whereHas('outgoing_products.product_location.product.material')
             ->get();
     }
 
@@ -59,7 +59,7 @@ class ProcessPlanRepository
     {
         $current_month = now()->month;
         $current_year = now()->year;
-        return $this->model->with('outgoing_products.product_transaction_location.product.qualifier', 'customer')
+        return $this->model->with('outgoing_products.product_location.product.qualifier', 'customer')
             ->whereHas('customer', function ($query) use ($data) {
                 $query->where('name', $data);
             })
@@ -76,12 +76,12 @@ class ProcessPlanRepository
     public function search($term)
     {
         return $this->model
-            ->with('outgoing_products.product_transaction_location.product.qualifier.unit_group', 'customer')
+            ->with('outgoing_products.product_location.product.qualifier.unit_group', 'customer')
             ->where('customer', 'LIKE', '%' . $term . '%')
             ->orWhere('order_type', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
             ->orWhereHas('outgoing_products', function ($query) use ($term) {
-                $query->whereHas('product_transaction_location', function ($query) use ($term) {
+                $query->whereHas('product_location', function ($query) use ($term) {
                     $query->whereHas('product', function ($query) use ($term) {
                         $query->where('name', 'LIKE', '%' . $term . '%');
                     });
@@ -92,12 +92,12 @@ class ProcessPlanRepository
 
     public function all()
     {
-        return $this->model->with('outgoing_products.product_transaction_location.product.qualifier.unit_group', 'customer')->get();
+        return $this->model->with('outgoing_products.product_location.product.qualifier.unit_group', 'customer')->get();
     }
 
     public function paginate(int $num)
     {
-        return $this->model->with('outgoing_products.product_transaction_location.product.qualifier.unit_group', 'customer')->paginate($num);
+        return $this->model->with('outgoing_products.product_location.product.qualifier.unit_group', 'customer')->paginate($num);
     }
 
     public function create($data)

@@ -44,6 +44,7 @@ icon: 'warning',
                                 title: 'category Deleted Successfully',
                                 type: 'success',
 icon: 'success',
+type: 'success',
                                 timer: 1700,
                             });
                             Swal.showLoading();

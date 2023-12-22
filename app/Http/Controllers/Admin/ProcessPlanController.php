@@ -64,7 +64,15 @@ class ProcessPlanController extends Controller
                 return $rpp->code;
             })
             ->addColumn('order_type', function ($rpp) {
-                return $rpp->order_type;
+                return $rpp->order_type->name;
+            })
+            ->addColumn('products', function ($rpp) {
+                $productList = '<ul>';
+                foreach ($rpp->outgoing_product as $product) {
+                    $productList .= '<li>' . $product->product->name . ' | (Qty: ' . $product->amount . ')</li>';
+                }
+                $productList .= '</ul>';
+                return $productList;
             })
             ->addColumn('desc', function ($rpp) {
                 return $rpp->desc;

@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductLocation extends Model
@@ -25,6 +23,21 @@ class ProductLocation extends Model
         'expired' => 'date',
         'purchase_date' => 'date',
     ];
+
+    protected static function booted()
+    {
+        static::created(function ($productLocation) {
+            $product = $productLocation->product;
+            $totalAmount = $product->product_locations()->sum('amount');
+            $product->update(['total_amount' => $totalAmount]);
+        });
+
+        static::updated(function ($productLocation) {
+            $product = $productLocation->product;
+            $totalAmount = $product->product_locations()->sum('amount');
+            $product->update(['total_amount' => $totalAmount]);
+        });
+    }
 
     public function location(): BelongsTo
     {

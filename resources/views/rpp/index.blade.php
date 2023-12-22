@@ -41,11 +41,25 @@
                                 <th scope="col" class="text-center">Code</th>
                                 <th scope="col" class="text-center">Customer</th>
                                 <th scope="col" class="text-center">Order Type</th>
+                                <th scope="col" class="text-center">Products</th>
                                 <th scope="col" class="text-center">Last Updated</th>
                                 <th scope="col" class="text-center">Dibuat</th>
+                                <th scope="col" class="text-center">Description</th>
                                 <th scope="col" class="text-center" width="14%">Action</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th scope="col" class="text-center">ID</th>
+                                <th scope="col" class="text-center">Code</th>
+                                <th scope="col" class="text-center">Customer</th>
+                                <th scope="col" class="text-center">Order Type</th>
+                                <th scope="col" class="text-center">Products</th>
+                                <th scope="col" class="text-center">Last Updated</th>
+                                <th scope="col" class="text-center">Dibuat</th>
+                                <th scope="col" class="text-center">Description</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div class="modal fade" id="outgoingProductsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -98,21 +112,38 @@
     @section('js')
     <script>
         $(function() {
+
+            $('#table tfoot th').each( function (i) {
+                var title = $('#table thead th').eq( $(this).index() ).text();
+                $(this).html( '<input type="text" placeholder="'+title+'" data-index="'+i+'" />' );
+            });
+
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
                 searchable: true,
+                columnDefs: [{ width: 550, targets: 4 }],
                 ajax: '{{ route('get-rpps') }}',
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'code', name: 'code' },
                     { data: 'customer', name: 'customer' },
                     { data: 'order_type', name: 'order_type' },
+                    { data: 'products', name: 'products' },
                     { data: 'formatted_updated_at', name: 'formatted_updated_at' },
                     { data: 'formatted_created_at', name: 'formatted_created_at' },
+                    { data: 'desc', name: 'desc' },
                     { data: 'action', name: 'action', orderable: false },
                 ],
                 order: [[0, 'desc']],
+            });
+
+            $(table.table().container() ).on( 'keyup', 'tfoot input', function () {
+                table
+                    .column( $(this).data('index') )
+                    .search( this.value )
+                    .order([])
+                    .draw();
             });
 
             $('#table tbody').on('click', '#show-outgoing-products', function () {

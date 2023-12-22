@@ -72,7 +72,9 @@ id="edit"
                             title: 'Supplier Deleted Successfully',
                             type: 'success',
 icon: 'success',
+type: 'success',
                             icon: 'success',
+type: 'success',
                             timer: 1700,
                         });
                         Swal.showLoading();
@@ -104,7 +106,9 @@ function update(name, defaultId)
             title: `Supplier Name "${name}" Updated Successfully`, 
             type: 'success',
 icon: 'success',
+type: 'success',
             icon: 'success',
+type: 'success',
             timer: 1700,
         });
         Swal.showLoading();

@@ -21,9 +21,9 @@ class OutgoingProductRepository
     public function search($term)
     {
         return $this->model
-            ->with('product_transaction_location', 'process_plan')
+            ->with('product_location', 'process_plan')
             ->where('amount', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('product_transaction_location', function ($query) use ($term) {
+            ->orWhereHas('product_location', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%');
             })
             ->orWhereHas('process_plan', function ($query) use ($term) {
@@ -35,19 +35,19 @@ class OutgoingProductRepository
     public function getByRpp($rpp)
     {
         return $this->model
-            ->with('product_transaction_location', 'process_plan')
+            ->with('product_location', 'process_plan')
             ->where('process_plan_id', $rpp)
             ->get();
     }
 
     public function all()
     {
-        return $this->model->with('product_transaction_location', 'process_plan')->get();
+        return $this->model->with('product_location', 'process_plan')->get();
     }
 
     public function paginate(int $num)
     {
-        return $this->model->with('product_transaction_location', 'process_plan')->paginate($num);
+        return $this->model->with('product_location', 'process_plan')->paginate($num);
     }
 
     public function create($data)

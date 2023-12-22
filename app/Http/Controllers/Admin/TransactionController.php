@@ -7,6 +7,7 @@ use App\Exports\TransactionExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequest;
 use App\Imports\TransactionImport;
+use App\Repositories\LocationRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\TransactionRepository;
 use App\Services\TransactionService;
@@ -23,21 +24,31 @@ class TransactionController extends Controller
 {
     protected $transactionRepository;
     protected $productRepository;
+    protected $locationRepository;
     protected $transactionService;
 
     public function __construct(
         TransactionRepository $transactionRepository,
         ProductRepository $productRepository,
+        LocationRepository $locationRepository,
         TransactionService $transactionService,
     ) {
         $this->transactionRepository = $transactionRepository;
         $this->productRepository = $productRepository;
+        $this->locationRepository = $locationRepository;
         $this->transactionService = $transactionService;
     }
 
     public function index(): View
     {
         return view('transaction.index');
+    }
+
+
+    public function allTransactions()
+    {
+        $data = $this->transactionService->all();
+        return response()->json($data);
     }
 
     public function getTransactions()
@@ -101,7 +112,9 @@ class TransactionController extends Controller
     public function edit(string $id): View
     {
         $transaction = $this->transactionRepository->find($id);
-        return view('transaction.edit', compact('transaction'));
+        $locations = $this->locationRepository->all();
+
+        return view('transaction.edit', compact('transaction', 'locations'));
     }
 
     public function update(TransactionRequest $request, string $id)

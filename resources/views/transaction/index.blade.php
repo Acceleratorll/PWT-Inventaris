@@ -7,19 +7,6 @@
 @stop
 
 @section('content')
-<div class="row">
-    <div class="col-md-12">
-        @if($message = Session::get('success'))
-        <div class="alert alert-success" role="alert">
-            {{ $message }}
-        </div>
-        @elseif($message =  Session::get('error'))
-        <div class="alert alert-danger" role="alert">
-            {{ $message }}
-        </div>
-        @endif
-    </div>
-</div>
 <div class="row" style="height: 10px"></div>
 <div class="row" >
     <div class="col-md-12">
@@ -106,73 +93,90 @@
         </div>
     </div>
 </div>
+@stop
 
+@section('css')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+@stop
 
-    @stop
-    
-    @section('css')
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
-    @stop
-    
-    @section('js')
-    <script>
-        $(function() {
-
-            $('#table tfoot th').each( function (i) {
-                var title = $('#table thead th').eq( $(this).index() ).text();
-                $(this).html( '<input type="text" placeholder="'+title+'" data-index="'+i+'" />' );
-            });
-
-            $('#table').DataTable({
-                processing: true,
-                serverSide: true,
-                searchable: true,
-                scrollCollapse: true,
-                scrollX: true,
-                scrollY: 350,
-                columnDefs: [{ width: 550, targets: 4 }],
-                ajax: '{{ route('get-transactions') }}',
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'code', name: 'code' },
-                    { data: 'supplier', name: 'supplier' },
-                    { data: 'formatted_purchase_date', name: 'formatted_purchase_date' },
-                    { data: 'products', name: 'products' },
-                    { data: 'formatted_updated_at', name: 'formatted_updated_at' },
-                    { data: 'formatted_created_at', name: 'formatted_created_at' },
-                    { data: 'action', name: 'action', orderable: false },
-                ],
-                order:[[0, 'desc']],
-            });
-
-            $(table.table().container() ).on( 'keyup', 'tfoot input', function () {
-                table
-                    .column( $(this).data('index') )
-                    .search( this.value )
-                    .order([])
-                    .draw();
-            });
-
-            $('#table tbody').on('click', '#show-incoming-products', function () {
-                var data = $('#table').DataTable().row($(this).parents('tr')).data();
-                var incomingProducts = data.incoming_products;
-                
-                var modal = $('#incomingProductsModal');
-                var modalList = modal.find('#incoming-products-list');
-                modalList.empty();
-                
-                console.log(incomingProducts);
-                $.each(incomingProducts, function(index, product) {
-                    let qualifier = product.product.qualifier;
-                
-                    modalList.append('<li>' + product.product.name + ' : ' + product.qty +
-                        (' ' + qualifier.name ?? 'N/A') +'</li>');
-                });
-                
-                modal.modal('show');
-            });
+@section('js')
+<script>
+    if ('{{ Session::has('error') }}') {
+        Swal.fire({
+            icon: 'error',
+            type: 'error',
+            title: 'Error',
+            timer: 3000,
+            text: '{{ Session::get('error') }}',
         });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+    }
+
+    if ('{{ Session::has('success') }}') {
+        Swal.fire({
+            icon: 'success',
+            type: 'success',
+            title: 'success',
+            timer: 3000,
+            text: '{{ Session::get('success') }}',
+        });
+    }
+
+    $(function() {
+        $('#table tfoot th').each( function (i) {
+            var title = $('#table thead th').eq( $(this).index() ).text();
+            $(this).html( '<input type="text" placeholder="'+title+'" data-index="'+i+'" />' );
+        });
+
+        var table = $('#table').DataTable({
+            processing: true,
+            serverSide: true,
+            searchable: true,
+            scrollCollapse: true,
+            scrollX: true,
+            scrollY: 350,
+            columnDefs: [{ width: 550, targets: 4 }],
+            ajax: '{{ route('get-json-transactions') }}',
+            columns: [
+                { data: 'id', name: 'id' },
+                { data: 'code', name: 'code' },
+                { data: 'supplier', name: 'supplier' },
+                { data: 'formatted_purchase_date', name: 'formatted_purchase_date' },
+                { data: 'products', name: 'products' },
+                { data: 'formatted_updated_at', name: 'formatted_updated_at' },
+                { data: 'formatted_created_at', name: 'formatted_created_at' },
+                { data: 'action', name: 'action', orderable: false },
+            ],
+            order:[[0, 'desc']],
+        });
+
+        $(table.table().container() ).on( 'keyup', 'tfoot input', function () {
+            table
+                .column( $(this).data('index') )
+                .search( this.value )
+                .order([])
+                .draw();
+        });
+
+        $('#table tbody').on('click', '#show-incoming-products', function () {
+            var data = $('#table').DataTable().row($(this).parents('tr')).data();
+            var incomingProducts = data.product_transactions;
+            
+            var modal = $('#incomingProductsModal');
+            var modalList = modal.find('#incoming-products-list');
+            modalList.empty();
+            
+            console.log(incomingProducts);
+            $.each(incomingProducts, function(index, product) {
+                let qualifier = product.product.qualifier;
+            
+                modalList.append('<li>' + product.product.name + ' : ' + product.qty +
+                    (' ' + qualifier.name ?? 'N/A') +'</li>');
+            });
+            
+            modal.modal('show');
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 @stop

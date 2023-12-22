@@ -29,12 +29,12 @@ class LocationRepository
 
     public function all()
     {
-        return $this->model->with('product_transaction_locations')->get();
+        return $this->model->with('product_locations')->get();
     }
 
     public function paginate(int $num)
     {
-        return $this->model->with('product_transaction_locations')->paginate($num);
+        return $this->model->with('product_locations')->paginate($num);
     }
 
     public function create($data)

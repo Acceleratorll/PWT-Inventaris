@@ -30,7 +30,7 @@ class ProductTransactionExport implements FromCollection, Responsable, WithHeadi
                 'Supplier' => $productTransaction->supplier->name,
                 'Code' => $productTransaction->code,
                 'Purchase Date' => $productTransaction->purchase_date,
-                'Incoming Products' => $this->formatIncomingProducts($productTransaction->incoming_products),
+                'Incoming Products' => $this->formatIncomingProducts($productTransaction->product_transactions),
                 'Description' => $productTransaction->desc,
             ];
         });

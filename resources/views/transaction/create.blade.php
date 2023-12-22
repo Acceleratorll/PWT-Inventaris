@@ -8,33 +8,6 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-<div class="row">
     <div class="card col-md-12">
         <form action="{{ route('transaction.store') }}" method="post">
             @csrf
@@ -65,20 +38,19 @@
                     <textarea name="note"class="form-control mb-3" placeholder="Masukkan Catatan Pembelian"></textarea>
                 </div>
             </div>
-                <div id="selected-products"></div>
-            <div class="row justify-content-end">
-                <div class="col-md-3">
-                    <button class="form-control btn-success" type="submit">Save</button>
-                </div>
+        </div>
+        <div id="selected-products"></div>
+        <div class="row justify-content-end">
+            <div class="col-md-3">
+                <button class="form-control btn-success" type="submit">Save</button>
             </div>
         </div>
     </form>
     </div>
 </div>
-
 @stop
-    
-    @section('css')
+
+@section('css')
     <style>
         .select2-selection__choice {
             padding-right: 16px !important;
@@ -86,12 +58,32 @@
             background-color: ghostwhite !important;
             color: #333 !important;
         }
-        </style>
-    @stop
+    </style>
+@stop
     
-    @section('js')
+@section('js')
     <script src="{{ asset('/js/customSelect2.js') }}"></script>
     <script>
+        if ('{{ Session::has('error') }}') {
+            Swal.fire({
+                icon: 'error',
+                type: 'error',
+                timer: 3000,
+                title: 'Error',
+                text: '{{ Session::get('error') }}',
+            });
+        }
+    
+        if ('{{ Session::has('success') }}') {
+            Swal.fire({
+                icon: 'success',
+                type: 'success',
+                title: 'Success',
+                timer: 3000,
+                text: '{{ Session::get('success') }}',
+            });
+        }
+            
         const products = document.getElementById("products");
         const locations = document.getElementById("locations");
         const suppliers = document.getElementById("supplier_id");
@@ -107,57 +99,78 @@
         });
 
         $(products).on("change", function () {
-        var selectedProducts = $(this).select2("data");
+            var selectedProducts = $(this).select2("data");
 
-        $("#selected-products").empty();
+            $("#selected-products").empty();
 
-        selectedProducts.forEach(function (product) {
-            var productId = product.id;
-            var productName = product.text;
-            $.ajax({
-            url: '{{ route("get-json-product", ["product_id" => ":product"]) }}'.replace(':product', productId),
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var qualifiers = data.qualifiers;
-                var uniqueLocationId = "location_id_" + productId;
-                var inputHtml = `
-                    <div class="row justify-center">
-                        <div class="col-md-3">
-                            <label>Nama Barang</label>
-                            <input type="hidden" name="selected_products[${productId}][product_id]" value="${productId}">
-                            <input type="text" class="form-control mb-3" value="${productName}" disabled>
-                        </div>
-                        <div class="col-md-2">
-                            <label>QTY</label>
-                            <input type="number" name="selected_products[${productId}][qty]" class="form-control mb-3" placeholder="Quantity" required>
-                        </div>
-                        <div class="col-md-3">
-                                    <label>Expired</label>
-                                    <input type="date" name="selected_products[${productId}][expired]" id="expired" class="form-control mb-3" required/>
+            selectedProducts.forEach(function (product) {
+                var productId = product.id;
+                var productName = product.text;
+                $.ajax({
+                    url: '{{ route("get-json-product", ["product_id" => ":product"]) }}'.replace(':product', productId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var qualifiers = data.qualifiers;
+                        var uniqueLocationId = "location_id_" + productId;
+                        var inputHtml = `
+                            <div class="row justify-center">
+                                <div class="col-md-4">
+                                    <label>Nama Barang</label>
+                                    <input type="hidden" name="selected_products[${productId}][product_id]" value="${productId}">
+                                    <input type="text" class="form-control mb-3" value="${productName}" disabled>
                                 </div>
-                        <div class="col-md-2">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3">
                                     <label>Location</label>
-                                    <select name="selected_products[${productId}][location_id]" id="${uniqueLocationId}" class="form-control mb-3" required></select>
+                                    <select name="selected_products[${productId}][location][]" id="${uniqueLocationId}" class="form-control mb-3" multiple required></select>
                                 </div>
-                        <div class="col-md-2">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-2">
                                     <label>Qualifier</label>
                                     <select name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" required>
                                         <option value="${data.qualifier_id}" selected>${data.qualifier.name}</option>
                                     </select>
                                 </div>
-                    </div>
-                    `;
-                
-                $("#selected-products").append(inputHtml);
-                selectInput($("#" + uniqueLocationId), locations_url, location_ph);
-        },
-        error: function (error) {
-            console.error('Error retrieving data for product:', error);
-        }
-    });
+                            </div>
+                            <div id="locations_${productId}"></div>
+                            `;
+                        
+                        $("#selected-products").append(inputHtml);
+                        selectInput($("#" + uniqueLocationId), locations_url, location_ph);
 
-    });
-});
+                        $(`#${uniqueLocationId}`).on('change', function() {
+                            const selectedLocations = $(this).select2("data");
+                            $(`#locations_${productId}`).empty();
+                            
+                            selectedLocations.forEach(location => {
+                                const inputFields = `
+                                        <div class="row">
+                                            <div class="col-md-4"></div>
+                                            <div class="col-md-4">
+                                                <label>Location</label>
+                                                <input type="text" name="selected_products[${productId}][location_ids][${location.id}][name]" class="form-control mb-3" value="${location.text}" placeholder="Amount">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Amount</label>
+                                                <input type="number" name="selected_products[${productId}][location_ids][${location.id}][amount]" class="form-control mb-3" placeholder="Amount" required>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Expired</label>
+                                                <input type="date" name="selected_products[${productId}][location_ids][${location.id}][expired]" class="form-control mb-3" required>
+                                            </div>
+                                        </div>
+                                `;
+
+                                $(`#locations_${productId}`).append(inputFields);
+                            });
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error retrieving data for product:', error);
+                    }
+                });
+            });
+        });
     </script>
 @stop

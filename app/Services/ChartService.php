@@ -45,7 +45,7 @@ class ChartService
             $labels = [];
 
             foreach ($productTransactions as $productTransaction) {
-                $totalSalesQty = $productTransaction->incoming_products
+                $totalSalesQty = $productTransaction->product_transactions
                     ->where('product.material.id', $material->id)
                     ->sum('qty');
 

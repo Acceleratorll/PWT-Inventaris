@@ -43,7 +43,7 @@ class TransactionRepository
     {
         return $this->model->whereMonth('created_at', $month)
             ->whereYear('created_at', $year)
-            ->whereHas('incoming_products.product.material')
+            ->whereHas('product_transactions.product.material')
             ->count();
     }
 
@@ -94,7 +94,6 @@ class TransactionRepository
 
     public function delete($id)
     {
-        $data = $this->model->find($id);
-        return $data->delete();
+        return $this->model->find($id)->delete();
     }
 }

@@ -42,13 +42,18 @@ class TransactionService
         $this->transactionRepository = $transactionRepository;
     }
 
+    public function all()
+    {
+        return $this->transactionRepository->all();
+    }
+
     public function updateIncomingProducts($transaction, $selectedProducts)
     {
         $amountChanges = [];
 
         foreach ($selectedProducts as $productId => $productData) {
             if ($transaction->product_transactions == null || !$transaction->product_transactions->contains('product_id', $productId)) {
-                // Product is not in the existing incoming_products, create it
+                // Product is not in the existing product_transactions, create it
                 $this->createIncomingProduct($transaction, $productId, $productData, $amountChanges);
             }
         }
@@ -56,10 +61,10 @@ class TransactionService
         foreach ($transaction->product_transactions as $incomingProduct) {
             $productId = $incomingProduct->product_id;
             if (!isset($selectedProducts[$productId])) {
-                // Delete the incoming_product
+                // Delete the product_transaction
                 $this->deleteIncomingProduct($incomingProduct, $amountChanges);
             } else {
-                // Update the existing incoming_product
+                // Update the existing product_transaction
                 $this->updateIncomingProduct($incomingProduct, $selectedProducts[$productId], $amountChanges);
             }
         }
@@ -75,6 +80,19 @@ class TransactionService
 
     private function updateIncomingProduct($incomingProduct, $productData, &$amountChanges)
     {
+        $product = $incomingProduct->product;
+        foreach ($productData['location_ids'] as $locationId => $locationData) {
+            $inputOutLoc = [
+                'product_id' => $product->id,
+                'location_id' => $locationId,
+                'amount' => $locationData['amount'],
+                'expired' => $locationData['expired'],
+            ];
+
+            $incomeLoc = $this->productLocationRepository->find()->update($inputOutLoc);
+            $product->product_locations()->save($incomeLoc);
+            $amount += $locationData['amount'];
+        }
         $netChange = $productData['qty'] - $incomingProduct->amount;
         $amountChanges[$incomingProduct->product_id] = $netChange;
 
@@ -85,26 +103,34 @@ class TransactionService
     private function createIncomingProduct($transaction, $productId, $productData, &$amountChanges)
     {
         $product = $this->productRepository->find($productId);
+        $oriAmount = $product->total_amount;
+        (int) $amount = 0;
+
+        foreach ($productData['location_ids'] as $locationId => $locationData) {
+            $inputOutLoc = [
+                'product_id' => $product->id,
+                'location_id' => $locationId,
+                'amount' => $locationData['amount'],
+                'purchase_date' => $transaction->purchase_date,
+                'expired' => $locationData['expired'],
+            ];
+
+            $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
+            $product->product_locations()->save($incomeLoc);
+            $amount += $locationData['amount'];
+        }
 
         $inputOutPro = [
             'transaction_id' => $transaction->id,
             'product_id' => $productId,
-            'amount' => $productData['qty'],
-            'product_amount' => $product->total_amount,
-            'expired' => $productData['expired'],
+            'amount' => (int)$amount,
+            'product_amount' => $oriAmount,
         ];
+
         $income = $this->productTransactionRepository->create($inputOutPro);
         $transaction->product_transactions()->save($income);
 
-        $inputOutLoc = [
-            'product_id' => $income->id,
-            'location_id' => $productData['location_id'],
-            'amount' => $income->amount,
-        ];
-        $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
-        $income->product_transaction_location()->save($incomeLoc);
-
-        $amountChanges[$productId] = $productData['qty'];
+        $amountChanges[$productId] = $amount;
     }
 
     public function updateProductAmounts($amountChanges)
@@ -153,7 +179,7 @@ class TransactionService
         $data = [];
         $labels = [];
         foreach ($materials as $material) {
-            $totalSalesQty = $transaction_find->incoming_products
+            $totalSalesQty = $transaction_find->product_transactions
                 ->where('product.material_id', $material->id)
                 ->sum('qty');
             $data[] = $totalSalesQty;
@@ -183,7 +209,7 @@ class TransactionService
     public function notifyProduct($transaction)
     {
         $user = auth()->user();
-        foreach ($transaction->incoming_products as $iProduct) {
+        foreach ($transaction->product_transactions as $iProduct) {
             $product = $this->productRepository->find($iProduct->product_id);
             if ($product->amount < (0.1 * $product->max_amount)) {
                 auth()->user()->notify(new CriticalProduct($product));

@@ -119,6 +119,7 @@
                     title: `Supplier Name "${name}" created successfully`, 
                     type: 'success',
 icon: 'success',
+type: 'success',
                     icon: "success",
                     timer: 1700,
                 });

@@ -30,7 +30,7 @@ class productTransactionImport implements ToModel, WithHeadingRow
 
         $this->productTransaction->save();
 
-        return $this->processIncomingProducts($row['incoming_products']);
+        return $this->processIncomingProducts($row['product_transactions']);
     }
 
     private function processIncomingProducts($incomingProducts)

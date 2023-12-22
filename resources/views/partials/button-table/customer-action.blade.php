@@ -74,6 +74,7 @@ icon: 'warning',
                             title: 'customer Deleted Successfully',
                             type: 'success',
 icon: 'success',
+type: 'success',
                             timer: 1700,
                         });
                         Swal.showLoading();
@@ -105,7 +106,9 @@ function update(name, defaultId)
             title: `customer Name "${name}" Updated Successfully`, 
             type: 'success',
 icon: 'success',
+type: 'success',
             icon: 'success',
+type: 'success',
             timer: 1700,
         });
         Swal.showLoading();

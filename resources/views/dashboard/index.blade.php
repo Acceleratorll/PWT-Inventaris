@@ -737,7 +737,9 @@
                 Toast.fire({
                     type: 'success',
                     icon: 'success',
+type: 'success',
                     icon: 'success',
+type: 'success',
                     title: data.name+' Updated'
                 })
             }
@@ -756,6 +758,7 @@
                 })
                 Toast.fire({
                     icon: 'success',
+type: 'success',
                     title: data.name+' Added'
                 })
             }
@@ -810,7 +813,7 @@
                     data.forEach(dataItem => {
                         modalContent += `
                         <p>Tanggal <strong>${new Date(dataItem.purchase_date).toLocaleDateString('id-ID',{ weekday:"long", year:"numeric", month:"short", day:"numeric"})}</strong></p>`;
-                        dataItem.incoming_products.forEach(iProduct => {
+                        dataItem.product_transactions.forEach(iProduct => {
                             const limitedProductName = limitText(iProduct.product.name, 30);
                             modalContent += `
                             <li>${limitedProductName} : ${iProduct.qty} ${iProduct.product.qualifier.abbreviation}</li>`;
