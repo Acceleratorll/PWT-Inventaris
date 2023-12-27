@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::resource('/profile', ProfileController::class);
+    Route::resource('/location', LocationController::class);
     Route::resource('/category', CategoryProductController::class);
     Route::resource('/product', ProductController::class);
     Route::resource('/rpp', ProcessPlanController::class);
@@ -68,6 +69,9 @@ Route::prefix('/json')->group(function () {
     Route::get('/get-suppliers', [SupplierController::class, 'getJsonsuppliers'])->name('get-json-suppliers');
     Route::get('/get-locations', [LocationController::class, 'selectLocations'])->name('get-json-locations');
     Route::get('/select-transactions', [LocationController::class, 'selectTransactions'])->name('select-transactions');
+    Route::get('/select-order-type', [OrderTypeController::class, 'select'])->name('select-order-type');
+    Route::get('/select-product-locations', [ProductLocationController::class, 'select'])->name('select-product-locations');
+    Route::get('/select-product-locations-param', [ProductLocationController::class, 'selectWithParam'])->name('select-product-locations-param');
     Route::get('/get-transactions', [TransactionController::class, 'getTransactions'])->name('get-json-transactions');
     Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');
     Route::get('/get-products', [ProductController::class, 'getJsonProducts'])->name('get-json-products');

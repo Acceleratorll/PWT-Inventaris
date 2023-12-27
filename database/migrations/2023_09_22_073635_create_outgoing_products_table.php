@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained();
             $table->float('amount');
             $table->float('product_amount');
-            $table->softDeletes();
+            $table->date('expired');
             $table->timestamps();
         });
     }

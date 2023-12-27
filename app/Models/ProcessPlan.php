@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProcessPlan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'customer_id',
+        'order_type_id',
         'code',
         'desc',
         'outed_date',

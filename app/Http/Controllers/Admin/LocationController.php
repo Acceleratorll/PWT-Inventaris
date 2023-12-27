@@ -50,4 +50,10 @@ class LocationController extends Controller
         $term = $request->term;
         return $this->locationService->selectLocations($term);
     }
+
+    public function selectByProduct(Request $request)
+    {
+        $term = $request->term;
+        return $this->locationService->selectLocations($term);
+    }
 }

@@ -30,4 +30,16 @@ class LocationService
         });
         return response()->json($formattedDatas);
     }
+
+    public function selectByProduct($product_id): JsonResponse
+    {
+        $datas = $this->repository->getByProduct($product_id);
+        $formattedDatas = $datas->map(function ($data) {
+            return [
+                'id' => $data->id,
+                'text' => $data->name,
+            ];
+        });
+        return response()->json($formattedDatas);
+    }
 }

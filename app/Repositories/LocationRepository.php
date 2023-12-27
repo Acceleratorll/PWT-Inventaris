@@ -27,6 +27,29 @@ class LocationRepository
             ->get();
     }
 
+    public function searchAfterFilter($term, $data)
+    {
+        return $data
+            ->where('name', 'LIKE', '%' . $term . '%')
+            ->orWhere('location', 'LIKE', '%' . $term . '%')
+            ->orWhere('desc', 'LIKE', '%' . $term . '%')
+            ->orWhereHas('product_locations', function ($q) use ($term) {
+                $q->where('product_id', 'LIKE', '%' . $term . '%')
+                    ->orWhere('purchase_date', 'LIKE', '%' . $term . '%')
+                    ->orWhere('expired', 'LIKE', '%' . $term . '%');
+            })
+            ->get();
+    }
+
+    public function getByProduct($product_id)
+    {
+        return $this->model
+            ->orWhereHas('product_locations', function ($q) use ($product_id) {
+                $q->where('product_id', $product_id);
+            })
+            ->get();
+    }
+
     public function all()
     {
         return $this->model->with('product_locations')->get();
@@ -49,7 +72,6 @@ class LocationRepository
 
     public function delete($id)
     {
-        $data = $this->model->find($id);
-        return $data->delete();
+        return $this->model->find($id)->delete();
     }
 }

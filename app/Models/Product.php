@@ -27,9 +27,10 @@ class Product extends Model
 
     public function updateAmount()
     {
-        $this->amount = $this->product_locations->sum('amount');
+        $this->total_amount = $this->product_locations()->sum('amount');
         $this->save();
     }
+
 
     public function material(): BelongsTo
     {

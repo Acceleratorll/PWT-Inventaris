@@ -17,4 +17,16 @@ class OrderTypeService
     {
         return $this->repository->find($id);
     }
+
+    public function select($term)
+    {
+        $datas = $this->repository->search($term);
+        $formattedDatas = $datas->map(function ($data) {
+            return [
+                'id' => $data->id,
+                'text' => $data->name,
+            ];
+        });
+        return response()->json($formattedDatas);
+    }
 }

@@ -15,7 +15,16 @@ class ProductLocationRepository
 
     public function find($id)
     {
-        return $this->model->find($id);
+        return $this->model->with('location', 'product')->find($id);
+    }
+
+    public function findByProductExpiredLocation($product_id, $location_id, $expired)
+    {
+        return $this->model->with('location', 'product')
+            ->where('product_id', $product_id)
+            ->where('expired', $expired)
+            ->where('location_id', $location_id)
+            ->first();
     }
 
     public function search($term)
@@ -35,7 +44,27 @@ class ProductLocationRepository
             ->get();
     }
 
-    public function allByProduct($data)
+    public function searchAfterFilter($term, $param)
+    {
+        return $this->model
+            ->with('location', 'product')
+            ->where('product_id', $param)
+            ->where(function ($query) use ($term) {
+                $query->where('amount', 'LIKE', '%' . $term . '%')
+                    ->orWhereHas('location', function ($query) use ($term) {
+                        $query->where('name', 'LIKE', '%' . $term . '%')
+                            ->orWhere('location', 'LIKE', '%' . $term . '%')
+                            ->orWhere('desc', 'LIKE', '%' . $term . '%');
+                    })
+                    ->orWhereHas('product', function ($query) use ($term) {
+                        $query->where('name', 'LIKE', '%' . $term . '%')
+                            ->orWhere('product_code', 'LIKE', '%' . $term . '%');
+                    });
+            })
+            ->get();
+    }
+
+    public function getByProduct($data)
     {
         return $this->model
             ->with('location', 'product')

@@ -27,17 +27,14 @@ class ProductLocation extends Model
     protected static function booted()
     {
         static::created(function ($productLocation) {
-            $product = $productLocation->product;
-            $totalAmount = $product->product_locations()->sum('amount');
-            $product->update(['total_amount' => $totalAmount]);
+            $productLocation->product->updateAmount();
         });
 
         static::updated(function ($productLocation) {
-            $product = $productLocation->product;
-            $totalAmount = $product->product_locations()->sum('amount');
-            $product->update(['total_amount' => $totalAmount]);
+            $productLocation->product->updateAmount();
         });
     }
+
 
     public function location(): BelongsTo
     {

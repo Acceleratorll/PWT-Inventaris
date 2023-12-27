@@ -366,6 +366,22 @@ return [
                 ],
             ],
         ],
+        [
+            'text'    => 'Location',
+            'icon' => 'nav-icon fas fa-th',
+            'submenu' => [
+                [
+                    'text'    => 'All Data',
+                    'route'     => 'location.index',
+                    'icon' => 'nav-icon fas fa-book',
+                ],
+                [
+                    'text'    => 'Add Location',
+                    'route'     => 'location.create',
+                    'icon' => 'nav-icon fas fa-edit',
+                ],
+            ],
+        ],
         ['header' => 'transactions_settings'],
         [
             'text'    => 'rpp',

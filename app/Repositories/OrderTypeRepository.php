@@ -20,13 +20,7 @@ class OrderTypeRepository
 
     public function search($term)
     {
-        return $this->model
-            ->where('name', 'LIKE', '%' . $term . '%')
-            ->orWhere('desc', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('process_plans', function ($query) use ($term) {
-                $query->where('code', 'LIKE', '%' . $term . '%');
-            })
-            ->get();
+        return $this->model->where('name', 'LIKE', '%' . $term . '%')->get();
     }
 
     public function all()

@@ -97,9 +97,10 @@ class TransactionController extends Controller
     {
         $input = $transactionRequest->validated();
         $transaction = $this->transactionRepository->create($input);
-        $amountChanges = $this->transactionService->updateIncomingProducts($transaction, $input['selected_products']);
-        $this->transactionService->updateProductAmounts($amountChanges);
-        $this->transactionService->addChart($transaction);
+        $this->transactionService->storeIncomingProducts($transaction, $input['selected_products']);
+        // $this->transactionService->updateProductAmounts($amountChanges);
+        // $this->transactionService->addChart($transaction);
+        dd($transaction);
         return redirect()->back()->with('success', 'Product Transaction created successfully !');
     }
 

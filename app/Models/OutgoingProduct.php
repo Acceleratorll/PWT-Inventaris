@@ -9,14 +9,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OutgoingProduct extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'process_plan_id',
         'product_id',
         'amount',
         'product_amount',
+        'expired',
     ];
+
+    protected $casts = [
+        'expired' => 'date',
+    ];
+
+    protected static function booted()
+    {
+        static::created(function ($outgoingProduct) {
+            $product = $outgoingProduct->product;
+            $totalAmount = $product->product_locations()->sum('amount');
+            $product->update(['total_amount' => $totalAmount]);
+        });
+    }
 
     public function process_plan(): BelongsTo
     {

@@ -45,4 +45,10 @@ class OrderTypeController extends Controller
         $this->orderTypeService->getById($id)->delete();
         return response()->json(['message' => 'Data has been found!'], 200);
     }
+
+    public function select(Request $request)
+    {
+        $term = $request->term;
+        return $this->orderTypeService->select($term);
+    }
 }

@@ -122,6 +122,9 @@
                 processing: true,
                 serverSide: true,
                 searchable: true,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 350,
                 columnDefs: [{ width: 550, targets: 4 }],
                 ajax: '{{ route('get-rpps') }}',
                 columns: [

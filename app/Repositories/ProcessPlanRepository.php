@@ -59,7 +59,7 @@ class ProcessPlanRepository
     {
         $current_month = now()->month;
         $current_year = now()->year;
-        return $this->model->with('outgoing_products.product_location.product.qualifier', 'customer')
+        return $this->model->with('outgoing_products.product.qualifier', 'customer', 'order_type')
             ->whereHas('customer', function ($query) use ($data) {
                 $query->where('name', $data);
             })
@@ -76,7 +76,7 @@ class ProcessPlanRepository
     public function search($term)
     {
         return $this->model
-            ->with('outgoing_products.product_location.product.qualifier.unit_group', 'customer')
+            ->with('outgoing_products.product.qualifier.unit_group', 'customer', 'order_type')
             ->where('customer', 'LIKE', '%' . $term . '%')
             ->orWhere('order_type', 'LIKE', '%' . $term . '%')
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
@@ -92,12 +92,12 @@ class ProcessPlanRepository
 
     public function all()
     {
-        return $this->model->with('outgoing_products.product_location.product.qualifier.unit_group', 'customer')->get();
+        return $this->model->with('outgoing_products.product.qualifier.unit_group', 'customer', 'order_type')->get();
     }
 
     public function paginate(int $num)
     {
-        return $this->model->with('outgoing_products.product_location.product.qualifier.unit_group', 'customer')->paginate($num);
+        return $this->model->with('outgoing_products.product.qualifier.unit_group', 'customer', 'order_type')->paginate($num);
     }
 
     public function create($data)

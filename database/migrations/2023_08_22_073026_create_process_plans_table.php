@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('process_plans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained();
+            $table->foreignId('order_type_id')->constrained();
             $table->string('code')->unique();
             $table->datetime('outed_date');
             $table->string('desc')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

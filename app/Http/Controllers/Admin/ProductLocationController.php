@@ -10,12 +10,12 @@ use Illuminate\Http\Request;
 
 class ProductLocationController extends Controller
 {
-    protected $productPlanningService;
+    protected $productLocationService;
 
     public function __construct(
-        ProductLocationService $productPlanningService,
+        ProductLocationService $productLocationService,
     ) {
-        $this->productPlanningService = $productPlanningService;
+        $this->productLocationService = $productLocationService;
     }
 
     public function index(): View
@@ -30,7 +30,7 @@ class ProductLocationController extends Controller
 
     public function show($id): JsonResponse
     {
-        $data = $this->productPlanningService->getById($id);
+        $data = $this->productLocationService->getById($id);
         return response()->json(['data' => $data, 'message' => 'Data has been found!'], 200);
     }
 
@@ -41,7 +41,14 @@ class ProductLocationController extends Controller
 
     public function delete($id): JsonResponse
     {
-        $this->productPlanningService->getById($id)->delete();
+        $this->productLocationService->getById($id)->delete();
         return response()->json(['message' => 'Data has been found!'], 200);
+    }
+
+    public function selectWithParam(Request $request)
+    {
+        $term = $request->input('term');
+        $productId = $request->input('data');
+        return $this->productLocationService->selectWithParam($term, $productId);
     }
 }

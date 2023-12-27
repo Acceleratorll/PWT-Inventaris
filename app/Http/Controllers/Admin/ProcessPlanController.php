@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\AddChartEvent;
 use App\Events\DataAddedEvent;
-use App\Events\DeleteChartEvent;
 use App\Events\DeletedDataEvent;
 use App\Events\ProductNotificationEvent;
 use App\Events\UpdateChartEvent;
@@ -17,6 +16,7 @@ use App\Notifications\WarningProduct;
 use App\Repositories\MaterialRepository;
 use App\Repositories\OutgoingProductRepository;
 use App\Repositories\ProcessPlanRepository;
+use App\Repositories\ProductLocationRepository;
 use App\Repositories\ProductRepository;
 use App\Services\ProcessPlanService;
 use Illuminate\Contracts\View\View;
@@ -30,6 +30,7 @@ class ProcessPlanController extends Controller
     protected $processPlanRepository;
     protected $outgoingProductRepository;
     protected $productRepository;
+    protected $productLocationRepository;
     protected $materialRepository;
     protected $processPlanService;
 
@@ -37,12 +38,14 @@ class ProcessPlanController extends Controller
         ProcessPlanRepository $processPlanRepository,
         OutgoingProductRepository $outgoingProductRepository,
         ProductRepository $productRepository,
+        ProductLocationRepository $productLocationRepository,
         MaterialRepository $materialRepository,
         ProcessPlanService $processPlanService,
     ) {
         $this->processPlanRepository = $processPlanRepository;
         $this->outgoingProductRepository = $outgoingProductRepository;
         $this->productRepository = $productRepository;
+        $this->productLocationRepository = $productLocationRepository;
         $this->materialRepository = $materialRepository;
         $this->processPlanService = $processPlanService;
     }
@@ -68,7 +71,7 @@ class ProcessPlanController extends Controller
             })
             ->addColumn('products', function ($rpp) {
                 $productList = '<ul>';
-                foreach ($rpp->outgoing_product as $product) {
+                foreach ($rpp->outgoing_products as $product) {
                     $productList .= '<li>' . $product->product->name . ' | (Qty: ' . $product->amount . ')</li>';
                 }
                 $productList .= '</ul>';
@@ -84,7 +87,7 @@ class ProcessPlanController extends Controller
                 return $rpp->updated_at->format('D, d-m-y, G:i');
             })
             ->addColumn('action', 'partials.button-table.process-plan-action')
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'products'])
             ->addIndexColumn()
             ->make(true);
     }
@@ -96,97 +99,97 @@ class ProcessPlanController extends Controller
 
     public function store(ProcessPlanRequest $processPlanRequest)
     {
-        $input = $processPlanRequest->validated();
-        $user = auth()->user();
-        if ($input) {
-            $rpp = $this->processPlanRepository->create($input);
-            $currentMonth = now()->month;
-            $currentYear = now()->year;
-            $formattedCurrentMonth = now()->format('M');
-            $datasets = [];
-            $amountChanges = [];
-            foreach ($input['selected_products'] as $productId => $productData) {
-                $inputOutPro = [
-                    'process_plan_id' => $rpp->id,
-                    'product_id' => $productId,
-                    'qty' => $productData['qty'],
-                ];
+        try {
+            $input = $processPlanRequest->validated();
+            if ($input) {
+                DB::transaction(function () use ($input) {
+                    $user = auth()->user();
+                    $rpp = $this->processPlanRepository->create($input);
+                    $formattedCurrentMonth = now()->format('M');
+                    $datasets = [];
+                    $amountChanges = [];
+                    foreach ($input['selected_products'] as $productId => $productData) {
+                        foreach ($productData['pro_loc_ids'] as $proLocId => $proLocData) {
+                            $product = $this->productRepository->find($productId);
+                            $inputOutPro = [
+                                'process_plan_id' => $rpp->id,
+                                'product_id' => $productId,
+                                'amount' => $proLocData['amount'],
+                                'product_amount' => $product->total_amount,
+                                'expired' => $proLocData['expired'],
+                            ];
 
-                $netChange = $productData['qty'];
+                            $netChange = $proLocData['amount'];
 
-                if (!isset($amountChanges[$productId])) {
-                    $amountChanges[$productId] = 0;
-                }
+                            if (!isset($amountChanges[$productId])) {
+                                $amountChanges[$productId] = 0;
+                            }
 
-                $amountChanges[$productId] += $netChange;
+                            $amountChanges[$productId] += $netChange;
 
-                $this->outgoingProductRepository->create($inputOutPro);
-                $product = $this->productRepository->find($productId);
-
-                DB::beginTransaction();
-
-                try {
-                    if ($product->amount - $productData['qty'] >= 0) {
-                        $this->productRepository->update($productId, ['amount' => $product->amount - $productData['qty']]);
-                        DB::commit();
-                    } else {
-                        throw new \Exception('Stock ' . $product->name . ' Kurang.');
+                            $this->outgoingProductRepository->create($inputOutPro);
+                            $proLoc = $this->productLocationRepository->find($proLocId);
+                            $proLoc->update(['amount' => $proLoc->amount -= $proLocData['amount']]);
+                        }
                     }
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    return back()->with('error', $e->getMessage());
-                }
-            }
 
-            foreach ($rpp->outgoing_products as $oProduct) {
-                $cproduct = $this->productRepository->find($oProduct->product_id);
-                if ($cproduct->amount <= (0.1 * $cproduct->max_amount)) {
-                    auth()->user()->notify(new CriticalProduct($cproduct));
-                    $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
-                    event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
-                } else if ($cproduct->amount <= (0.3 * $cproduct->max_amount)) {
-                    auth()->user()->notify(new WarningProduct($cproduct));
-                    $notif = $user->unreadNotifications->where('data.type', 'warning')->last();
-                    event(new ProductNotificationEvent('warning', $cproduct, $notif->data['message']));
-                }
-            }
+                    foreach ($rpp->outgoing_products as $oProduct) {
+                        $cproduct = $this->productRepository->find($oProduct->product_id);
+                        if ($cproduct->amount <= (0.1 * $cproduct->max_amount)) {
+                            auth()->user()->notify(new CriticalProduct($cproduct));
+                            $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
+                            event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
+                        } else if ($cproduct->amount <= (0.3 * $cproduct->max_amount)) {
+                            auth()->user()->notify(new WarningProduct($cproduct));
+                            $notif = $user->unreadNotifications->where('data.type', 'warning')->last();
+                            event(new ProductNotificationEvent('warning', $cproduct, $notif->data['message']));
+                        }
+                    }
 
-            $rppChart = [
-                'id' => $rpp->id,
-                'name' => $formattedCurrentMonth,
-                'context' => 'add'
-            ];
-            event(new UpdateChartEvent('rChart', $rppChart));
-            $materials = $this->materialRepository->all();
-            $data = [];
-            $labels = [];
-            foreach ($materials as $material) {
-                $totalSalesQty = $rpp->outgoing_products
-                    ->where('product.material.id', $material->id)
-                    ->sum('qty');
-                $data[] = $totalSalesQty;
-                $labels[] = $material->name;
-            }
-            $datasets[] = [
-                'labels' => $labels,
-                'qty' => $data,
-            ];
-            $addedData = [
-                'name' => $rpp->customer->name,
-                'qty' => $data,
-                'context' => 'create'
-            ];
-            $toastData = [
-                'name' => $rpp->customer->name,
-                'qty' => $data,
-                'context' => 'create'
-            ];
+                    // $rppChart = [
+                    //     'id' => $rpp->id,
+                    //     'name' => $formattedCurrentMonth,
+                    //     'context' => 'add'
+                    // ];
+                    // event(new UpdateChartEvent('rChart', $rppChart));
+                    // $materials = $this->materialRepository->all();
+                    // $data = [];
+                    // $labels = [];
+                    // foreach ($materials as $material) {
+                    //     $totalSalesQty = $rpp->outgoing_products
+                    //         ->where('product.material.id', $material->id)
+                    //         ->sum('qty');
+                    //     $data[] = $totalSalesQty;
+                    //     $labels[] = $material->name;
+                    // }
+                    // $datasets[] = [
+                    //     'labels' => $labels,
+                    //     'qty' => $data,
+                    // ];
+                    // $addedData = [
+                    //     'name' => $rpp->customer->name,
+                    //     'qty' => $data,
+                    //     'context' => 'create'
+                    // ];
+                    // $toastData = [
+                    //     'name' => $rpp->customer->name,
+                    //     'qty' => $data,
+                    //     'context' => 'create'
+                    // ];
 
-            event(new AddChartEvent('tChart', $addedData));
-            event(new DataAddedEvent($toastData, 'Rpp'));
-            return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
+                    // event(new AddChartEvent('tChart', $addedData));
+                    // event(new DataAddedEvent($toastData, 'Rpp'));
+
+                    DB::commit();
+                });
+
+                dd('success!', $processPlanRequest);
+                return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-        return redirect()->back()->with('error', 'Data isnt correct !');
     }
 
     public function show(string $id)

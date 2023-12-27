@@ -17,8 +17,17 @@ class ProcessPlanRequest extends FormRequest
             'customer_id' => 'required',
             'order_type_id' => 'required|string',
             'code' => 'required|string',
+            'outed_date' => 'required|date',
             'desc' => 'nullable|string',
-            'selected_products' => 'required|array'
+            'selected_products' => 'required|array',
+            'selected_products.*.location_ids.*.amount' => 'gte:selected_products.*.location_ids.*.oriAmount',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'selected_products.*.location_ids.*.amount.gte' => 'The amount must not exceed the original amount (oriAmount).',
         ];
     }
 }

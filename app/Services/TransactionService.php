@@ -47,29 +47,14 @@ class TransactionService
         return $this->transactionRepository->all();
     }
 
-    public function updateIncomingProducts($transaction, $selectedProducts)
+    public function storeIncomingProducts($transaction, $selectedProducts)
     {
-        $amountChanges = [];
-
         foreach ($selectedProducts as $productId => $productData) {
             if ($transaction->product_transactions == null || !$transaction->product_transactions->contains('product_id', $productId)) {
                 // Product is not in the existing product_transactions, create it
                 $this->createIncomingProduct($transaction, $productId, $productData, $amountChanges);
             }
         }
-
-        foreach ($transaction->product_transactions as $incomingProduct) {
-            $productId = $incomingProduct->product_id;
-            if (!isset($selectedProducts[$productId])) {
-                // Delete the product_transaction
-                $this->deleteIncomingProduct($incomingProduct, $amountChanges);
-            } else {
-                // Update the existing product_transaction
-                $this->updateIncomingProduct($incomingProduct, $selectedProducts[$productId], $amountChanges);
-            }
-        }
-
-        return $amountChanges;
     }
 
     private function deleteIncomingProduct($incomingProduct, &$amountChanges)
@@ -107,16 +92,22 @@ class TransactionService
         (int) $amount = 0;
 
         foreach ($productData['location_ids'] as $locationId => $locationData) {
-            $inputOutLoc = [
-                'product_id' => $product->id,
-                'location_id' => $locationId,
-                'amount' => $locationData['amount'],
-                'purchase_date' => $transaction->purchase_date,
-                'expired' => $locationData['expired'],
-            ];
+            $proLoc = $this->productLocationRepository->findByProductExpiredLocation($product->id, $locationId, $locationData['expired']);
 
-            $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
-            $product->product_locations()->save($incomeLoc);
+            if (!$proLoc) {
+                $inputOutLoc = [
+                    'product_id' => $product->id,
+                    'location_id' => $locationId,
+                    'amount' => $locationData['amount'],
+                    'purchase_date' => $transaction->purchase_date,
+                    'expired' => $locationData['expired'],
+                ];
+
+                $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
+                $product->product_locations()->save($incomeLoc);
+            } else {
+                $proLoc->update(['amount' => $proLoc->amount += $locationData['amount']]);
+            }
             $amount += $locationData['amount'];
         }
 
@@ -129,8 +120,6 @@ class TransactionService
 
         $income = $this->productTransactionRepository->create($inputOutPro);
         $transaction->product_transactions()->save($income);
-
-        $amountChanges[$productId] = $amount;
     }
 
     public function updateProductAmounts($amountChanges)
