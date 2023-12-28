@@ -42,6 +42,7 @@ Route::get('/get-table/read-notifications', [NotificationController::class, 'get
 Route::resource('/dashboard', AdminDashboardController::class);
 Route::get('/get-profiles', [ProfileController::class, 'getProfiles'])->name('get-profiles');
 Route::get('/get-suppliers', [SupplierController::class, 'getSuppliers'])->name('get-suppliers');
+Route::get('/get-locations', [LocationController::class, 'getLocations'])->name('get-locations');
 Route::get('/get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
 Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rpps');
 Route::get('/get-transactions', [TransactionController::class, 'allTransactions'])->name('get-transactions');

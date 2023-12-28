@@ -382,6 +382,22 @@ return [
                 ],
             ],
         ],
+        [
+            'text'    => 'Order Type',
+            'icon' => 'nav-icon fas fa-th',
+            'submenu' => [
+                [
+                    'text'    => 'All Data',
+                    'route'     => 'orderType.index',
+                    'icon' => 'nav-icon fas fa-book',
+                ],
+                [
+                    'text'    => 'Add Order Type',
+                    'route'     => 'orderType.create',
+                    'icon' => 'nav-icon fas fa-edit',
+                ],
+            ],
+        ],
         ['header' => 'transactions_settings'],
         [
             'text'    => 'rpp',

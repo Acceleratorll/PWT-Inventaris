@@ -1,57 +1,34 @@
 @extends('adminlte::page')
 
-@section('title', 'Kategori')
+@section('title', 'Location')
 
 @section('content_header')
-    <h1>Kategori Barang</h1>
+    <h1>Location Barang</h1>
 @stop
 
 @section('content')
-<div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-<div class="row">
-    <div class="card col-md-12">
+    <div class="card">
         <div class="card-body">
-            <form action="{{ route('category.store') }}" method="post">
-                @csrf
+            <form action="{{ route('location.store') }}" method="post">
+            @csrf
             <div class="row">
-                <div class="col-md-6">
-                    <x-adminlte-input fgroup-class="mb-3" name="name" label="Name" placeholder="Masukkan Nama Kategori" disable-feedback/>
+                <div class="col-md-3">
+                    <x-adminlte-input fgroup-class="mb-3" name="name" label="Name" placeholder="Masukkan Nama Location" disable-feedback/>
+                </div>
+                <div class="col-md-3">
+                    <x-adminlte-input fgroup-class="mb-3" name="location" label="Exact Location" placeholder="Masukkan Location" disable-feedback/>
                 </div>
                 <div class="col-md-6">
-                    <x-adminlte-input fgroup-class="mb-3" name="max" label="Max Tahun" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
+                    <label for="desc">Description</label>
+                    <textarea name="desc" id="desc" class="form-control mb-3" placeholder="Description"></textarea>
                 </div>
+            </div>
+            <div class="row">
             </div>
             <button class="form-control btn btn-success" type="submit">Save</button>
             </form>
         </div>
     </div>
-</div>
 
 @stop
     
@@ -61,7 +38,29 @@
     
     @section('js')
     <script>
-        
+        if ('{{ Session::has('error') }}') {
+        Swal.fire({
+            icon: 'error',
+            type: 'error',
+            title: 'Error',timer: 3000,
+            text: '{{ Session::get('error') }}',
+            onOpen: function() {
+                Swal.showLoading()
+            }
+        });
+    }
+
+    if ('{{ Session::has('success') }}') {
+        Swal.fire({
+            icon: 'success',
+            type: 'success',title: 'Success',
+            timer: 3000,
+            text: '{{ Session::get('success') }}',
+            onOpen: function() {
+                Swal.showLoading()
+            }
+        });
+    }
     </script>
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>

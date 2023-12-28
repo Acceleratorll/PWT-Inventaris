@@ -1,49 +1,29 @@
 @extends('adminlte::page')
 
-@section('title', 'Supplier')
+@section('title', 'Location')
 
 @section('content_header')
-    <h1>Supplier</h1>
+    <h1>Location</h1>
 @stop
 
 @section('content')
 <div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-            <x-adminlte-alert theme="info" title="Info">
-                {{ $message }}
-            </x-adminlte-alert>
-        @elseif($message =  Session::get('success'))
-            <x-adminlte-alert theme="success" title="Success">
-                {{ $message }}
-            </x-adminlte-alert>
-        @elseif($message =  Session::get('warning'))
-            <x-adminlte-alert theme="warning" title="Warning">
-                {{ $message }}
-            </x-adminlte-alert>
-        @elseif($message =  Session::get('error'))
-            <x-adminlte-alert theme="danger" title="Danger">
-                {{ $message }}
-            </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-
-<div class="row">
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
-                <button class="btn btn-primary" onclick="add()">+ Add</button>
+                <a href="{{ route('location.create') }}" class="btn btn-primary">+ Add</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">
-                    <caption>Table Supplier</caption>
+                    <caption>Table Location</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
                             <th scope="col" class="text-center">Name</th>
+                            <th scope="col" class="text-center">Location</th>
                             <th scope="col" class="text-center">Last Update</th>
                             <th scope="col" class="text-center">Created At</th>
+                            <th scope="col" class="text-center">Description</th>
                             <th scope="col" class="text-center" width="14%">Action</th>
                         </tr>
                     </thead>
@@ -52,7 +32,7 @@
         </div>
     </div>
 </div>
-<form action="{{ route('supplier.store') }}" method="post" id="createForm">
+<form action="{{ route('location.store') }}" method="post" id="createForm">
     @csrf
     <input type="text" name="name" id="name" hidden>
 </form>
@@ -70,26 +50,52 @@
     const column = [
         { data: 'id', name: 'id' },
         { data: 'name', name: 'name' },
-        { data: 'formatted_updated_at', name: 'formatted_updated_at' },
-        { data: 'formatted_created_at', name: 'formatted_created_at' },
+        { data: 'location', name: 'location' },
+        { data: 'updated_at', name: 'updated_at' },
+        { data: 'created_at', name: 'created_at' },
+        { data: 'desc', name: 'desc' },
         { data: 'action', name: 'action', orderable: false },
     ];
+
+    if ('{{ Session::has('error') }}') {
+        Swal.fire({
+            icon: 'error',
+            type: 'error',
+            title: 'Error',timer: 3000,
+            text: '{{ Session::get('error') }}',
+            onOpen: function() {
+                Swal.showLoading()
+            }
+        });
+    }
+
+    if ('{{ Session::has('success') }}') {
+        Swal.fire({
+            icon: 'success',
+            type: 'success',title: 'Success',
+            timer: 3000,
+            text: '{{ Session::get('success') }}',
+            onOpen: function() {
+                Swal.showLoading()
+            }
+        });
+    }
 
     $(document).ready(function() {
         $('#table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('get-suppliers') }}',
+            ajax: '{{ route('get-locations') }}',
             columns: column,
         });
     });
 
     function add() {
         Swal.fire({
-            title: 'Add Supplier',
+            title: 'Add Location',
             input: 'text',
             inputLabel: 'Name',
-            inputPlaceholder: 'Enter supplier name',
+            inputPlaceholder: 'Enter location name',
             showCancelButton: true,
             confirmButtonText: 'Save',
             cancelButtonText: 'Cancel',
@@ -101,22 +107,22 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 var name = result.value;
-                saveSupplier(name);
+                saveLocation(name);
             }
         });
     }
 
-    function saveSupplier(name) {
+    function saveLocation(name) {
         $.ajax({
             type: 'POST',
-            url: '{{ route("supplier.store") }}',
+            url: '{{ route("location.store") }}',
             data: {
                 name: name,
                 _token: '{{ csrf_token() }}'
             },
             success: function (response) {
                 Swal.fire({
-                    title: `Supplier Name "${name}" created successfully`, 
+                    title: `Location Name "${name}" created successfully`, 
                     type: 'success',
 icon: 'success',
 type: 'success',
@@ -130,7 +136,7 @@ type: 'success',
             },
             error: function (error) {
                 console.error('Error:', error);
-                Swal.fire('Error', 'Failed to create supplier', 'error');
+                Swal.fire('Error', 'Failed to create location', 'error');
             },
         });
     }
