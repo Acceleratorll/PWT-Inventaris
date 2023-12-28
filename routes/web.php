@@ -44,6 +44,7 @@ Route::get('/get-profiles', [ProfileController::class, 'getProfiles'])->name('ge
 Route::get('/get-suppliers', [SupplierController::class, 'getSuppliers'])->name('get-suppliers');
 Route::get('/get-locations', [LocationController::class, 'getLocations'])->name('get-locations');
 Route::get('/get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
+Route::get('/get-orderTypes', [OrderTypeController::class, 'table'])->name('get-table-order-types');
 Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rpps');
 Route::get('/get-transactions', [TransactionController::class, 'allTransactions'])->name('get-transactions');
 Route::get('/get-transaction/{transaction}', [TransactionController::class, 'getTransaction'])->name('get-transaction');

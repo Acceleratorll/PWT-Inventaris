@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrderType;
+use App\Http\Requests\OrderTypeRequest;
 use App\Services\OrderTypeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderTypeController extends Controller
 {
@@ -21,12 +22,27 @@ class OrderTypeController extends Controller
 
     public function index(): View
     {
-        return view();
+        return view('orderType.index');
     }
 
     public function create(): View
     {
-        return view();
+        return view('orderType.create');
+    }
+
+    public function store(OrderTypeRequest $orderTypeRequest)
+    {
+        try {
+            DB::transaction(function () use ($orderTypeRequest) {
+                $input = $orderTypeRequest->validated();
+                $this->orderTypeService->create($input);
+                DB::commit();
+            });
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return false;
+        }
     }
 
     public function show($id): JsonResponse
@@ -35,12 +51,28 @@ class OrderTypeController extends Controller
         return response()->json(['data' => $data, 'message' => 'Data has been found!'], 200);
     }
 
-    public function edit(): View
+    public function edit($id): View
     {
-        return view();
+        $data = $this->orderTypeService->getById($id);
+        return view('orderType.edit', compact('data'));
     }
 
-    public function delete($id): JsonResponse
+    public function update($id, OrderTypeRequest $orderTypeRequest)
+    {
+        try {
+            DB::transaction(function () use ($id, $orderTypeRequest) {
+                $input = $orderTypeRequest->validated();
+                $this->orderTypeService->update($id, $input);
+                DB::commit();
+            });
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return false;
+        }
+    }
+
+    public function destroy($id): JsonResponse
     {
         $this->orderTypeService->getById($id)->delete();
         return response()->json(['message' => 'Data has been found!'], 200);
@@ -50,5 +82,10 @@ class OrderTypeController extends Controller
     {
         $term = $request->term;
         return $this->orderTypeService->select($term);
+    }
+
+    public function table()
+    {
+        return $this->orderTypeService->table();
     }
 }

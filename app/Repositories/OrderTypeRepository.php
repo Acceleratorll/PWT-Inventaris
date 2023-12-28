@@ -25,7 +25,7 @@ class OrderTypeRepository
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('process_plans')->get();
     }
 
     public function paginate()
