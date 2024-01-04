@@ -1,9 +1,9 @@
 
-<a href="{{ route('product.edit', ['product' => $id]) }}"class="edit btn btn-success edit">
+<a href="{{ route('product.edit', ['product' => $id]) }}"class="btn btn-success">
     Edit
 </a>
-@csrf
-@method("DELETE")
+{{-- <button class="masuk btn btn-info" id="masuk" data-original-title="Masuk" data-id="{{ $id }}" data-name="{{ $name }}">Income</button>
+<button class="keluar btn btn-info" id="keluar" data-original-title="Keluar" data-id="{{ $id }}" data-name="{{ $name }}">Out</button> --}}
 <button id="delete" data-id="{{ $id }}" data-name="{{ $name }}" data-original-title="Delete" class="delete btn btn-danger">
 Delete
 </button>
@@ -22,8 +22,7 @@ Delete
                 title: 'Delete Product',
                 text: 'Are you sure you want to delete this product?',
                 type: 'warning',
-icon: 'warning',
-icon: 'warning',
+                icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
                 cancelButtonText: 'Cancel',
@@ -42,15 +41,13 @@ icon: 'warning',
                             Swal.fire({
                                 title: 'product Deleted Successfully',
                                 type: 'success',
-icon: 'success',
-type: 'success',
                                 icon: 'success',
-type: 'success',
                                 timer: 1700,
+                                onOpen: function() {
+                                    Swal.showLoading()
+                                    $('#myTable').DataTable().ajax.reload();
+                                }
                             });
-                            Swal.showLoading();
-    
-                            $('#table').DataTable().ajax.reload();
                         },
                         error: function (error) {
                             console.error('Error:', error);

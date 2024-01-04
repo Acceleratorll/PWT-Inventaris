@@ -69,7 +69,7 @@ class ProductTypeController extends Controller
         //
     }
 
-    public function getJsonProductTypes(Request $request): JsonResponse
+    public function select(Request $request): JsonResponse
     {
         $term = $request->term;
         $product_types = $this->productTypeRepository->search($term);

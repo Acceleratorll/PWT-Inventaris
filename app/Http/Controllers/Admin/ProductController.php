@@ -86,6 +86,21 @@ class ProductController extends Controller
             ->addColumn('category_product_name', function ($product) {
                 return $product->category_product ? $product->category_product->name : 'N/A';
             })
+            ->addColumn('outgoing_products', function ($product) {
+                return $product->outgoing_products ?? 'N/A';
+            })
+            ->addColumn('product_transactions', function ($product) {
+                return $product->product_transactions ?? 'N/A';
+            })
+            ->addColumn('history', function ($product) {
+                return $product->product_transactions && $product->outgoing_products;
+            })
+            ->addColumn('total_amount', function ($product) {
+                return $product->total_amount;
+            })
+            ->addColumn('minimal_amount', function ($product) {
+                return $product->minimal_amount;
+            })
             ->addColumn('note', function ($product) {
                 return $product->note ? $product->note : 'N/A';
             })
@@ -180,15 +195,15 @@ class ProductController extends Controller
             'context' => 'create',
         ];
 
-        if ($product->amount <= (0.1 * $product->max_amount)) {
-            auth()->user()->notify(new CriticalProduct($product));
-            $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
-            event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
-        } else if ($product->amount <= (0.3 * $product->max_amount)) {
-            auth()->user()->notify(new WarningProduct($product));
-            $notif = auth()->user()->unreadNotifications->where('data.type', 'warning')->last();
-            event(new ProductNotificationEvent('warning', $product, $notif->data['message']));
-        }
+        // if ($product->amount <= (0.1 * $product->max_amount)) {
+        //     auth()->user()->notify(new CriticalProduct($product));
+        //     $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
+        //     event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
+        // } else if ($product->amount <= (0.3 * $product->max_amount)) {
+        //     auth()->user()->notify(new WarningProduct($product));
+        //     $notif = auth()->user()->unreadNotifications->where('data.type', 'warning')->last();
+        //     event(new ProductNotificationEvent('warning', $product, $notif->data['message']));
+        // }
 
         event(new DataAddedEvent($data, 'Product'));
         return redirect()->route('product.index')->with('success', 'Product created successfully');

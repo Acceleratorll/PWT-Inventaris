@@ -8,33 +8,6 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-<div class="row">
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
@@ -125,11 +98,36 @@
             border: 2px solid orange;
             background-color: orange !important;
         }
-        </style>
+    </style>
 @stop
 
 @section('js')
 <script>
+
+    if ('{{ Session::has('error') }}') {
+        Swal.fire({
+            icon: 'error',
+            type: 'error',
+            title: 'Error',timer: 3000,
+            text: '{{ Session::get('error') }}',
+            onOpen: function() {
+                Swal.showLoading()
+            }
+        });
+    }
+
+    if ('{{ Session::has('success') }}') {
+        Swal.fire({
+            icon: 'success',
+            type: 'success',title: 'Success',
+            timer: 3000,
+            text: '{{ Session::get('success') }}',
+            onOpen: function() {
+                Swal.showLoading()
+            }
+        });
+    }
+
     var selectElement = document.getElementById('stock-filter');
     var maxAmountArray = [];
     var columns = [
@@ -152,8 +150,8 @@
             data: 'qualifier_name', 
             name: 'qualifier_name',
         },
-        { data: 'amount', name: 'amount', orderable: true},
-        { data: 'max_amount', name: 'max_amount' },
+        { data: 'total_amount', name: 'total_amount', orderable: true},
+        { data: 'minimal_amount', name: 'minimal_amount' },
         { data: 'updated_at', name: 'updated_at' },
         { data: 'created_at', name: 'created_at' },
         { data: 'note', name: 'note' },
@@ -165,6 +163,41 @@
     .addClass('filters')
     .appendTo('#myTable thead');
 
+    function format(d) {
+        let historyArray = JSON.parse(d.history);
+        let historyList = `
+            <table style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #ccc;">
+                        <th style="padding: 8px; text-align: left;">Type</th>
+                        <th style="padding: 8px; text-align: left;">Date</th>
+                        <th style="padding: 8px; text-align: left;">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        // Combine product_transactions and outgoing_products and sort by date
+        let combinedHistory = [...historyArray.product_transactions, ...historyArray.outgoing_products];
+        combinedHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        combinedHistory.forEach(entry => {
+            historyList += `
+                <tr style="border-bottom: 1px solid #ccc;">
+                    <td style="padding: 8px; text-align: left;">${entry.type}</td>
+                    <td style="padding: 8px; text-align: left;">${entry.date}</td>
+                    <td style="padding: 8px; text-align: left;">${entry.details}</td>
+                </tr>`;
+        });
+
+        historyList += `
+                </tbody>
+            </table>
+        `;
+
+        return 'History:<br>' + historyList;
+    }
+    
     $(function() {
         var table = $('#myTable').DataTable({
             processing: true,
@@ -185,10 +218,8 @@
                 var maxAmount = parseFloat(maxAmountCell.text());
                 maxAmountArray.push(maxAmount);
 
-                if (amount < (0.10 * maxAmount)) {
+                if (amount < maxAmount) {
                     amountCell.css({'color': 'red', 'font-weight': 'bold'});
-                } else if (amount < (0.30 * maxAmount)) {
-                    amountCell.css({'color': 'orange', 'font-weight': 'bold'});
                 }
             },
             initComplete: function () {

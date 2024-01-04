@@ -27,14 +27,14 @@ class MaterialRepository
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
             ->orWhereHas('products', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%')
-                    ->orWhere('amount', 'LIKE', '%' . $term . '%');
+                    ->orWhere('product_code', 'LIKE', '%' . $term . '%');
             })
             ->get();
     }
 
     public function all()
     {
-        return $this-> model->with('products')->get();
+        return $this->model->with('products')->get();
     }
 
     public function paginate()

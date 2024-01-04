@@ -26,7 +26,7 @@ class ProductTypeRepository
             ->orWhere('desc', 'LIKE', '%' . $term . '%')
             ->orWhereHas('products', function ($query) use ($term) {
                 $query->where('name', 'LIKE', '%' . $term . '%')
-                    ->orWhere('amount', 'LIKE', '%' . $term . '%');
+                    ->orWhere('product_code', 'LIKE', '%' . $term . '%');
             })
             ->get();
     }

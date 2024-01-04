@@ -53,7 +53,7 @@ class MaterialController extends Controller
         //
     }
 
-    public function getJsonMaterials(Request $request): JsonResponse
+    public function select(Request $request): JsonResponse
     {
         $term = $request->term;
         $materials = $this->materialRepository->search($term);
