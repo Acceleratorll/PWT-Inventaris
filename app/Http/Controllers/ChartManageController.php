@@ -28,9 +28,9 @@ class ChartManageController extends Controller
         $this->chartService = $chartService;
     }
 
-    public function productTransactionMonthly(): JsonResponse
+    public function transactionMonthly(): JsonResponse
     {
-        return $this->chartService->productTransactionMonthly();
+        return $this->chartService->transactionMonthly();
     }
 
     public function tintaMonthly(): JsonResponse

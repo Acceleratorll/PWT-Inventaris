@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repositories\ProductTransactionRepository;
+use App\Repositories\TransactionRepository;
 use App\Repositories\MaterialRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\JsonResponse;
@@ -10,30 +10,30 @@ use Illuminate\Support\Str;
 
 class ChartService
 {
-    protected $productTransactionRepository;
+    protected $transactionRepository;
     protected $materialRepository;
     protected $productRepository;
 
     public function __construct(
-        ProductTransactionRepository $productTransactionRepository,
+        TransactionRepository $transactionRepository,
         MaterialRepository $materialRepository,
         ProductRepository $productRepository
     ) {
-        $this->productTransactionRepository = $productTransactionRepository;
+        $this->transactionRepository = $transactionRepository;
         $this->materialRepository = $materialRepository;
         $this->productRepository = $productRepository;
     }
 
-    public function productTransactionMonthly(): JsonResponse
+    public function transactionMonthly(): JsonResponse
     {
         $currentMonth = now()->month;
 
-        $productTransactions = $this->productTransactionRepository->getByMonth($currentMonth);
+        $transactions = $this->transactionRepository->getByMonth($currentMonth);
 
-        return $this->productTransactionChartData($productTransactions);
+        return $this->transactionChartData($transactions);
     }
 
-    protected function productTransactionChartData($productTransactions)
+    protected function transactionChartData($transactions)
     {
         $datasets = [];
         $labels = [];
@@ -44,13 +44,13 @@ class ChartService
             $data = [];
             $labels = [];
 
-            foreach ($productTransactions as $productTransaction) {
-                $totalSalesQty = $productTransaction->product_transactions
+            foreach ($transactions as $transaction) {
+                $totalSalesQty = $transaction->product_transactions
                     ->where('product.material.id', $material->id)
                     ->sum('qty');
 
                 $data[] = $totalSalesQty;
-                $labels[] = $productTransaction->supplier->name;
+                $labels[] = $transaction->supplier->name;
             }
 
             $datasets[] = [

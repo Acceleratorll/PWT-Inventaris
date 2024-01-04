@@ -336,7 +336,7 @@
             
             function productTransactionChart() {
                 $.ajax({
-                    url: "{{route('monthly.productTransaction.chart')}}",
+                    url: "{{route('monthly.transaction.chart')}}",
                     method: 'GET',
                     dataType: 'json',
                     success: function (data) {
@@ -368,7 +368,7 @@
                                         const clickedLabel = pChart.data.labels[index];
                                         console.log(clickedLabel);
                                         const clickedData = pChart.data.datasets[datasetIndex].data[index];
-                                        const url = '{{ route("get-json-product-transaction-by-supplier-name", ["supplier" => ":supplier"]) }}'. replace(":supplier", clickedLabel);
+                                        const url = '{{ route("get-json-transaction-by-supplier-name", ["supplier" => ":supplier"]) }}'. replace(":supplier", clickedLabel);
                                         
                                         $.ajax({
                                             url: url,
@@ -737,9 +737,6 @@
                 Toast.fire({
                     type: 'success',
                     icon: 'success',
-type: 'success',
-                    icon: 'success',
-type: 'success',
                     title: data.name+' Updated'
                 })
             }
@@ -758,7 +755,7 @@ type: 'success',
                 })
                 Toast.fire({
                     icon: 'success',
-type: 'success',
+                    type: 'success',
                     title: data.name+' Added'
                 })
             }
