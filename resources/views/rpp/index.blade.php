@@ -118,7 +118,7 @@
                 $(this).html( '<input type="text" placeholder="'+title+'" data-index="'+i+'" />' );
             });
 
-            $('#table').DataTable({
+            var table = $('#table').DataTable({
                 processing: true,
                 serverSide: true,
                 searchable: true,

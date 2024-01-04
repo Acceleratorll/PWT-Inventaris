@@ -31,6 +31,18 @@ class ProductLocationService
     //     return $this->repository->allByProduct($id);
     // }
 
+    public function select($term)
+    {
+        $datas = $this->repository->search($term);
+        $formattedDatas = $datas->map(function ($data) {
+            return [
+                'id' => $data->id,
+                'text' => $data->location->name . ', Expired: ' . $data->expired->format('Y-m-d'),
+            ];
+        });
+        return response()->json($formattedDatas);
+    }
+
     public function selectWithParam($term, $param)
     {
         $datas = $this->repository->searchAfterFilter($term, $param);

@@ -45,6 +45,12 @@ class ProductLocationController extends Controller
         return response()->json(['message' => 'Data has been found!'], 200);
     }
 
+    public function select(Request $request)
+    {
+        $term = $request->input('term');
+        return $this->productLocationService->select($term);
+    }
+
     public function selectWithParam(Request $request)
     {
         $term = $request->input('term');

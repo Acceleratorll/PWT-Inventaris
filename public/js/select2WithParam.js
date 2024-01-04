@@ -1,4 +1,5 @@
 function selectInputWithParam(element, url, placeholder, parameter) {
+    console.log(parameter);
     $(element).select2({
         ajax: {
             url: url,

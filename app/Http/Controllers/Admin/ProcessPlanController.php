@@ -182,8 +182,6 @@ class ProcessPlanController extends Controller
 
                     DB::commit();
                 });
-
-                dd('success!', $processPlanRequest);
                 return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
             }
         } catch (\Exception $e) {
