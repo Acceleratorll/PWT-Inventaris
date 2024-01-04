@@ -416,6 +416,22 @@ return [
             ],
         ],
         [
+            'text'    => 'nota_dinas',
+            'icon' => 'nav-icon fas fa-th',
+            'submenu' => [
+                [
+                    'text'    => 'All Data',
+                    'route'     => 'notaDinas.index',
+                    'icon' => 'nav-icon fas fa-book',
+                ],
+                [
+                    'text'    => 'Add Nota Dinas',
+                    'route'     => 'notaDinas.create',
+                    'icon' => 'nav-icon fas fa-edit',
+                ],
+            ],
+        ],
+        [
             'text'    => 'product_transactions',
             'icon' => 'nav-icon fas fa-th',
             'submenu' => [

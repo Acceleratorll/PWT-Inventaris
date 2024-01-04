@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\ProductTransactionController;
 use App\Http\Controllers\Admin\ProductLocationController;
+use App\Http\Controllers\Admin\ProductPlanningController;
 use App\Http\Controllers\ChartManageController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\NotificationController;
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/transaction', TransactionController::class);
     Route::resource('/productTransaction', ProductTransactionController::class);
     Route::resource('/productLocation', ProductLocationController::class);
+    Route::resource('/productPlanning', ProductPlanningController::class);
 });
 
 Route::get('/get-table/unread-notifications', [NotificationController::class, 'getTableUnreadNotifications'])->name('get-table.unread-notifications');
@@ -45,6 +47,7 @@ Route::get('/get-suppliers', [SupplierController::class, 'getSuppliers'])->name(
 Route::get('/get-locations', [LocationController::class, 'getLocations'])->name('get-locations');
 Route::get('/get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
 Route::get('/get-orderTypes', [OrderTypeController::class, 'table'])->name('get-table-order-types');
+Route::get('/get-notaDinas', [NotaDinasController::class, 'table'])->name('get-table-nota-dinas');
 Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rpps');
 Route::get('/get-transactions', [TransactionController::class, 'allTransactions'])->name('get-transactions');
 Route::get('/get-transaction/{transaction}', [TransactionController::class, 'getTransaction'])->name('get-transaction');

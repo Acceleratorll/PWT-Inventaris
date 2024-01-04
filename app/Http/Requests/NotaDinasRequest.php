@@ -22,11 +22,12 @@ class NotaDinasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'unique|required',
-            'authorized' => '',
-            'from_date' => 'required|datetime',
-            'to_date' => 'required|datetime',
+            'code' => 'required',
+            'authorized' => 'nullable',
+            'from_date' => 'required',
+            'to_date' => 'required',
             'desc' => 'nullable',
+            'selected_products' => 'required|array',
         ];
     }
 }

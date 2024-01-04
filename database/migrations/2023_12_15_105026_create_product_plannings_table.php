@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_plannings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained();
-            $table->foreignId('nota_dinas_id')->constrained();
+            $table->foreignId('nota_dinas_id')->constrained()->onDelete('cascade');
             $table->float('requirement_amount');
             $table->float('product_amount');
             $table->float('procurement_plan_amount');

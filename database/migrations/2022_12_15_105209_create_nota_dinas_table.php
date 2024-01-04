@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('authorized')->default(0);
             $table->date('from_date');
             $table->date('to_date');
-            $table->text('desc');
+            $table->text('desc')->nullable();
             $table->timestamps();
         });
     }

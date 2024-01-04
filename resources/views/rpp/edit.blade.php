@@ -8,33 +8,6 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-<div class="row">
     <div class="card col-md-12">
         <form action="{{ route('rpp.update',['rpp' =>$rpp->id]) }}" method="post">
             @csrf
@@ -108,7 +81,7 @@
         selectInput(customer, customer_url, customer_ph);
         selectInput(products, products_url, products_ph);
 
-         function getProductQty(productId) {
+        function getProductQty(productId) {
             @foreach($rpp->outgoing_products as $outgoing_product)
                 if ({{ $outgoing_product->product_id }} == productId) {
                     return {{ $outgoing_product->qty }};
