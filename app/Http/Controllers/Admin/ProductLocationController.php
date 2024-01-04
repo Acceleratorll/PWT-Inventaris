@@ -20,12 +20,12 @@ class ProductLocationController extends Controller
 
     public function index(): View
     {
-        return view();
+        return view('productLocation.index');
     }
 
     public function create(): View
     {
-        return view();
+        return view('productLocation.create');
     }
 
     public function show($id): JsonResponse
@@ -43,6 +43,11 @@ class ProductLocationController extends Controller
     {
         $this->productLocationService->getById($id)->delete();
         return response()->json(['message' => 'Data has been found!'], 200);
+    }
+
+    public function table()
+    {
+        return $this->productLocationService->table();
     }
 
     public function select(Request $request)

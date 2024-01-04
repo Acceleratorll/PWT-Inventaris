@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\ProductLocationRepository;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProductLocationService
 {
@@ -11,6 +12,41 @@ class ProductLocationService
     public function __construct(ProductLocationRepository $repository)
     {
         $this->repository = $repository;
+    }
+
+    public function table()
+    {
+        $datas = $this->repository->all();
+
+        return DataTables::of($datas)
+            ->addColumn('id', function ($data) {
+                return $data->id;
+            })
+            ->addColumn('product', function ($data) {
+                return $data->product->name . ' | ' . $data->product->product_code;
+            })
+            ->addColumn('location', function ($data) {
+                return $data->location->name;
+            })
+            ->addColumn('amount', function ($data) {
+                return $data->amount;
+            })
+            ->addColumn('purchase_date', function ($data) {
+                return $data->purchase_date->format('d-m-Y');
+            })
+            ->addColumn('expired', function ($data) {
+                return $data->expired->format('d-m-Y');
+            })
+            ->addColumn('created_at', function ($data) {
+                return $data->created_at->format('d-m-Y');
+            })
+            ->addColumn('updated_at', function ($data) {
+                return $data->updated_at->format('d-m-Y');
+            })
+            // ->addColumn('action', 'partials.button-table.product-location-action')
+            // ->rawColumns(['action'])
+            ->addIndexColumn()
+            ->make(true);
     }
 
     public function getById($id)

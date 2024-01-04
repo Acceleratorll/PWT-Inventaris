@@ -69,10 +69,16 @@ Route::get('/export/process-plans', [ProcessPlanController::class, 'exportProces
 Route::post('/import/process-plans', [ProcessPlanController::class, 'importProcessPlans'])->name('import.processplans');
 Route::get('/export/transaction', [TransactionController::class, 'exportTransactions'])->name('export.transactions');
 Route::post('/import/transaction', [TransactionController::class, 'importTransactions'])->name('import.transactions');
+Route::get('/export/productLocations', [ProductLocationController::class, 'exportProductLocations'])->name('export.productLocations');
+Route::post('/import/productLocations', [ProductLocationController::class, 'importProductLocations'])->name('import.productLocations');
+
+Route::prefix('/table')->group(function () {
+    Route::get('/productLocations', [ProductLocationController::class, 'table'])->name('table-productLocations');
+});
 
 Route::prefix('/json')->group(function () {
     Route::get('/get-customers', [CustomerController::class, 'getJsonCustomers'])->name('get-json-customers');
-    Route::get('/get-suppliers', [SupplierController::class, 'getJsonsuppliers'])->name('get-json-suppliers');
+    Route::get('/get-suppliers', [SupplierController::class, 'getJsonSuppliers'])->name('get-json-suppliers');
     Route::get('/get-locations', [LocationController::class, 'selectLocations'])->name('get-json-locations');
     Route::get('/select-material', [MaterialController::class, 'select'])->name('select-material');
     Route::get('/select-product-type', [ProductTypeController::class, 'select'])->name('select-product-type');

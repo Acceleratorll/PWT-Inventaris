@@ -341,11 +341,13 @@ return [
                 [
                     'text'    => 'All Data',
                     'route'     => 'category.index',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                 ],
                 [
                     'text'    => 'Add Category',
                     'route'     => 'category.create',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
                 ],
             ],
@@ -357,11 +359,19 @@ return [
                 [
                     'text'    => 'All Data',
                     'route'     => 'product.index',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
+                ],
+                [
+                    'text'    => 'Location',
+                    'route'     => 'productLocation.index',
+                    'shift'   => 'ml-3',
+                    'icon' => 'nav-icon fa-solid fa-location-arrow',
                 ],
                 [
                     'text'    => 'Add Product',
                     'route'     => 'product.create',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
                 ],
             ],
@@ -373,11 +383,13 @@ return [
                 [
                     'text'    => 'All Data',
                     'route'     => 'location.index',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                 ],
                 [
                     'text'    => 'Add Location',
                     'route'     => 'location.create',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
                 ],
             ],
@@ -389,11 +401,13 @@ return [
                 [
                     'text'    => 'All Data',
                     'route'     => 'orderType.index',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                 ],
                 [
                     'text'    => 'Add Order Type',
                     'route'     => 'orderType.create',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
                 ],
             ],
@@ -406,11 +420,13 @@ return [
                 [
                     'text'    => 'All Data',
                     'route'     => 'rpp.index',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                 ],
                 [
                     'text'    => 'Add RPP',
                     'route'     => 'rpp.create',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
                 ],
             ],
@@ -422,11 +438,13 @@ return [
                 [
                     'text'    => 'All Data',
                     'route'     => 'notaDinas.index',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                 ],
                 [
                     'text'    => 'Add Nota Dinas',
                     'route'     => 'notaDinas.create',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
                 ],
             ],
@@ -438,11 +456,13 @@ return [
                 [
                     'text'    => 'All Data',
                     'route'     => 'transaction.index',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                 ],
                 [
                     'text'    => 'Add Transaction',
                     'route'     => 'transaction.create',
+                    'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
                 ],
             ],
