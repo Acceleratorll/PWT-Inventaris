@@ -115,6 +115,51 @@ class ProductController extends Controller
             ->make(true);
     }
 
+    public function getThisYear()
+    {
+        $products = $this->productRepository->getByThisYear();
+        return DataTables::of($products)
+            ->addColumn('material_name', function ($product) {
+                return $product->material ? $product->material->name : 'N/A';
+            })
+            ->addColumn('product_type_name', function ($product) {
+                return $product->product_type ? $product->product_type->name : 'N/A';
+            })
+            ->addColumn('qualifier_name', function ($product) {
+                return $product->qualifier ? $product->qualifier->name : 'N/A';
+            })
+            ->addColumn('category_product_name', function ($product) {
+                return $product->category_product ? $product->category_product->name : 'N/A';
+            })
+            ->addColumn('outgoing_products', function ($product) {
+                return $product->outgoing_products ?? 'N/A';
+            })
+            ->addColumn('product_transactions', function ($product) {
+                return $product->product_transactions ?? 'N/A';
+            })
+            ->addColumn('history', function ($product) {
+                return [$product->product_transactions, $product->outgoing_products];
+            })
+            ->addColumn('total_amount', function ($product) {
+                return $product->total_amount;
+            })
+            ->addColumn('minimal_amount', function ($product) {
+                return $product->minimal_amount;
+            })
+            ->addColumn('note', function ($product) {
+                return $product->note ? $product->note : 'N/A';
+            })
+            ->addColumn('created_at', function ($product) {
+                return $product->created_at->format('d-m-Y');
+            })
+            ->addColumn('updated_at', function ($product) {
+                return $product->updated_at->format('d-m-Y');
+            })
+            ->addColumn('action', 'partials.button-table.product-action')
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
     public function getWarningProducts()
     {
         $products = $this->productRepository->getWarning();

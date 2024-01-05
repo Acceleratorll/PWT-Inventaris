@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use Carbon\Carbon;
 
 class ProductRepository
 {
@@ -70,6 +71,76 @@ class ProductRepository
                 'outgoing_products.process_plan.customer',
                 'product_plannings',
             )
+            ->get();
+    }
+
+    public function getThisMonth()
+    {
+        $currentMonth = Carbon::now()->month;
+
+        return $this->model
+            ->with([
+                'product_type',
+                'qualifier',
+                'material',
+                'category_product',
+                'product_transactions' => function ($query) use ($currentMonth) {
+                    $query->whereMonth('updated_at', $currentMonth);
+                },
+                'product_transactions.transaction.supplier',
+                'outgoing_products' => function ($query) use ($currentMonth) {
+                    $query->whereMonth('updated_at', $currentMonth);
+                },
+                'outgoing_products.process_plan.customer',
+                'product_plannings',
+            ])
+            ->get();
+    }
+
+    public function getTransactionsForPeriod($startMonth, $endMonth)
+    {
+        $start = Carbon::parse("first day of $startMonth")->startOfDay();
+        $end = Carbon::parse("last day of $endMonth")->endOfDay();
+
+        return $this->model
+            ->with([
+                'product_transactions' => function ($query) use ($start, $end) {
+                    $query->whereBetween('updated_at', [$start, $end]);
+                },
+                'outgoing_products' => function ($query) use ($start, $end) {
+                    $query->whereBetween('updated_at', [$start, $end]);
+                },
+                'product_type',
+                'qualifier',
+                'material',
+                'category_product',
+                'product_transactions.transaction.supplier',
+                'outgoing_products.process_plan.customer',
+                'product_plannings',
+            ])
+            ->get();
+    }
+
+    public function getByThisYear()
+    {
+        $currentYear = Carbon::now()->year;
+
+        return $this->model
+            ->with(
+                'product_type',
+                'qualifier',
+                'material',
+                'category_product',
+                'product_transactions.transaction.supplier',
+                'outgoing_products.process_plan.customer',
+                'product_plannings',
+            )
+            ->whereHas('product_transactions', function ($query) use ($currentYear) {
+                $query->whereYear('updated_at', $currentYear);
+            })
+            ->orWhereHas('outgoing_products', function ($query) use ($currentYear) {
+                $query->whereYear('updated_at', $currentYear);
+            })
             ->get();
     }
 

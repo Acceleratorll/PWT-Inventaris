@@ -53,6 +53,7 @@ Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rp
 Route::get('/get-transactions', [TransactionController::class, 'allTransactions'])->name('get-transactions');
 Route::get('/get-transaction/{transaction}', [TransactionController::class, 'getTransaction'])->name('get-transaction');
 Route::get('/get-all-products', [ProductController::class, 'getAllProducts'])->name('get-all-products');
+Route::get('/get-this-year-products', [ProductController::class, 'getThisYear'])->name('get-this-year-products');
 Route::get('/get-warning-products', [ProductController::class, 'getWarningProducts'])->name('get-warning-products');
 Route::get('/get-danger-products', [ProductController::class, 'getDangerProducts'])->name('get-danger-products');
 Route::get('/get-products/{category}', [ProductController::class, 'getProductsByCategory'])->name('get-products-by-category');

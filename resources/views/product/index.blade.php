@@ -172,7 +172,7 @@
 
         // Combine product_transactions and outgoing_products and sort by date
         let combinedHistory = [...outProArray, ...productTransArray];
-        combinedHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+        combinedHistory.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
         console.log(combinedHistory);
 
         let historyList = `
@@ -193,9 +193,17 @@
         
 
         combinedHistory.forEach(entry => {
+            let updatedDate = new Date(entry.updated_at);
+            let formattedDate = updatedDate.toLocaleDateString('us-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+
             historyList += `
                 <tr style="border-bottom: 1px solid #ccc;">
-                    <td style="padding: 8px; text-align: left;">${entry.updated_at}</td>
+                    <td style="padding: 8px; text-align: left;">${formattedDate}</td>
                     <td style="padding: 8px; text-align: left;">${entry.transaction_id ? entry.transaction.code : entry.process_plan.code}</td>
                     <td style="padding: 8px; text-align: left;">${entry.transaction_id ? entry.transaction.supplier.name : entry.process_plan.customer.name}</td>
                     <td style="padding: 8px; text-align: left;">${entry.transaction_id ? 'Income' : 'Out'}</td>
@@ -217,7 +225,7 @@
             processing: true,
             serverSide: true,
             searchable: true,
-            ajax: '{{ route('get-all-products') }}',
+            ajax: '{{ route('get-this-year-products') }}',
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
