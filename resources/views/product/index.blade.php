@@ -33,10 +33,11 @@
                 </select>
             </div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="myTable">
+                <table class="table table-bordered" id="table">
                     <caption>Table Barang</caption>
                     <thead class="thead-light">
                         <tr>
+                            <th></th>
                             <th scope="col" class="text-center">ID</th>
                             <th scope="col" class="text-center">Name</th>
                             <th scope="col" class="text-center">Material</th>
@@ -130,7 +131,9 @@
 
     var selectElement = document.getElementById('stock-filter');
     var maxAmountArray = [];
+    var detailRows = [];
     var columns = [
+        { data: null, defaultContent: '', className: 'dt-control', orderable: false },
         { data: 'id', name: 'id' },
         { data: 'name', name: 'name' },
         { 
@@ -158,35 +161,46 @@
         { data: 'action', name: 'action', orderable: false, searchable: false },
     ];
 
-    $('#myTable thead tr')
-    .clone(true)
-    .addClass('filters')
-    .appendTo('#myTable thead');
+    // $('#table thead tr')
+    // .clone(true)
+    // .addClass('filters')
+    // .appendTo('#table thead');
 
     function format(d) {
-        let historyArray = JSON.parse(d.history);
+        let productTransArray = JSON.parse(d.product_transactions);
+        let outProArray = JSON.parse(d.outgoing_products);
+
+        // Combine product_transactions and outgoing_products and sort by date
+        let combinedHistory = [...outProArray, ...productTransArray];
+        combinedHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+        console.log(combinedHistory);
+
         let historyList = `
             <table style="width:100%; border-collapse: collapse;">
                 <thead>
                     <tr style="border-bottom: 2px solid #ccc;">
-                        <th style="padding: 8px; text-align: left;">Type</th>
                         <th style="padding: 8px; text-align: left;">Date</th>
+                        <th style="padding: 8px; text-align: left;">Code</th>
                         <th style="padding: 8px; text-align: left;">Details</th>
+                        <th style="padding: 8px; text-align: left;">Type</th>
+                        <th style="padding: 8px; text-align: left;">Amount</th>
+                        <th style="padding: 8px; text-align: left;">Original</th>
                     </tr>
                 </thead>
                 <tbody>
         `;
 
-        // Combine product_transactions and outgoing_products and sort by date
-        let combinedHistory = [...historyArray.product_transactions, ...historyArray.outgoing_products];
-        combinedHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
 
         combinedHistory.forEach(entry => {
             historyList += `
                 <tr style="border-bottom: 1px solid #ccc;">
-                    <td style="padding: 8px; text-align: left;">${entry.type}</td>
-                    <td style="padding: 8px; text-align: left;">${entry.date}</td>
-                    <td style="padding: 8px; text-align: left;">${entry.details}</td>
+                    <td style="padding: 8px; text-align: left;">${entry.updated_at}</td>
+                    <td style="padding: 8px; text-align: left;">${entry.transaction_id ? entry.transaction.code : entry.process_plan.code}</td>
+                    <td style="padding: 8px; text-align: left;">${entry.transaction_id ? entry.transaction.supplier.name : entry.process_plan.customer.name}</td>
+                    <td style="padding: 8px; text-align: left;">${entry.transaction_id ? 'Income' : 'Out'}</td>
+                    <td style="padding: 8px; text-align: left;">${entry.amount} ${d.qualifier.name}</td>
+                    <td style="padding: 8px; text-align: left;">${entry.product_amount} ${d.qualifier.name}</td>
                 </tr>`;
         });
 
@@ -199,7 +213,7 @@
     }
     
     $(function() {
-        var table = $('#myTable').DataTable({
+        var table = $('#table').DataTable({
             processing: true,
             serverSide: true,
             searchable: true,
@@ -269,6 +283,32 @@
             },
         });
 
+        $('#table tbody').on('click', 'td.dt-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+         
+            if (row.child.isShown()) {
+                row.child.hide();
+            }
+            else {
+                row.child(format(row.data())).show();
+            }
+        });
+
+        table.on('draw', function () {
+            detailRows.forEach(function (id, i) {
+                $('#' + id + ' td.dt-control').trigger('click');
+            });
+        });
+
+        $(table.table().container() ).on( 'keyup', 'tfoot input', function () {
+                table
+                    .column( $(this).data('index') )
+                    .search( this.value )
+                    .order([])
+                    .draw();
+        });
+
         selectElement.addEventListener('change', function() {
             var selectedValue = selectElement.value;
 
@@ -289,10 +329,10 @@
             }
         });
 
-        table
-        .column( '7:visible' )
-        .order( 'asc' )
-        .draw();
+        // table
+        // .column( '7:visible' )
+        // .order( 'asc' )
+        // .draw();
     });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>

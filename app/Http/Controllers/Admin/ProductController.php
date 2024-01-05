@@ -93,7 +93,7 @@ class ProductController extends Controller
                 return $product->product_transactions ?? 'N/A';
             })
             ->addColumn('history', function ($product) {
-                return $product->product_transactions && $product->outgoing_products;
+                return [$product->product_transactions, $product->outgoing_products];
             })
             ->addColumn('total_amount', function ($product) {
                 return $product->total_amount;
