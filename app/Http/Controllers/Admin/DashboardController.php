@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Charts\categoryProductChart;
-use App\Charts\monthlyUsedTintaChart;
-use App\Charts\yearlyRppChart;
 use App\Http\Controllers\Controller;
 use App\Models\ProcessPlan;
 use App\Models\Product;
@@ -12,7 +9,6 @@ use App\Repositories\CategoryProductRepository;
 use App\Repositories\ProductTransactionRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class DashboardController extends Controller
@@ -31,8 +27,8 @@ class DashboardController extends Controller
     public function index(): View
     {
         $categories = $this->categoryRepository->all();
-        $unusedMax = $categories->max('max');
-        $unused = $categories->where('max', $unusedMax)->first();
+        $unusedMax = $categories->max('min');
+        $unused = $categories->where('min', $unusedMax)->first();
         $total = Product::all()->count();
         return view('dashboard.index', [
             'categories' => $categories,
@@ -64,8 +60,8 @@ class DashboardController extends Controller
     public function getUnusedProducts()
     {
         $categories = $this->categoryRepository->all();
-        $unusedMax = $categories->max('max');
-        $unused = $categories->where('max', $unusedMax)->first();
+        $unusedMax = $categories->max('min');
+        $unused = $categories->where('min', $unusedMax)->first();
 
         $products = Product::where('category_product_id', $unused->id)->get();
 
