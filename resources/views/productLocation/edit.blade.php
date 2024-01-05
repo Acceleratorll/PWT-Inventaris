@@ -10,8 +10,8 @@
 <div class="row">
     <div class="card col-md-12">
         <form action="{{ route('product.update',['product'=>$product->id]) }}" method="post">
-            @csrf
-            @method('PUT')
+        @csrf
+        @method('PUT')
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
@@ -74,7 +74,7 @@
             <br>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-success" type="submit">Save</button>
+                    <button class="form-control btn btn-outline-success" type="submit">Save</button>
                 </div>
             </div>
         </div>

@@ -74,7 +74,7 @@
             <br>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-success" type="submit">Save</button>
+                    <button class="form-control btn btn-outline-success" type="submit">Save</button>
                 </div>
             </div>
         </div>

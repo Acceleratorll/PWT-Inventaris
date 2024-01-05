@@ -24,7 +24,7 @@
                     <textarea name="desc" id="desc" class="form-control mb-3" placeholder="Description">{{ $data->desc }}</textarea>
                 </div>
             </div>
-            <button class="form-control btn btn-success" type="submit">Save</button>
+            <button class="form-control btn btn-outline-success" type="submit">Save</button>
             </form>
         </div>
     </div>

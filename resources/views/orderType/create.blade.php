@@ -25,7 +25,7 @@
             </div>
             <div class="row">
             </div>
-            <button class="form-control btn btn-success" type="submit">Save</button>
+            <button class="form-control btn btn-outline-success" type="submit">Save</button>
             </form>
         </div>
     </div>

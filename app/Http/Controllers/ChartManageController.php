@@ -50,8 +50,8 @@ class ChartManageController extends Controller
 
             foreach ($processPlans as $processPlan) {
                 $totalSalesQty = $processPlan->outgoing_products
-                    ->where('product.material.id', $material->id)
-                    ->sum('qty');
+                    ->where('product.material_id', $material->id)
+                    ->sum('amount');
                 $data[] = $totalSalesQty;
                 $labels[] = $processPlan->customer->name;
             }
@@ -70,7 +70,7 @@ class ChartManageController extends Controller
     {
         $currentYear = now()->year;
         $datas = ProcessPlan::whereYear('created_at', $currentYear)->get();
-        $types = Material::all(); // Assuming ProductType is a model for your product types.
+        $types = Material::all();
 
         $datasets = [];
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -82,7 +82,7 @@ class ChartManageController extends Controller
                     return $item->created_at->month == $index + 1 &&
                         $item->outgoing_products->contains('product.material_id', $type->id);
                 })->sum(function ($item) use ($type) {
-                    return $item->outgoing_products->where('product.material_id', $type->id)->sum('qty');
+                    return $item->outgoing_products->where('product.material_id', $type->id)->sum('amount');
                 });
 
                 $data[] = $totalQty;
@@ -97,23 +97,6 @@ class ChartManageController extends Controller
 
         return response()->json(['datasets' => $datasets, 'labels' => $months]);
     }
-
-
-    // public function rppYearly(): JsonResponse
-    // {
-    //     $currentYear = now()->year;
-    //     $datas = ProcessPlan::whereYear('created_at', $currentYear)->get();
-    //     $totalSales = [];
-    //     $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    //     foreach ($months as $index => $month) {
-    //         $totalSales[] = $datas->filter(function ($item) use ($index) {
-    //             return $item->created_at->month == $index + 1;
-    //         })->count();
-    //     }
-
-    //     return response()->json(['datas' => $totalSales, 'labels' => $months]);
-    // }
 
     public function categoryOverall(): JsonResponse
     {
