@@ -8,33 +8,6 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-<div class="row">
     <div class="card col-md-12">
         <div class="card-body">
             <form action="{{ route('category.store') }}" method="post">
@@ -44,7 +17,7 @@
                     <x-adminlte-input fgroup-class="mb-3" name="name" label="Name" placeholder="Masukkan Nama Kategori" disable-feedback/>
                 </div>
                 <div class="col-md-6">
-                    <x-adminlte-input type="number" fgroup-class="mb-3" name="max" label="Max Tahun" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
+                    <x-adminlte-input type="number" fgroup-class="mb-3" name="min" label="Minimal" placeholder="Masukkan Minimal Tahun Barang Ganti Kategori" disable-feedback/>
                 </div>
             </div>
             <input value="Submit" class="form-control btn btn-outline-success" type="submit"/>
@@ -61,7 +34,29 @@
     
     @section('js')
     <script>
-        
+        if ('{{ Session::has('error') }}') {
+            Swal.fire({
+                icon: 'error',
+                type: 'error',
+                title: 'Error',timer: 3000,
+                text: '{{ Session::get('error') }}',
+                onOpen: function() {
+                    Swal.showLoading()
+                }
+            });
+        }
+
+        if ('{{ Session::has('success') }}') {
+            Swal.fire({
+                icon: 'success',
+                type: 'success',title: 'Success',
+                timer: 3000,
+                text: '{{ Session::get('success') }}',
+                onOpen: function() {
+                    Swal.showLoading()
+                }
+            });
+        }
     </script>
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>

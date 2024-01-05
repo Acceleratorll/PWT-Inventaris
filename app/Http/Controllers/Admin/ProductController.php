@@ -195,15 +195,11 @@ class ProductController extends Controller
             'context' => 'create',
         ];
 
-        // if ($product->amount <= (0.1 * $product->max_amount)) {
-        //     auth()->user()->notify(new CriticalProduct($product));
-        //     $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
-        //     event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
-        // } else if ($product->amount <= (0.3 * $product->max_amount)) {
-        //     auth()->user()->notify(new WarningProduct($product));
-        //     $notif = auth()->user()->unreadNotifications->where('data.type', 'warning')->last();
-        //     event(new ProductNotificationEvent('warning', $product, $notif->data['message']));
-        // }
+        if ($product->amount <= $product->minimal_amount) {
+            auth()->user()->notify(new CriticalProduct($product));
+            $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
+            event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
+        }
 
         event(new DataAddedEvent($data, 'Product'));
         return redirect()->route('product.index')->with('success', 'Product created successfully');

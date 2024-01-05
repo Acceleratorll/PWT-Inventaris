@@ -41,7 +41,7 @@ class CategoryProductController extends Controller
                 return $category->name;
             })
             ->addColumn('min', function ($category) {
-                return $category->min;
+                return $category->min . ' year';
             })
             ->addColumn('created_at', function ($category) {
                 return $category->created_at->format('d-m-Y');

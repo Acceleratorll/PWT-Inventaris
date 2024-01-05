@@ -17,55 +17,23 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Form for editing the category -->
                 <form id="editForm" method="post">
                     @csrf
                     @method('PATCH')
-
-                    <!-- Category fields for editing -->
                     <div class="form-group">
                         <label for="categoryName">Category Name</label>
                         <input type="text" class="form-control" id="categoryName" name="name">
                     </div>
                     <div class="form-group">
-                        <label for="max">Max Value</label>
-                        <input type="number" class="form-control" id="max" name="max">
+                        <label for="min">Minimal</label>
+                        <input type="number" class="form-control" id="min" name="min">
                     </div>
-
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-
 <div class="row">
     <div class="card col-md-12">
         <div class="card-body">
@@ -79,7 +47,7 @@
                         <tr>
                             <th scope="col" class="text-center">ID</th>
                             <th scope="col" class="text-center">Name</th>
-                            <th scope="col" class="text-center">Max Tahun</th>
+                            <th scope="col" class="text-center">Minimal</th>
                             <th scope="col" class="text-center">Last Update</th>
                             <th scope="col" class="text-center">Created At</th>
                             <th scope="col" class="text-center" width="14%">Action</th>
@@ -98,6 +66,30 @@
     
     @section('js')
     <script>
+        if ('{{ Session::has('error') }}') {
+            Swal.fire({
+                icon: 'error',
+                type: 'error',
+                title: 'Error',timer: 3000,
+                text: '{{ Session::get('error') }}',
+                onOpen: function() {
+                    Swal.showLoading()
+                }
+            });
+        }
+
+        if ('{{ Session::has('success') }}') {
+            Swal.fire({
+                icon: 'success',
+                type: 'success',title: 'Success',
+                timer: 3000,
+                text: '{{ Session::get('success') }}',
+                onOpen: function() {
+                    Swal.showLoading()
+                }
+            });
+        }
+            
         $(function() {
             $('#table').DataTable({
                 processing: true,
@@ -106,12 +98,7 @@
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
-                    { 
-                        data: 'max', name: 'max',
-                        render: function(data) {
-                            return data + ' tahun';
-                        }
-                    },
+                    { data: 'min', name: 'min' },
                     { data: 'updated_at', name: 'updated_at' },
                     { data: 'created_at', name: 'created_at' },
                     { data: 'action', name: 'action', orderable: false },

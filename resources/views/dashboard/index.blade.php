@@ -717,7 +717,6 @@
                 Toast.fire({
                     type: 'warning',
                     icon: 'warning',
-                    icon: 'warning',
                     title: data.name+' Deleted'
                 })
             }
