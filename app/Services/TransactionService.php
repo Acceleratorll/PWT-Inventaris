@@ -142,7 +142,7 @@ class TransactionService
         $data = [];
         $labels = [];
         foreach ($materials as $material) {
-            $totalSalesQty = $material->products()->sum('total_amount');
+            $totalSalesQty = $transaction_find->product_transactions->where('product.material_id', $material->id)->sum('amount');
             $data[] = $totalSalesQty;
             $labels[] = $material->name;
         }
