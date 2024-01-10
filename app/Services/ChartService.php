@@ -36,7 +36,6 @@ class ChartService
     protected function transactionChartData($transactions)
     {
         $datasets = [];
-        $labels = [];
 
         $materials = $this->materialRepository->all();
 

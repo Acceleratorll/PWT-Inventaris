@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Material;
+use App\Models\NotaDinas;
 use App\Models\ProcessPlan;
 use App\Models\Product;
+use App\Models\Transaction;
 use App\Repositories\CategoryProductRepository;
 use App\Repositories\MaterialRepository;
 use App\Services\ChartService;
 use App\Services\ChartServiceService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -31,6 +34,195 @@ class ChartManageController extends Controller
     public function transactionMonthly(): JsonResponse
     {
         return $this->chartService->transactionMonthly();
+    }
+
+    public function planPaperFirst(): JsonResponse
+    {
+        $currentYear = now()->year;
+        $datas = Transaction::whereYear('created_at', $currentYear)->get();
+        $plans = NotaDinas::whereYear('to_date', $currentYear)->get();
+
+        $datasets = [];
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'];
+
+        $data = [];
+        $dataPlan = [];
+        foreach ($months as $index => $month) {
+            $realData = $datas->filter(function ($item) use ($index) {
+                return $item->purchase_date->month == $index + 1 &&
+                    $item->product_transactions->contains('product.material.name', 'Bahan Kertas');
+            })->sum(function ($item) {
+                return $item->product_transactions->where('product.material.name', 'Bahan Kertas')->sum('amount');
+            });
+
+            $planData = $plans->filter(function ($item) use ($index) {
+                $fromDate = $item->from_date instanceof Carbon ? $item->from_date : Carbon::parse($item->from_date);
+                return $fromDate->month == $index + 1 &&
+                    $item->product_plannings->contains('product.material.name', 'Bahan Kertas');
+            })->sum(function ($item) {
+                return $item->product_plannings->where('product.material.name', 'Bahan Kertas')->sum('procurement_plan_amount');
+            });
+
+            if ($data) {
+                $data[] = $data[$index - 1] + $realData;
+                $dataPlan[] = $dataPlan[$index - 1] + $planData;
+            } else {
+                $data[] = $realData;
+                $dataPlan[] = $planData;
+            }
+        }
+
+
+
+        $datasets = [
+            'realData' => $data,
+            'planData' => $dataPlan,
+            'fill' => false,
+        ];
+
+        return response()->json(['datasets' => $datasets, 'labels' => $months]);
+    }
+
+    public function planPaperSecond(): JsonResponse
+    {
+        $currentYear = now()->year;
+        $datas = Transaction::whereYear('created_at', $currentYear)->get();
+        $plans = NotaDinas::whereYear('to_date', $currentYear)->get();
+        $types = Material::all();
+
+        $datasets = [];
+        $months = ['July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        $data = [];
+        $dataPlan = [];
+        foreach ($months as $index => $month) {
+            $realData = $datas->filter(function ($item) use ($index) {
+                return $item->purchase_date->month == $index + 7 &&
+                    $item->product_transactions->contains('product.material.name', 'Bahan Kertas');
+            })->sum(function ($item) {
+                return $item->product_transactions->where('product.material.name', 'Bahan Kertas')->sum('amount');
+            });
+
+            $planData = $plans->filter(function ($item) use ($index) {
+                $fromDate = $item->from_date instanceof Carbon ? $item->from_date : Carbon::parse($item->from_date);
+                return $fromDate->month == $index + 7 &&
+                    $item->product_plannings->contains('product.material.name', 'Bahan Kertas');
+            })->sum(function ($item) {
+                return $item->product_plannings->where('product.material.name', 'Bahan Kertas')->sum('procurement_plan_amount');
+            });
+
+            if ($data) {
+                $data[] = $data[$index - 1] + $realData;
+                $dataPlan[] = $dataPlan[$index - 1] + $planData;
+            } else {
+                $data[] = $realData;
+                $dataPlan[] = $planData;
+            }
+        }
+
+
+
+        $datasets = [
+            'realData' => $data,
+            'planData' => $dataPlan,
+            'fill' => false,
+        ];
+
+        return response()->json(['datasets' => $datasets, 'labels' => $months]);
+    }
+
+    public function planInkFirst(): JsonResponse
+    {
+        $currentYear = now()->year;
+        $datas = Transaction::whereYear('created_at', $currentYear)->get();
+        $plans = NotaDinas::whereYear('to_date', $currentYear)->get();
+
+        $datasets = [];
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'];
+
+        $data = [];
+        $dataPlan = [];
+        foreach ($months as $index => $month) {
+            $realData = $datas->filter(function ($item) use ($index) {
+                return $item->purchase_date->month == $index + 1 &&
+                    $item->product_transactions->contains('product.material.name', 'Bahan Tinta');
+            })->sum(function ($item) {
+                return $item->product_transactions->where('product.material.name', 'Bahan Tinta')->sum('amount');
+            });
+
+            $planData = $plans->filter(function ($item) use ($index) {
+                $fromDate = $item->from_date instanceof Carbon ? $item->from_date : Carbon::parse($item->from_date);
+                return $fromDate->month == $index + 1 &&
+                    $item->product_plannings->contains('product.material.name', 'Bahan Tinta');
+            })->sum(function ($item) {
+                return $item->product_plannings->where('product.material.name', 'Bahan Tinta')->sum('procurement_plan_amount');
+            });
+
+            if ($data) {
+                $data[] = $data[$index - 1] + $realData;
+                $dataPlan[] = $dataPlan[$index - 1] + $planData;
+            } else {
+                $data[] = $realData;
+                $dataPlan[] = $planData;
+            }
+        }
+
+
+
+        $datasets = [
+            'realData' => $data,
+            'planData' => $dataPlan,
+            'fill' => false,
+        ];
+
+        return response()->json(['datasets' => $datasets, 'labels' => $months]);
+    }
+
+    public function planInkSecond(): JsonResponse
+    {
+        $currentYear = now()->year;
+        $datas = Transaction::whereYear('created_at', $currentYear)->get();
+        $plans = NotaDinas::whereYear('to_date', $currentYear)->get();
+
+        $datasets = [];
+        $months = ['July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        $data = [];
+        $dataPlan = [];
+        foreach ($months as $index => $month) {
+            $realData = $datas->filter(function ($item) use ($index) {
+                return $item->purchase_date->month == $index + 7 &&
+                    $item->product_transactions->contains('product.material.name', 'Bahan Tinta');
+            })->sum(function ($item) {
+                return $item->product_transactions->where('product.material.name', 'Bahan Tinta')->sum('amount');
+            });
+
+            $planData = $plans->filter(function ($item) use ($index) {
+                $fromDate = $item->from_date instanceof Carbon ? $item->from_date : Carbon::parse($item->from_date);
+                return $fromDate->month == $index + 7 &&
+                    $item->product_plannings->contains('product.material.name', 'Bahan Tinta');
+            })->sum(function ($item) {
+                return $item->product_plannings->where('product.material.name', 'Bahan Tinta')->sum('procurement_plan_amount');
+            });
+
+            if ($data) {
+                $data[] = $data[$index - 1] + $realData;
+                $dataPlan[] = $dataPlan[$index - 1] + $planData;
+            } else {
+                $data[] = $realData;
+                $dataPlan[] = $planData;
+            }
+        }
+
+
+
+        $datasets = [
+            'realData' => $data,
+            'planData' => $dataPlan,
+            'fill' => false,
+        ];
+
+        return response()->json(['datasets' => $datasets, 'labels' => $months]);
     }
 
     public function tintaMonthly(): JsonResponse

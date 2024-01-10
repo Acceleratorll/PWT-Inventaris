@@ -55,7 +55,38 @@
 
 @section('content')
 <div id="custom-target"></div>
-
+<div class="row">
+    <div class="col-md-6">
+        <x-adminlte-card title="Pengadaan Kertas S1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-category">
+                <canvas id="planPaper1Chart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+    <div class="col-md-6">
+        <x-adminlte-card title="Pengadaan Tinta S1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-category">
+                <canvas id="planInk1Chart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <x-adminlte-card title="Pengadaan Kertas S2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-category">
+                <canvas id="planPaper2Chart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+    <div class="col-md-6">
+        <x-adminlte-card title="Pengadaan Tinta S2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-category">
+                <canvas id="planInk2Chart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-4">
         <x-adminlte-card title="Info Barang" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
@@ -157,6 +188,10 @@
             let rChart;
             let cChart;
             let pChart;
+            let pP1Chart;
+            let pI1Chart;
+            let pP2Chart;
+            let pI2Chart;
             let labels;
             let datas;
             
@@ -166,12 +201,13 @@
             
             var productNotif = pusher.subscribe('public.product.notification.1')
             .bind("product.notification", (data) => {
-                console.log('Data : ', data);
-                console.log('Data Message : ', data.message);
-                console.log('Data Type : ', data.type);
-                if (data.type === 'warning' || data.type === 'critical') {
-                    handleNotification(data.data, data.type);
-                }
+                // console.log('Data : ', data);
+                // console.log('Data Message : ', data.message);
+                // console.log('Data Type : ', data.type);
+                // if (data.type === 'warning' || data.type === 'critical') {
+                //     handleNotification(data.data, data.type);
+                // }
+                location.reload();
             });
 
             var addChart = pusher.subscribe('public.add.chart.1')
@@ -184,15 +220,16 @@
             var updateChart = pusher.subscribe('public.update.chart.1')
             .bind("update.chart", (data) => {
                 console.log(data);
-                if(data.chart === 'rChart'){
-                    rppChart();
-                }else if(data.chart === 'tChart'){
-                    tintaChart();
-                }else if(data.chart === 'pChart'){
-                    productTransactionChart();
-                }else{
-                    updateDataChart(data);
-                }
+                location.reload();
+                // if(data.chart === 'rChart'){
+                //     rppChart();
+                // }else if(data.chart === 'tChart'){
+                //     tintaChart();
+                // }else if(data.chart === 'pChart'){
+                //     productTransactionChart();
+                // }else{
+                    
+                // }
             });
             
             var deleteChart = pusher.subscribe('public.delete.chart.1')
@@ -206,11 +243,12 @@
             .bind("update.data", (data) => {
                 console.log(data);
                 
-                if(data.name == 'Category'){
-                    changeCategoryInfo(data);
-                }else if(data.name == 'Product'){
-                    affectedByProduct(data);
-                }
+                // if(data.name == 'Category'){
+                //     changeCategoryInfo(data);
+                // }else if(data.name == 'Product'){
+                //     affectedByProduct(data);
+                // }
+                location.reload();
 
                 toastUpdateData(data);
             });
@@ -391,6 +429,219 @@
                 })
             }
 
+            function planningPaper1Chart(){
+                $.ajax({    
+                    url: "{{ route('plan.paper.1.chart') }}",
+                    method:'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        labels = data.labels,
+                        datas = data.datas;
+                        const ctx = document.getElementById("planPaper1Chart");
+                        
+                        if(pP1Chart){
+                            pP1Chart.destroy();
+                        }
+
+                        const realDataset = {
+                            label: 'Real',
+                            data: data.datasets.realData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false
+                        };
+
+                        const planDataset = {
+                            label: 'Plan',
+                            data: data.datasets.planData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false
+                        };
+
+                        const chartData = {
+                            labels: data.labels,
+                            datasets: [realDataset, planDataset]
+                        };
+
+                        pP1Chart = new Chart(ctx,{
+                            type: 'line',
+                            data: {
+                                labels: chartData.labels,
+                                datasets: chartData.datasets,
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
+                                maintainAspectRatio: true,
+                                responsive: true,
+                            }
+                        })
+                    }
+                })
+            }
+
+            function planningInk1Chart(){
+                $.ajax({    
+                    url: "{{ route('plan.ink.1.chart') }}",
+                    method:'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        labels = data.labels,
+                        datas = data.datas;
+                        const ctx = document.getElementById("planInk1Chart");
+                        
+                        if(pI1Chart){
+                            pI1Chart.destroy();
+                        }
+
+                        const realDataset = {
+                            label: 'Real',
+                            data: data.datasets.realData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false,
+                        };
+
+                        const planDataset = {
+                            label: 'Plan',
+                            data: data.datasets.planData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false,
+                        };
+
+                        const chartData = {
+                            labels: data.labels,
+                            datasets: [realDataset, planDataset]
+                        };
+
+
+                        pI1Chart = new Chart(ctx,{
+                            type: 'line',
+                            data: {
+                                labels: chartData.labels,
+                                datasets: chartData.datasets,
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
+                                maintainAspectRatio: true,
+                                responsive: true,
+                            }
+                        })
+                    }
+                })
+            }
+
+            function planningPaper2Chart(){
+                $.ajax({    
+                    url: "{{ route('plan.paper.2.chart') }}",
+                    method:'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        labels = data.labels,
+                        datas = data.datas;
+                        const ctx = document.getElementById("planPaper2Chart");
+                        
+                        if(pP2Chart){
+                            pP2Chart.destroy();
+                        }
+
+                        const realDataset = {
+                            label: 'Real',
+                            data: data.datasets.realData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false
+                        };
+
+                        const planDataset = {
+                            label: 'Plan',
+                            data: data.datasets.planData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false
+                        };
+
+                        const chartData = {
+                            labels: data.labels,
+                            datasets: [realDataset, planDataset]
+                        };
+
+                        pP2Chart = new Chart(ctx,{
+                            type: 'line',
+                            data: {
+                                labels: chartData.labels,
+                                datasets: chartData.datasets,
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
+                                maintainAspectRatio: true,
+                                responsive: true,
+                            }
+                        })
+                    }
+                })
+            }
+
+            function planningInk2Chart(){
+                $.ajax({    
+                    url: "{{ route('plan.ink.2.chart') }}",
+                    method:'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        labels = data.labels,
+                        datas = data.datas;
+                        const ctx = document.getElementById("planInk2Chart");
+                        
+                        if(pI2Chart){
+                            pI2Chart.destroy();
+                        }
+
+                        const realDataset = {
+                            label: 'Real',
+                            data: data.datasets.realData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false
+                        };
+
+                        const planDataset = {
+                            label: 'Plan',
+                            data: data.datasets.planData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false
+                        };
+
+                        const chartData = {
+                            labels: data.labels,
+                            datasets: [realDataset, planDataset]
+                        };
+
+                        pI2Chart = new Chart(ctx,{
+                            type: 'line',
+                            data: {
+                                labels: chartData.labels,
+                                datasets: chartData.datasets,
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
+                                maintainAspectRatio: true,
+                                responsive: true,
+                            }
+                        })
+                    }
+                })
+            }
+
             function rppChart(){
                 $.ajax({    
                     url: "{{route('yearly.rpp.chart')}}",
@@ -404,7 +655,7 @@
                         if(rChart){
                             rChart.destroy();
                         }
-                        
+
                         rChart = new Chart(ctx,{
                             type: 'line',
                             data: {
@@ -853,6 +1104,10 @@
                 categoryChart();
                 rppChart();
                 tintaChart();
+                planningPaper1Chart();
+                planningInk1Chart();
+                planningPaper2Chart();
+                planningInk2Chart();
                 productTransactionChart();
                 
                 $('#table').DataTable({

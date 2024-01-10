@@ -90,4 +90,9 @@ class ProductLocationService
         });
         return response()->json($formattedDatas);
     }
+
+    public function update($id, $data)
+    {
+        return $this->repository->update($id, $data);
+    }
 }

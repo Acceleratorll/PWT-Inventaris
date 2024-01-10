@@ -70,6 +70,21 @@
             selectInput(products, products_url, products_ph);
             selectInput(customer, customer_url, customer_ph);
             selectInput(order_type, order_type_url, order_type_ph);
+
+            $(document).on("input", 'input[name^="selected_products["][name$="[requirement_amount]"]', function () {
+                var requirementInput = $(this);
+                var productId = requirementInput.closest(".row").find('input[name$="[product_amount]"]').val();
+                var minimumStock = requirementInput.closest(".row").find('input[name$="[minimum_stock]"]').val();
+                var procurementInput = requirementInput.closest(".row").find('input[name$="[procurement_plan_amount]"]');
+
+                var requirement = parseFloat(requirementInput.val()) || 0;
+                var stock = parseFloat(productId) || 0;
+                var minimumStockValue = parseFloat(minimumStock) || 0;
+
+                var procurement = Math.max(requirement - stock + minimumStockValue, 0);
+                
+                procurementInput.val(procurement.toFixed(2));
+            });
         });
     
         $(products).on("change", function () {
@@ -100,6 +115,7 @@
                             <div class="col-md-2">
                                 <label>Stock</label>
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][product_amount]" value="${data.total_amount}" required readonly>
+                                <input type="hidden" class="form-control mb-3" name="selected_products[${productId}][minimum_stock]" value="${data.minimal_amount}">
                             </div>
                             <div class="col-md-2">
                                 <label>Procurement</label>

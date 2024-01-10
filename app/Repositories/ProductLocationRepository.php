@@ -27,6 +27,16 @@ class ProductLocationRepository
             ->first();
     }
 
+    public function findByProductExpiredPurchaseLocation($product_id, $location_id, $expired, $purchase)
+    {
+        return $this->model->with('location', 'product')
+            ->where('product_id', $product_id)
+            ->where('location_id', $location_id)
+            ->where('expired', $expired)
+            ->where('purchase_date', $purchase)
+            ->first();
+    }
+
     public function search($term)
     {
         return $this->model

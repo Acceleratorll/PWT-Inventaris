@@ -21,7 +21,7 @@ class TransactionRepository
     public function getByMonth($month)
     {
         return $this->model
-            ->with(['product_transactions.product', 'supplier'])
+            ->with(['product_transactions.product.material', 'supplier'])
             ->whereMonth('purchase_date', $month)
             ->get();
     }

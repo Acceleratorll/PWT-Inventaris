@@ -120,11 +120,12 @@ class TransactionController extends Controller
     public function update(TransactionRequest $request, string $id)
     {
         $input = $request->validated();
-        $this->transactionRepository->update($id, $input);
+        dd($input);
+        // $amount_changes = $request->;
         $transaction = $this->transactionRepository->find($id);
+        $this->transactionRepository->update($id, $input);
 
-        $amountChanges = $this->transactionService->updateIncomingProducts($transaction, $input['selected_products']);
-        $this->transactionService->updateProductAmounts($amountChanges);
+
         $this->transactionService->updateChart($transaction);
 
         return redirect()->route('transaction.index')->with('success', 'TRANSACTION berhasil diupdate!');

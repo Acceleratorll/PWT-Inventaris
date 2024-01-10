@@ -105,6 +105,10 @@ Route::prefix('/json')->group(function () {
     Route::get('/get-qualifiers-by-product/{product}', [QualifierController::class, 'getJsonQualifierByProduct'])->name('get-json-qualifiers-by-product');
     Route::get('/get-roles', [RoleController::class, 'getJsonRoles'])->name('get-json-roles');
     Route::prefix('/chart')->group(function () {
+        Route::get('/plan/paper-1', [ChartManageController::class, 'planPaperFirst'])->name('plan.paper.1.chart');
+        Route::get('/plan/ink-1', [ChartManageController::class, 'planInkFirst'])->name('plan.ink.1.chart');
+        Route::get('/plan/paper-2', [ChartManageController::class, 'planPaperSecond'])->name('plan.paper.2.chart');
+        Route::get('/plan/ink-2', [ChartManageController::class, 'planInkSecond'])->name('plan.ink.2.chart');
         Route::get('/transaction', [ChartManageController::class, 'transactionMonthly'])->name('monthly.transaction.chart');
         Route::get('/tinta', [ChartManageController::class, 'tintaMonthly'])->name('monthly.tinta.chart');
         Route::get('/rpp', [ChartManageController::class, 'rppYearly'])->name('yearly.rpp.chart');

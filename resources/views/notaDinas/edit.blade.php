@@ -93,7 +93,72 @@
 
         $(document).ready(function() {
             selectInput(products, products_url, products_ph);
+
+            $(document).on("input", 'input[name^="selected_products["][name$="[requirement_amount]"]', function () {
+                var requirementInput = $(this);
+                var productId = requirementInput.closest(".row").find('input[name$="[product_amount]"]').val();
+                var minimumStock = requirementInput.closest(".row").find('input[name$="[minimum_stock]"]').val();
+                var procurementInput = requirementInput.closest(".row").find('input[name$="[procurement_plan_amount]"]');
+
+                var requirement = parseFloat(requirementInput.val()) || 0;
+                var stock = parseFloat(productId) || 0;
+                var minimumStockValue = parseFloat(minimumStock) || 0;
+
+                var procurement = Math.max(requirement - stock + minimumStockValue, 0);
+                
+                procurementInput.val(procurement.toFixed(2));
+            });
+
             updateSelectedProducts();
+        });
+
+        $(products).on("change", function () {
+            var selectedProducts = $(this).select2("data");
+    
+            $("#selected-products").empty();
+    
+            selectedProducts.forEach(function (product) {
+                var productId = product.id;
+                var productName = product.text;
+                var uniqueLocationId = "location_id_" + productId;
+                
+                $.ajax({
+                    url: '{{ route("get-json-product", ["product_id" => ":product"]) }}'.replace(':product', productId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var inputHtml = `
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Product Name</label>
+                                <input type="text" class="form-control mb-3" name="selected_products[${productId}][name][]" value="${productName} | ${data.product_code}" disabled>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Requirement</label>
+                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][requirement_amount]" placeholder="Requirement amount" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Stock</label>
+                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][product_amount]" value="${data.total_amount}" required readonly>
+                                <input type="hidden" class="form-control mb-3" name="selected_products[${productId}][minimum_stock]" value="${data.minimal_amount}">
+                            </div>
+                            <div class="col-md-2">
+                                <label>Procurement</label>
+                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" placeholder="Procurement plan amount" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Qualifier</label>
+                                <input type="text" class="form-control mb-3" name="selected_products[${productId}][qualifier]" value="${data.qualifier.name}" required readonly>
+                            </div>
+                        </div>
+                        <div id="locations_${productId}"></div>
+                    `;
+                    $("#selected-products").append(inputHtml);
+                },
+                error: function (error) {
+                    console.error("Error fetching product data:", error);
+                }
+            });
         });
 
         function updateSelectedProducts() {

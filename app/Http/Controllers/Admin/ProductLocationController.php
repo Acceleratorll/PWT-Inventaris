@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductLocationRequest;
 use App\Services\ProductLocationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductLocationController extends Controller
 {
@@ -37,6 +39,19 @@ class ProductLocationController extends Controller
     public function edit(): View
     {
         return view();
+    }
+
+    public function update($id, ProductLocationRequest $productLocationRequest)
+    {
+        try {
+            DB::transaction(function () use ($id, $productLocationRequest) {
+                $input = $productLocationRequest->validated();
+
+                DB::commit();
+            });
+        } catch (\Throwable $th) {
+            DB::rollBack();
+        }
     }
 
     public function delete($id): JsonResponse

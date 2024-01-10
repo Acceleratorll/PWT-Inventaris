@@ -35,7 +35,6 @@ class ProductLocation extends Model
         });
     }
 
-
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);

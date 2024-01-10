@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\UpdateChartEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NotaDinasRequest;
 use App\Services\NotaDinasService;
@@ -36,9 +37,9 @@ class NotaDinasController extends Controller
 
     public function store(NotaDinasRequest $notaDinasRequest)
     {
+        $input = $notaDinasRequest->validated();
         try {
-            DB::transaction(function () use ($notaDinasRequest) {
-                $input = $notaDinasRequest->validated();
+            DB::transaction(function () use ($input) {
                 $notaDinas = $this->notaDinasService->create($input);
                 foreach ($input['selected_products'] as $productId => $proPlanData) {
                     $proPlan = [
@@ -51,6 +52,7 @@ class NotaDinasController extends Controller
                     $this->productPlanningService->create($proPlan);
                 }
             });
+            event(new UpdateChartEvent('pPChart', $input));
             return redirect()->route('notaDinas.index')->with('success', 'Nota dinas created successfully');
         } catch (\Throwable $th) {
             DB::rollBack();

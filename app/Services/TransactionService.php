@@ -63,26 +63,43 @@ class TransactionService
         $incomingProduct->delete();
     }
 
-    private function updateIncomingProduct($incomingProduct, $productData, &$amountChanges)
-    {
-        $product = $incomingProduct->product;
-        foreach ($productData['location_ids'] as $locationId => $locationData) {
-            $inputOutLoc = [
-                'product_id' => $product->id,
-                'location_id' => $locationId,
-                'amount' => $locationData['amount'],
-                'expired' => $locationData['expired'],
-            ];
 
-            $incomeLoc = $this->productLocationRepository->find()->update($inputOutLoc);
-            $product->product_locations()->save($incomeLoc);
+    private function updateIncomingProduct($transaction, $productId, $productData, &$amountChanges)
+    {
+        $product = $this->productRepository->find($productId);
+        $oriAmount = $product->total_amount;
+        (int) $amount = 0;
+
+        foreach ($productData['location_ids'] as $locationId => $locationData) {
+            $proLoc = $this->productLocationRepository->findByProductExpiredLocation($product->id, $locationId, $locationData['expired']);
+            $proLocOri = $this->productLocationRepository->findByProductExpiredPurchaseLocation($product->id, $locationId, $locationData['expired']);
+
+            if (!$proLoc) {
+                $inputOutLoc = [
+                    'product_id' => $product->id,
+                    'location_id' => $locationId,
+                    'amount' => $locationData['amount'],
+                    'purchase_date' => $transaction->purchase_date,
+                    'expired' => $locationData['expired'],
+                ];
+
+                $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
+                $product->product_locations()->save($incomeLoc);
+            } else if ($proloc == $transa) {
+                $proLoc->update(['amount' => $proLoc->amount += $locationData['amount']]);
+            }
             $amount += $locationData['amount'];
         }
-        $netChange = $productData['qty'] - $incomingProduct->amount;
-        $amountChanges[$incomingProduct->product_id] = $netChange;
 
-        $incomingProduct->amount = $productData['qty'];
-        $incomingProduct->save();
+        $inputOutPro = [
+            'transaction_id' => $transaction->id,
+            'product_id' => $productId,
+            'amount' => (int)$amount,
+            'product_amount' => $oriAmount,
+        ];
+
+        $income = $this->productTransactionRepository->create($inputOutPro);
+        $transaction->product_transactions()->save($income);
     }
 
     private function createIncomingProduct($transaction, $productId, $productData, &$amountChanges)
