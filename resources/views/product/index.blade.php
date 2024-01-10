@@ -103,8 +103,9 @@
 @stop
 
 @section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script>
-
     if ('{{ Session::has('error') }}') {
         Swal.fire({
             icon: 'error',
@@ -225,7 +226,7 @@
             processing: true,
             serverSide: true,
             searchable: true,
-            ajax: '{{ route('get-this-year-products') }}',
+            ajax: '{{ route('get-all-products') }}',
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
@@ -343,6 +344,4 @@
         // .draw();
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 @stop

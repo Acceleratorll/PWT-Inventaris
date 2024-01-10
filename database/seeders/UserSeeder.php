@@ -13,7 +13,6 @@ class UserSeeder extends Seeder
     {
         $data = [
             [
-                'role_id' => 1,
                 'name' => 'Staff Gudang',
                 'email' => 'staff@mail.com',
                 'password' => bcrypt('12345'),
@@ -21,7 +20,6 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 2,
                 'name' => 'Kadev Logistik',
                 'email' => 'kadevlogistik@mail.com',
                 'password' => Hash::make('12345'),
@@ -29,7 +27,6 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 3,
                 'name' => 'PPIC',
                 'email' => 'ppic@mail.com',
                 'password' => Hash::make('12345'),

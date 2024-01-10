@@ -23,12 +23,14 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => ['auth']], function () {
     Route::resource('/profile', ProfileController::class);
     Route::resource('/location', LocationController::class);
     Route::resource('/category', CategoryProductController::class);
     Route::resource('/material', MaterialController::class);
-    Route::resource('/product', ProductController::class);
+    Route::group(['middleware' => ['permission:manage nota dinas']], function () {
+        Route::resource('/product', ProductController::class);
+    });
     Route::resource('/rpp', ProcessPlanController::class);
     Route::resource('/supplier', SupplierController::class);
     Route::resource('/customer', CustomerController::class);
@@ -41,6 +43,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/get-table/unread-notifications', [NotificationController::class, 'getTableUnreadNotifications'])->name('get-table.unread-notifications');
+Route::get('/get-table/read-notifications', [NotificationController::class, 'getTableReadNotifications'])->name('get-table.read-notifications');
 Route::get('/get-table/read-notifications', [NotificationController::class, 'getTableReadNotifications'])->name('get-table.read-notifications');
 Route::resource('/dashboard', AdminDashboardController::class);
 Route::get('/get-profiles', [ProfileController::class, 'getProfiles'])->name('get-profiles');

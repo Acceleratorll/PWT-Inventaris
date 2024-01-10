@@ -135,8 +135,8 @@ class ProductRepository
                 'outgoing_products.process_plan.customer',
                 'product_plannings',
             )
-            ->whereHas('product_transactions', function ($query) use ($currentYear) {
-                $query->whereYear('updated_at', $currentYear);
+            ->whereHas('product_transactions.transaction', function ($query) use ($currentYear) {
+                $query->whereYear('purchase_date', $currentYear);
             })
             ->orWhereHas('outgoing_products', function ($query) use ($currentYear) {
                 $query->whereYear('updated_at', $currentYear);
