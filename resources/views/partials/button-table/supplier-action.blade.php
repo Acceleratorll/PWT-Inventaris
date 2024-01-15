@@ -1,12 +1,16 @@
+@can('update supplier')
 <a href="#" class="edit btn btn-success"
 id="edit"
    data-id="{{ $id }}"
    data-name="{{ $name }}">
     Edit
 </a>
+@endcan
+@can('delete supplier')
 <button id="delete" data-id="{{ $id }}" data-name="{{ $name }}" data-original-title="Delete" class="delete btn btn-danger">
     Delete
 </button>
+@endcan
 <form action="{{ route('supplier.destroy',['supplier' => $id]) }}" id="deleteForm" method="post">
     @csrf
     @method("DELETE")

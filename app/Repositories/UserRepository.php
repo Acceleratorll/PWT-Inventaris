@@ -16,7 +16,12 @@ class UserRepository
 
     public function find($id)
     {
-        return $this->model->findOrFail($id);
+        return $this->model->with('roles')->find($id);
+    }
+
+    public function findGet($id)
+    {
+        return $this->model->with('roles')->where('id', $id)->get();
     }
 
     public function search($term)
@@ -31,17 +36,17 @@ class UserRepository
 
     public function all()
     {
-        return $this->model->with('role');
+        return $this->model->with('roles')->get();
     }
 
     public function paginate(int $number)
     {
-        return $this->model->with('role')->paginate($number);
+        return $this->model->with('roles')->paginate($number);
     }
 
     public function orderBy($col, $desc)
     {
-        return $this->model->with('role')->orderBy($col, $desc)->get();
+        return $this->model->with('roles')->orderBy($col, $desc)->get();
     }
 
     public function create($data)
@@ -73,7 +78,6 @@ class UserRepository
 
     public function delete($id)
     {
-        $data = $this->model->findOrFail($id);
-        return $data->delete();
+        return $this->model->findOrFail($id)->delete();
     }
 }

@@ -11,7 +11,9 @@
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
+                @can('create type')
                 <button class="btn btn-primary" onclick="add()">+ Add</button>
+                @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">

@@ -13,12 +13,14 @@
         <div class="card">
             <div class="card-body">
                 <div class="button-action" style="margin-bottom: 20px">
+                    @can('create transaction')
                     <a class="btn btn-primary" href="{{ route('transaction.create') }}">
                         <span>+ Add</span>
                     </a>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
                     </a>
+                    @endcan
                     <a class="btn btn-secondary" href="{{ route('export.transactions') }}">
                         <span>Excel</span>
                     </a>

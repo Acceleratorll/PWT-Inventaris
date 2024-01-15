@@ -11,7 +11,9 @@
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
+                @can('create nota dinas')
                 <a href="{{ route('notaDinas.create') }}" class="btn btn-primary">+ Add</a>
+                @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered text-center" id="table">

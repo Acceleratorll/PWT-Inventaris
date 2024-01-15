@@ -1,12 +1,16 @@
-    <a href="{{ route('rpp.edit', ['rpp' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
-        Edit
-    </a>
-    <button id="show-outgoing-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
-        Details
-    </button>
-    <button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
+@can('update rpp')
+<a href="{{ route('rpp.edit', ['rpp' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
+    Edit
+</a>
+@endcan
+<button id="show-outgoing-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+    Details
+</button>
+@can('delete rpp')
+<button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
 Delete
 </button>
+@endcan
 <form action="{{ route('rpp.destroy',['rpp' => $id]) }}" id="deleteForm" method="post">
     @csrf
     @method("DELETE")

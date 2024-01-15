@@ -31,7 +31,7 @@ class ProfileController extends Controller
 
     public function getProfiles()
     {
-        $profiles = $this->userRepository->orderBy('created_at', 'desc');
+        $profiles = $this->userRepository->all();
         return DataTables::of($profiles)
             ->addColumn('id', function ($profile) {
                 return $profile->id;
@@ -42,8 +42,13 @@ class ProfileController extends Controller
             ->addColumn('email', function ($profile) {
                 return $profile->email;
             })
-            ->addColumn('role_name', function ($profile) {
-                return $profile->role->name;
+            ->addColumn('roles', function ($profile) {
+                $roles = '<ul>';
+                foreach ($profile->roles as $role) {
+                    $roles .= '<li>' . $role->name . '</li>';
+                }
+                $roles .= '</ul>';
+                return $roles;
             })
             ->addColumn('formatted_created_at', function ($profile) {
                 return $profile->created_at->format('D, d-m-y, G:i');
@@ -52,7 +57,40 @@ class ProfileController extends Controller
                 return $profile->updated_at->format('D, d-m-y, G:i');
             })
             ->addColumn('action', 'partials.button-table.profile-action')
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'roles'])
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    public function tableProfile($id)
+    {
+        $profiles = $this->userRepository->findGet($id);
+        return DataTables::of($profiles)
+            ->addColumn('id', function ($profile) {
+                return $profile->id;
+            })
+            ->addColumn('name', function ($profile) {
+                return $profile->name;
+            })
+            ->addColumn('email', function ($profile) {
+                return $profile->email;
+            })
+            ->addColumn('roles', function ($profile) {
+                $roles = '<ul>';
+                foreach ($profile->roles as $role) {
+                    $roles .= '<li>' . $role->name . '</li>';
+                }
+                $roles .= '</ul>';
+                return $roles;
+            })
+            ->addColumn('formatted_created_at', function ($profile) {
+                return $profile->created_at->format('D, d-m-y, G:i');
+            })
+            ->addColumn('formatted_updated_at', function ($profile) {
+                return $profile->updated_at->format('D, d-m-y, G:i');
+            })
+            ->addColumn('action', 'partials.button-table.profile-action')
+            ->rawColumns(['action', 'roles'])
             ->addIndexColumn()
             ->make(true);
     }
@@ -60,6 +98,12 @@ class ProfileController extends Controller
     public function create(): View
     {
         return view('profile.create');
+    }
+
+    public function show($id): JsonResponse
+    {
+        $data = $this->userRepository->find($id);
+        return response()->json($data);
     }
 
     public function store(UserRequest $userRequest)

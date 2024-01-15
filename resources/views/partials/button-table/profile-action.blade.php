@@ -1,10 +1,11 @@
-    <a href="{{ route('profile.edit', ['profile' => $id]) }}" class="edit btn btn-success">
-        Edit
-    </a>
-
-    <button id="delete" data-id="{{ $id }}" data-name="{{ $name }}" data-original-title="Delete" class="delete btn btn-danger">
-Delete
+@if ($id == auth()->user()->id)
+<a href="{{ route('profile.edit', ['profile' => $id]) }}" class="edit btn btn-success">
+    Edit
+</a>
+<button id="delete" data-id="{{ $id }}" data-name="{{ $name }}" data-original-title="Delete" class="delete btn btn-danger">
+    Delete
 </button>
+@endif
 <form action="{{ route('profile.destroy',['profile' => $id]) }}" id="deleteForm" method="post">
     @csrf
     @method("DELETE")
@@ -21,8 +22,7 @@ Delete
             title: 'Delete Profile',
             text: 'Are you sure you want to delete this profile?',
             type: 'warning',
-icon: 'warning',
-icon: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Delete',
             cancelButtonText: 'Cancel',
@@ -38,10 +38,7 @@ icon: 'warning',
                         Swal.fire({
                             title: 'Profile Deleted Successfully',
                             type: 'success',
-icon: 'success',
-type: 'success',
                             icon: 'success',
-type: 'success',
                             timer: 1700,
                         });
                         Swal.showLoading();

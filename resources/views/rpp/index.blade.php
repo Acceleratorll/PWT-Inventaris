@@ -9,25 +9,18 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        @if($message = Session::get('success'))
-        <div class="alert alert-success" role="alert">
-            {{ $message }}
-        </div>
-        @elseif($message =  Session::get('error'))
-        <div class="alert alert-danger" role="alert">
-            {{ $message }}
-        </div>
-        @endif
         <div class="row" style="height: 10px"></div>
         <div class="card">
             <div class="card-body">
                 <div class="button-action" style="margin-bottom: 20px">
+                    @can('create rpp')
                     <a class="btn btn-primary" href="{{ route('rpp.create') }}">
                         <span>+ Add</span>
                     </a>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
                     </a>
+                    @endcan
                     <a class="btn btn-secondary" href="{{ route('export.processplans') }}">
                         <span>Excel</span>
                     </a>

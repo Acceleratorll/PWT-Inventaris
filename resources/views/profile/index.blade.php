@@ -8,54 +8,29 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-<div class="row">
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
+                @can('create user')
                 <a class="btn btn-primary" href="{{route('profile.create')}}">
                     <span>+ Add</span>
                 </a>
                 <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                     <span>Import</span>
                 </a>
+                @endcan
                 <a class="btn btn-secondary" href="{{ route('export.profiles') }}">
                     <span>Excel</span>
                 </a>
             </div>
-            <div class="button-action" style="margin-bottom: 20px">
+            {{-- <div class="button-action" style="margin-bottom: 20px">
                 <label for="stock-filter">Stock Filter:</label>
                 <select id="stock-filter">
                     <option value="all">All</option>
                     <option value="warning">Warning (30%)</option>
                     <option value="error">Error (10%)</option>
                 </select>
-            </div>
+            </div> --}}
             <div class="table-responsive">
                 <table class="table table-bordered" id="myTable">
                     <caption>Table Barang</caption>
@@ -108,6 +83,8 @@
 @stop
     
 @section('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script>
         var columns = [
             { data: 'id', name: 'id' },
@@ -116,7 +93,7 @@
                 data: 'email', 
                 name: 'email',
             },
-            { data: 'role_name', name: 'role_name' },
+            { data: 'roles', name: 'roles' },
             { data: 'formatted_updated_at', name: 'formatted_updated_at' },
             { data: 'formatted_created_at', name: 'formatted_created_at' },
             { data: 'action', name: 'action', orderable: false, searchable: false },
@@ -187,12 +164,10 @@
                 },
             });
 
-            table
-            .column( '3:visible' )
-            .order( 'desc' )
-            .draw();
+            // table
+            // .column( '3:visible' )
+            // .order( 'desc' )
+            // .draw();
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 @stop

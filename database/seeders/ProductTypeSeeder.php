@@ -27,12 +27,6 @@ class ProductTypeSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Bahan Tinta',
-                'desc' => '',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
                 'name' => 'Barang Jadi Beli',
                 'desc' => '',
                 'created_at' => now(),

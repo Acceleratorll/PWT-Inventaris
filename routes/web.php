@@ -28,9 +28,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/location', LocationController::class);
     Route::resource('/category', CategoryProductController::class);
     Route::resource('/material', MaterialController::class);
-    Route::group(['middleware' => ['permission:manage nota dinas']], function () {
-        Route::resource('/product', ProductController::class);
-    });
+    Route::resource('/product', ProductController::class);
     Route::resource('/rpp', ProcessPlanController::class);
     Route::resource('/supplier', SupplierController::class);
     Route::resource('/customer', CustomerController::class);
@@ -78,6 +76,7 @@ Route::post('/import/productLocations', [ProductLocationController::class, 'impo
 
 Route::prefix('/table')->group(function () {
     Route::get('/productLocations', [ProductLocationController::class, 'table'])->name('table-productLocations');
+    Route::get('/profile/{id}', [ProfileController::class, 'tableProfile'])->name('table-profile');
 });
 
 Route::prefix('/json')->group(function () {

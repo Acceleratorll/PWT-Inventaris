@@ -8,32 +8,12 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-            <x-adminlte-alert theme="info" title="Info">
-                {{ $message }}
-            </x-adminlte-alert>
-        @elseif($message =  Session::get('success'))
-            <x-adminlte-alert theme="success" title="Success">
-                {{ $message }}
-            </x-adminlte-alert>
-        @elseif($message =  Session::get('warning'))
-            <x-adminlte-alert theme="warning" title="Warning">
-                {{ $message }}
-            </x-adminlte-alert>
-        @elseif($message =  Session::get('error'))
-            <x-adminlte-alert theme="danger" title="Danger">
-                {{ $message }}
-            </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-
-<div class="row">
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
+                @can('create supplier')
                 <button class="btn btn-primary" onclick="add()">+ Add</button>
+                @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">
@@ -118,8 +98,6 @@
                 Swal.fire({
                     title: `Supplier Name "${name}" created successfully`, 
                     type: 'success',
-icon: 'success',
-type: 'success',
                     icon: "success",
                     timer: 1700,
                 });

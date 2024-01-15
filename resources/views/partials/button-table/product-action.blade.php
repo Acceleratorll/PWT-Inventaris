@@ -1,12 +1,19 @@
-
+@can('update product')
 <a href="{{ route('product.edit', ['product' => $id]) }}"class="btn btn-success">
     Edit
 </a>
-{{-- <button class="masuk btn btn-info" id="masuk" data-original-title="Masuk" data-id="{{ $id }}" data-name="{{ $name }}">Income</button>
-<button class="keluar btn btn-info" id="keluar" data-original-title="Keluar" data-id="{{ $id }}" data-name="{{ $name }}">Out</button> --}}
+@endcan
+@can('view transaction')
+<button class="masuk btn btn-info text-white" id="masuk" data-original-title="Masuk" data-id="{{ $id }}" data-name="{{ $name }}">Income</button>
+@endcan
+@can('view rpp')
+<button class="keluar btn btn-info text-white" id="keluar" data-original-title="Keluar" data-id="{{ $id }}" data-name="{{ $name }}">Out</button>
+@endcan
+@can('delete product')
 <button id="delete" data-id="{{ $id }}" data-name="{{ $name }}" data-original-title="Delete" class="delete btn btn-danger">
 Delete
 </button>
+@endcan
 <form action="{{ route('product.destroy',['product' => $id]) }}" id="deleteForm" method="post">
     @csrf
     @method("DELETE")

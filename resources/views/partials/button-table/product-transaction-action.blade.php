@@ -1,12 +1,16 @@
-    <a href="{{ route('transaction.edit', ['transaction' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
-        Edit
-    </a>
-    <button id="show-incoming-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
-        Details
-    </button>
-    <button id="delete" data-id="{{ $id }}" data-supplier="{{ $supplier_id }}" data-original-title="Delete" class="delete btn btn-danger">
+@can('update transaction')
+<a href="{{ route('transaction.edit', ['transaction' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
+    Edit
+</a>
+@endcan
+<button id="show-incoming-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+    Details
+</button>
+@can('delete transaction')
+<button id="delete" data-id="{{ $id }}" data-supplier="{{ $supplier_id }}" data-original-title="Delete" class="delete btn btn-danger">
 Delete
 </button>
+@endcan
 
 <script>
         $(document).ready(function(){

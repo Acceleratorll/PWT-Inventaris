@@ -19,7 +19,6 @@ window.select2 = select2;
 window.Swal = Swal;
 window.Chart = Chart;
 window.Pusher = Pusher;
-window.Swal = Swal;
 
 window.Echo = new Echo({
     broadcaster: "pusher",

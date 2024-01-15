@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 return [
 
     /*
@@ -329,26 +331,30 @@ return [
         // ],
         [
             'text'        => 'Dashboard',
-            'route'         => 'dashboard.index',
+            'route'       => 'dashboard.index',
             'icon'        => 'nav-icon fas fa-tachometer-alt',
             'label_color' => 'success',
         ],
-        ['header' => 'product_settings'],
+        [
+            'header' => 'product_settings',
+        ],
         [
             'text'    => 'Category Product',
-            'icon' => 'nav-icon fas fa-th',
+            'icon'    => 'nav-icon fas fa-th',
             'submenu' => [
                 [
                     'text'    => 'All Data',
-                    'route'     => 'category.index',
+                    'route'   => 'category.index',
                     'shift'   => 'ml-3',
-                    'icon' => 'nav-icon fas fa-book',
+                    'icon'    => 'nav-icon fas fa-book',
+                    'can'     => 'view category',
                 ],
                 [
                     'text'    => 'Add Category',
-                    'route'     => 'category.create',
+                    'route'   => 'category.create',
                     'shift'   => 'ml-3',
-                    'icon' => 'nav-icon fas fa-edit',
+                    'icon'    => 'nav-icon fas fa-edit',
+                    'can'     => 'create category',
                 ],
             ],
         ],
@@ -358,21 +364,24 @@ return [
             'submenu' => [
                 [
                     'text'    => 'All Data',
-                    'route'     => 'product.index',
+                    'route'   => 'product.index',
                     'shift'   => 'ml-3',
-                    'icon' => 'nav-icon fas fa-book',
+                    'icon'    => 'nav-icon fas fa-book',
+                    'can'     => 'view product',
                 ],
                 [
                     'text'    => 'Location',
                     'route'     => 'productLocation.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fa-solid fa-location-arrow',
+                    'can'     => 'view product location',
                 ],
                 [
                     'text'    => 'Add Product',
                     'route'     => 'product.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
+                    'can'     => 'create product',
                 ],
             ],
         ],
@@ -385,12 +394,14 @@ return [
                     'route'     => 'location.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view location',
                 ],
                 [
                     'text'    => 'Add Location',
                     'route'     => 'location.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
+                    'can'     => 'create location',
                 ],
             ],
         ],
@@ -403,16 +414,20 @@ return [
                     'route'     => 'orderType.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view type',
                 ],
                 [
                     'text'    => 'Add Order Type',
                     'route'     => 'orderType.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
+                    'can'     => 'create type',
                 ],
             ],
         ],
-        ['header' => 'transactions_settings'],
+        [
+            'header' => 'transactions_settings',
+        ],
         [
             'text'    => 'rpp',
             'icon' => 'nav-icon fas fa-th',
@@ -422,12 +437,14 @@ return [
                     'route'     => 'rpp.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view rpp',
                 ],
                 [
                     'text'    => 'Add RPP',
                     'route'     => 'rpp.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
+                    'can'     => 'create rpp',
                 ],
             ],
         ],
@@ -440,12 +457,14 @@ return [
                     'route'     => 'notaDinas.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view nota dinas',
                 ],
                 [
                     'text'    => 'Add Nota Dinas',
                     'route'     => 'notaDinas.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
+                    'can'     => 'create nota dinas',
                 ],
             ],
         ],
@@ -458,31 +477,46 @@ return [
                     'route'     => 'transaction.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view transaction',
                 ],
                 [
                     'text'    => 'Add Transaction',
                     'route'     => 'transaction.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
+                    'can'     => 'create transaction',
                 ],
             ],
         ],
-        ['header' => 'account_settings'],
         [
-            'text' => 'profile',
+            'header' => 'account_settings',
+        ],
+        [
+            'text' => 'User',
             'route'  => 'profile.index',
             'icon' => 'fas fa-fw fa-user',
+            'can' => 'view user',
         ],
         [
             'text' => 'supplier',
             'route'  => 'supplier.index',
             'icon' => 'fas fa-fw fa-user',
+            'can'     => 'view supplier',
         ],
         [
             'text' => 'customer',
             'route'  => 'customer.index',
             'icon' => 'fas fa-fw fa-user',
+            'can'     => 'view customer',
         ],
+        // [
+        //     'type'         => 'link',
+        //     'text'         => !Auth::check() ? 'Login' : 'Logout',
+        //     'route'        => !Auth::check() ? 'login' : 'logout',
+        //     'method'       => !Auth::check() ? 'get' : 'post',
+        //     'icon'         => !Auth::check() ? 'fas fa-sign-in-alt' : 'fas fa-sign-out-alt',
+        //     'classes'      => !Auth::check() ? 'text-center' : 'text-center text-white',
+        // ],
     ],
 
     /*

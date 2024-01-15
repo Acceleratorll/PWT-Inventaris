@@ -1,9 +1,13 @@
-    <a href="{{ route('notaDinas.edit', ['notaDina' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
-        Edit
-    </a>
-    <button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
+@can('update nota dinas')
+<a href="{{ route('notaDinas.edit', ['notaDina' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
+    Edit
+</a>
+@endcan
+@can('delete nota dinas')
+<button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
 Delete
 </button>
+@endcan
 <form action="{{ route('notaDinas.destroy',['notaDina' => $id]) }}" id="deleteForm" method="post">
     @csrf
     @method("DELETE")

@@ -44,5 +44,8 @@
 
     {{-- Link --}}
     @include('adminlte::partials.navbar.menu-item-link')
+@elseif ($navbarItemHelper->isLogin($item))
+
+    @include('adminlte::partials.navbar.menu-item-login')
 
 @endif

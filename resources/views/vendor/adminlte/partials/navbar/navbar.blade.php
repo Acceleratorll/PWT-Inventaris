@@ -30,6 +30,12 @@
             @else
                 @include('adminlte::partials.navbar.menu-item-logout-link')
             @endif
+        @else
+        <li class="nav-item">
+            <a class="nav-link" data-widget="login" href="{{ route('login') }}" role="button">
+                <i class="fas fa-sign-in-alt"></i>Login
+            </a>
+        </li>
         @endif
 
         {{-- Right sidebar toggler link --}}

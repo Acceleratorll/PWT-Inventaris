@@ -11,12 +11,14 @@
     <div class="card col-md-12">
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
+            @can('create product')
                 <a class="btn btn-primary" href="{{route('product.create')}}">
                     <span>+ Add</span>
                 </a>
                 <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                     <span>Import</span>
                 </a>
+            @endcan
                 <a class="btn btn-secondary" href="{{ route('export.products') }}">
                     <span>Excel</span>
                 </a>
@@ -25,8 +27,6 @@
                 <label for="stock-filter">Stock Filter:</label>
                 <select id="stock-filter">
                     <option value="all">All</option>
-                    <option value="warning">Warning (30%)</option>
-                    <option value="error">Error (10%)</option>
                     <option value="Daily">Daily</option>
                     <option value="Slow Moving">Slow Moving</option>
                     <option value="Unused">Unused</option>
