@@ -21,11 +21,7 @@ class RoleRepository
     public function search($term)
     {
         return $this->model
-            ->with('users')
             ->where('name', 'LIKE', '%' . $term . '%')
-            ->orWhereHas('users', function ($query) use ($term) {
-                $query->where('name', 'LIKE', '%' . $term . '%');
-            })
             ->get();
     }
 

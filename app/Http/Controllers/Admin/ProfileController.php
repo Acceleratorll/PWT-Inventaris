@@ -6,6 +6,8 @@ use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Imports\UserImport;
+use App\Models\Role;
+use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,10 +20,12 @@ use Yajra\DataTables\Facades\DataTables;
 class ProfileController extends Controller
 {
     protected $userRepository;
+    protected $roleRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository)
     {
         $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
     }
 
     public function index(): View
@@ -110,7 +114,9 @@ class ProfileController extends Controller
     {
         $input = $userRequest->validated();
         try {
-            $this->userRepository->create($input);
+            $role = Role::find($input['role_id']);
+            $user = $this->userRepository->create($input);
+            $user->assignRole($role->name);
             return redirect()->route('profile.index')->with('success', 'User Created Successfully!');
         } catch (\Exception $e) {
             return redirect()->route('profile.index')->with('error', 'Creating User Failed: ' . $e->getMessage());

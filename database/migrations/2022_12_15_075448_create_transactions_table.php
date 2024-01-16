@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('supplier_id')->constrained();
-            $table->string('code')->unique();
+            $table->string('code');
             $table->date('purchase_date');
             $table->text('note')->nullable();
             $table->timestamps();

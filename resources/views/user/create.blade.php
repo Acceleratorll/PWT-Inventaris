@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password" placeholder="Password" class="form-control mb-3" width="100%" required autocomplete="new-password"/>
+                    <input type="password" name="password" id="password" class="form-control mb-3" width="100%" required autocomplete="new-password"/>
                 </div>
             </div>
             <br>

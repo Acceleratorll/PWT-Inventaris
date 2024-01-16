@@ -52,7 +52,6 @@ class UserRepository
     public function create($data)
     {
         return $this->model->create([
-            'role_id' => $data['role_id'],
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -63,7 +62,6 @@ class UserRepository
     {
         $user = $this->model->findOrFail($id);
         $user->update([
-            'role_id' => $data['role_id'],
             'name' => $data['name'],
             'email' => $data['email'],
         ]);

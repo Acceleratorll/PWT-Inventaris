@@ -18,6 +18,7 @@ class RoleAndPermissionSeeder extends Seeder
         $staff = Role::create(['name' => 'staff']);
         $logistik = Role::create(['name' => 'logistik']);
         $ppic = Role::create(['name' => 'ppic']);
+        $superadmin = Role::create(['name' => 'superadmin']);
 
         $userStaff = User::find(1);
         $userLogistik = User::find(2);
@@ -183,6 +184,46 @@ class RoleAndPermissionSeeder extends Seeder
         $staff->givePermissionTo($permissionCreateProductLocation);
         $staff->givePermissionTo($permissionUpdateProductLocation);
         $staff->givePermissionTo($permissionDeleteProductLocation);
+
+        // $superadmin->givePermissionTo($permissionViewType);
+        // $superadmin->givePermissionTo($permissionCreateType);
+        // $superadmin->givePermissionTo($permissionUpdateType);
+        // $superadmin->givePermissionTo($permissionDeleteType);
+        // $superadmin->givePermissionTo($permissionViewMaterial);
+        // $superadmin->givePermissionTo($permissionCreateMaterial);
+        // $superadmin->givePermissionTo($permissionUpdateMaterial);
+        // $superadmin->givePermissionTo($permissionDeleteMaterial);
+        // $superadmin->givePermissionTo($permissionViewProduct);
+        // $superadmin->givePermissionTo($permissionCreateProduct);
+        // $superadmin->givePermissionTo($permissionUpdateProduct);
+        // $superadmin->givePermissionTo($permissionDeleteProduct);
+        // $superadmin->givePermissionTo($permissionViewTransaction);
+        // $superadmin->givePermissionTo($permissionCreateTransaction);
+        // $superadmin->givePermissionTo($permissionUpdateTransaction);
+        // $superadmin->givePermissionTo($permissionDeleteTransaction);
+        // $superadmin->givePermissionTo($permissionViewQualifier);
+        // $superadmin->givePermissionTo($permissionCreateQualifier);
+        // $superadmin->givePermissionTo($permissionUpdateQualifier);
+        // $superadmin->givePermissionTo($permissionDeleteQualifier);
+        // $superadmin->givePermissionTo($permissionViewCategory);
+        // $superadmin->givePermissionTo($permissionCreateCategory);
+        // $superadmin->givePermissionTo($permissionUpdateCategory);
+        // $superadmin->givePermissionTo($permissionDeleteCategory);
+        // $superadmin->givePermissionTo($permissionViewLocation);
+        // $superadmin->givePermissionTo($permissionCreateLocation);
+        // $superadmin->givePermissionTo($permissionUpdateLocation);
+        // $superadmin->givePermissionTo($permissionDeleteLocation);
+        // $superadmin->givePermissionTo($permissionViewProductLocation);
+        // $superadmin->givePermissionTo($permissionCreateProductLocation);
+        // $superadmin->givePermissionTo($permissionUpdateProductLocation);
+        // $superadmin->givePermissionTo($permissionDeleteProductLocation);
+
+
+        // Get all permissions
+        $allPermissions = Permission::all();
+
+        // Assign all permissions to the 'admin' role
+        $superadmin->syncPermissions($allPermissions);
 
         // Assign users to roles
         $userStaff->assignRole($staff);

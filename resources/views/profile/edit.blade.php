@@ -24,6 +24,7 @@
                 </div>
             </div>
             <div class="row">
+                @can('update user')
                 <div class="col-md-6">
                     <label for="role_id">Roles</label>
                     <select name="role_id" id="role_id" class="form-control mb-3" width="100%" required>
@@ -34,9 +35,10 @@
                         @endif
                     </select>
                 </div>
+                @endcan
                 <div class="col-md-6">
                     <label for="password">New Password</label>
-                    <input type="password" name="password" id="password" class="form-control mb-3" width="100%" autocomplete="new-password"/>
+                    <input type="password" name="password" id="password" class="form-control mb-3" width="100%" placeholder="New Password"/>
                 </div>
             </div>
             <br>

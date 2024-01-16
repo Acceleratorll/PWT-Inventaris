@@ -86,30 +86,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script>
-        if ('{{ Session::has('error') }}') {
-            Swal.fire({
-                icon: 'error',
-                type: 'error',
-                title: 'Error',timer: 3000,
-                text: '{{ Session::get('error') }}',
-                onOpen: function() {
-                    Swal.showLoading()
-                }
-            });
-        }
-
-        if ('{{ Session::has('success') }}') {
-            Swal.fire({
-                icon: 'success',
-                type: 'success',title: 'Success',
-                timer: 3000,
-                text: '{{ Session::get('success') }}',
-                onOpen: function() {
-                    Swal.showLoading()
-                }
-            });
-        }
-
         var columns = [
             { data: 'id', name: 'id' },
             { data: 'name', name: 'name' },

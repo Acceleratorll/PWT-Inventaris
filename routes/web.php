@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\ProductTransactionController;
 use App\Http\Controllers\Admin\ProductLocationController;
 use App\Http\Controllers\Admin\ProductPlanningController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ChartManageController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\NotificationController;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('/profile', ProfileController::class);
+    Route::resource('/user', UserController::class);
     Route::resource('/location', LocationController::class);
     Route::resource('/category', CategoryProductController::class);
     Route::resource('/material', MaterialController::class);
