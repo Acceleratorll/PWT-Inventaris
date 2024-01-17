@@ -18,7 +18,7 @@ class ProcessPlanRequest extends FormRequest
             'order_type_id' => 'required|string',
             'code' => 'required|string',
             'outed_date' => 'required|date',
-            'desc' => 'nullable|string',
+            'desc' => 'nullable',
             'selected_products' => 'required|array',
             'selected_products.*.location_ids.*.amount' => 'gte:selected_products.*.location_ids.*.oriAmount',
         ];

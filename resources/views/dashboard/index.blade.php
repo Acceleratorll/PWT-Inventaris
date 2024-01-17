@@ -29,7 +29,7 @@
     </div>
 </li>
 
-<li class="nav-item dropdown">
+{{-- <li class="nav-item dropdown">
     <a class="nav-link" data-toggle="dropdown" href="#" id="warning-dropdown">
         <i class="far fa-bell"></i>
         <span class="badge badge-warning navbar-badge" id="warning-notification-count">{{ auth()->user()->unreadNotifications->where('data.type', 'warning')->count() }}</span>
@@ -49,7 +49,7 @@
         <div class="dropdown-divider"></div>
         <a href="{{ route('notification.index') }}" class="dropdown-item dropdown-footer">See All Notifications</a>
     </div>
-</li>
+</li> --}}
 @endsection
 @endif
 

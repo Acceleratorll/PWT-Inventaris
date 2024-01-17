@@ -12,12 +12,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProcessPlanRequest;
 use App\Imports\ProcessPlansImport;
 use App\Notifications\CriticalProduct;
-use App\Notifications\WarningProduct;
+// use App\Notifications\WarningProduct;
 use App\Repositories\MaterialRepository;
 use App\Repositories\OutgoingProductRepository;
 use App\Repositories\ProcessPlanRepository;
 use App\Repositories\ProductLocationRepository;
 use App\Repositories\ProductRepository;
+use App\Repositories\UserRepository;
 use App\Services\ProcessPlanService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,7 @@ class ProcessPlanController extends Controller
     protected $productRepository;
     protected $productLocationRepository;
     protected $materialRepository;
+    protected $userRepository;
     protected $processPlanService;
 
     public function __construct(
@@ -40,6 +42,7 @@ class ProcessPlanController extends Controller
         ProductRepository $productRepository,
         ProductLocationRepository $productLocationRepository,
         MaterialRepository $materialRepository,
+        UserRepository $userRepository,
         ProcessPlanService $processPlanService,
     ) {
         $this->processPlanRepository = $processPlanRepository;
@@ -47,6 +50,7 @@ class ProcessPlanController extends Controller
         $this->productRepository = $productRepository;
         $this->productLocationRepository = $productLocationRepository;
         $this->materialRepository = $materialRepository;
+        $this->userRepository = $userRepository;
         $this->processPlanService = $processPlanService;
     }
 
@@ -135,10 +139,13 @@ class ProcessPlanController extends Controller
 
                     foreach ($rpp->outgoing_products as $oProduct) {
                         $cproduct = $this->productRepository->find($oProduct->product_id);
-                        if ($cproduct->amount <= $cproduct->minimal_amount) {
-                            auth()->user()->notify(new CriticalProduct($cproduct));
-                            $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
-                            event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
+                        if ($cproduct->total_amount <= $cproduct->minimal_amount) {
+                            $users = $this->userRepository->all();
+                            foreach ($users as $user) {
+                                $user->notify(new CriticalProduct($cproduct));
+                                $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
+                                event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
+                            }
                         }
                     }
 
@@ -147,10 +154,12 @@ class ProcessPlanController extends Controller
                         'name' => $formattedCurrentMonth,
                         'context' => 'add'
                     ];
+
                     event(new UpdateChartEvent('rChart', $rppChart));
                     $materials = $this->materialRepository->all();
                     $data = [];
                     $labels = [];
+
                     foreach ($materials as $material) {
                         $totalSalesQty = $rpp->outgoing_products
                             ->where('product.material.id', $material->id)
@@ -158,6 +167,7 @@ class ProcessPlanController extends Controller
                         $data[] = $totalSalesQty;
                         $labels[] = $material->name;
                     }
+
                     $datasets[] = [
                         'labels' => $labels,
                         'qty' => $data,

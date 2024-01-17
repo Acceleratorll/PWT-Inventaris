@@ -70,7 +70,8 @@ class ProductLocationController extends Controller
     public function store(ProductLocationRequest $productLocationRequest)
     {
         $input = $productLocationRequest->validated();
-        DB::transaction(function () use ($input) {
+        $error = false;
+        DB::transaction(function () use ($input, $error) {
             $transaction = $this->transactionRepository->find($input['transaction_id']);
             try {
                 foreach ($input['selected_products'] as $productId => $productData) {
@@ -100,15 +101,20 @@ class ProductLocationController extends Controller
                         }
                     }
                 }
-                
+
                 $transaction->update(['status' => 1]);
                 DB::commit();
-                return redirect()->route('transaction.index')->with('success', 'Product Location Added Successfully');
             } catch (\Throwable $th) {
+                $error = true;
                 DB::rollBack();
-                return redirect()->back()->with('error', $th);
             }
         });
+
+        if ($error) {
+            return redirect()->back()->with('error', 'An error occurred during the transaction.');
+        }
+
+        return redirect()->route('transaction.index')->with('success', 'Product Location Added Successfully');
     }
 
     public function destroy($id): JsonResponse
