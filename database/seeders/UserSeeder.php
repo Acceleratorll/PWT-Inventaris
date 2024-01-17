@@ -33,6 +33,13 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'name' => 'Superadmin',
+                'email' => 'admin@mail.com',
+                'password' => Hash::make('12345'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
 
         DB::table('users')->insert($data);

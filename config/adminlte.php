@@ -480,6 +480,20 @@ return [
                     'can'     => 'view transaction',
                 ],
                 [
+                    'text'    => 'Waiting',
+                    'url'     => '/transactions/wait',
+                    'shift'   => 'ml-3',
+                    'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view transaction',
+                ],
+                [
+                    'text'    => 'Finished',
+                    'url'     => '/transactions/finish',
+                    'shift'   => 'ml-3',
+                    'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view transaction',
+                ],
+                [
                     'text'    => 'Add Transaction',
                     'route'     => 'transaction.create',
                     'shift'   => 'ml-3',

@@ -22,6 +22,7 @@ class TransactionRequest extends FormRequest
             'code' => 'required',
             'purchase_date' => 'required',
             'note' => '',
+            'status' => 'nullable',
         ];
     }
 }

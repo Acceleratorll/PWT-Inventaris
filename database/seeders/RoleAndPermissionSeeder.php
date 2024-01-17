@@ -23,6 +23,7 @@ class RoleAndPermissionSeeder extends Seeder
         $userStaff = User::find(1);
         $userLogistik = User::find(2);
         $userPpic = User::find(3);
+        $userSuperadmin = User::find(4);
 
         // Create permissions
         $permissionAccessCategory = Permission::create(['name' => 'access category']);
@@ -165,9 +166,9 @@ class RoleAndPermissionSeeder extends Seeder
         $staff->givePermissionTo($permissionUpdateProduct);
         $staff->givePermissionTo($permissionDeleteProduct);
         $staff->givePermissionTo($permissionViewTransaction);
-        $staff->givePermissionTo($permissionCreateTransaction);
-        $staff->givePermissionTo($permissionUpdateTransaction);
-        $staff->givePermissionTo($permissionDeleteTransaction);
+        // $staff->givePermissionTo($permissionCreateTransaction);
+        // $staff->givePermissionTo($permissionUpdateTransaction);
+        // $staff->givePermissionTo($permissionDeleteTransaction);
         $staff->givePermissionTo($permissionViewQualifier);
         $staff->givePermissionTo($permissionCreateQualifier);
         $staff->givePermissionTo($permissionUpdateQualifier);
@@ -229,5 +230,6 @@ class RoleAndPermissionSeeder extends Seeder
         $userStaff->assignRole($staff);
         $userLogistik->assignRole($logistik);
         $userPpic->assignRole($ppic);
+        $userSuperadmin->assignRole($superadmin);
     }
 }

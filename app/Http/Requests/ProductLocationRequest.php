@@ -11,7 +11,7 @@ class ProductLocationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,9 +22,13 @@ class ProductLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required',
-            'location_id' => 'required',
-            'amount' => 'required',
+            // 'product_id' => 'required',
+            // 'location_id' => 'required',
+            // 'amount' => 'required',
+            // 'expired' => 'required',
+            'purchase_date' => 'required',
+            'transaction_id' => 'required',
+            'selected_products' => 'required',
         ];
     }
 }

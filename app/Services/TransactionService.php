@@ -11,14 +11,15 @@ use App\Exports\TransactionExport;
 use App\Imports\TransactionImport;
 use App\Notifications\CriticalProduct;
 use App\Notifications\WarningProduct;
-use App\Repositories\IncomingProductRepository;
 use App\Repositories\MaterialRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\ProductLocationRepository;
 use App\Repositories\ProductTransactionRepository;
 use App\Repositories\TransactionRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class TransactionService
 {
@@ -45,6 +46,44 @@ class TransactionService
     public function all()
     {
         return $this->transactionRepository->all();
+    }
+
+    public function table($datas)
+    {
+        return DataTables::of($datas)
+            ->addColumn('id', function ($transaction) {
+                return $transaction->id;
+            })
+            ->addColumn('code', function ($transaction) {
+                return $transaction->code;
+            })
+            ->addColumn('supplier', function ($transaction) {
+                return $transaction->supplier->name;
+            })
+            ->addColumn('formatted_purchase_date', function ($transaction) {
+                return Carbon::parse($transaction->purchase_date)->format('D, d-m-y, G:i');
+            })
+            ->addColumn('products', function ($transaction) {
+                $productList = '<ul>';
+                foreach ($transaction->product_transactions as $product) {
+                    $productList .= '<li>' . $product->product->name . ' | (Qty: ' . $product->amount . ')</li>';
+                }
+                $productList .= '</ul>';
+                return $productList;
+            })
+            ->addColumn('status', function ($transaction) {
+                return $transaction->status ? 'Finished' : 'Waiting';
+            })
+            ->addColumn('formatted_created_at', function ($transaction) {
+                return $transaction->created_at->format('D, d-m-y, G:i');
+            })
+            ->addColumn('formatted_updated_at', function ($transaction) {
+                return $transaction->updated_at->format('D, d-m-y, G:i');
+            })
+            ->addColumn('action', 'partials.button-table.product-transaction-action')
+            ->rawColumns(['action', 'products'])
+            ->addIndexColumn()
+            ->make(true);
     }
 
     public function storeIncomingProducts($transaction, $selectedProducts)
@@ -108,30 +147,10 @@ class TransactionService
         $oriAmount = $product->total_amount;
         (int) $amount = 0;
 
-        foreach ($productData['location_ids'] as $locationId => $locationData) {
-            $proLoc = $this->productLocationRepository->findByProductExpiredLocation($product->id, $locationId, $locationData['expired']);
-
-            if (!$proLoc) {
-                $inputOutLoc = [
-                    'product_id' => $product->id,
-                    'location_id' => $locationId,
-                    'amount' => $locationData['amount'],
-                    'purchase_date' => $transaction->purchase_date,
-                    'expired' => $locationData['expired'],
-                ];
-
-                $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
-                $product->product_locations()->save($incomeLoc);
-            } else {
-                $proLoc->update(['amount' => $proLoc->amount += $locationData['amount']]);
-            }
-            $amount += $locationData['amount'];
-        }
-
         $inputOutPro = [
             'transaction_id' => $transaction->id,
             'product_id' => $productId,
-            'amount' => (int)$amount,
+            'amount' => $productData['amount'],
             'product_amount' => $oriAmount,
         ];
 

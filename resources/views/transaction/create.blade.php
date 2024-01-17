@@ -122,8 +122,8 @@
                                 </div>
                                 <div class="col-md-1"></div>
                                 <div class="col-md-3">
-                                    <label>Location</label>
-                                    <select name="selected_products[${productId}][location][]" id="${uniqueLocationId}" class="form-control mb-3" multiple required></select>
+                                    <label>Amount</label>
+                                    <input type="number" class="form-control mb-3" name="selected_products[${productId}][amount]" placeholder="Amount" required>
                                 </div>
                                 <div class="col-md-1"></div>
                                 <div class="col-md-2">

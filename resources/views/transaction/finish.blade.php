@@ -143,7 +143,7 @@
             scrollX: true,
             scrollY: 350,
             columnDefs: [{ width: 550, targets: 4 }],
-            ajax: '{{ route('get-json-transactions') }}',
+            ajax: '{{ route('get-json-transactions-finish') }}',
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'code', name: 'code' },

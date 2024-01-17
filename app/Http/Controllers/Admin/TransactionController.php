@@ -44,6 +44,15 @@ class TransactionController extends Controller
         return view('transaction.index');
     }
 
+    public function finish(): View
+    {
+        return view('transaction.finish');
+    }
+
+    public function wait(): View
+    {
+        return view('transaction.wait');
+    }
 
     public function allTransactions()
     {
@@ -54,38 +63,19 @@ class TransactionController extends Controller
     public function getTransactions()
     {
         $transactions = $this->transactionRepository->all();
+        return $this->transactionService->table($transactions);
+    }
 
-        return DataTables::of($transactions)
-            ->addColumn('id', function ($transaction) {
-                return $transaction->id;
-            })
-            ->addColumn('code', function ($transaction) {
-                return $transaction->code;
-            })
-            ->addColumn('supplier', function ($transaction) {
-                return $transaction->supplier->name;
-            })
-            ->addColumn('formatted_purchase_date', function ($transaction) {
-                return Carbon::parse($transaction->purchase_date)->format('D, d-m-y, G:i');
-            })
-            ->addColumn('products', function ($transaction) {
-                $productList = '<ul>';
-                foreach ($transaction->product_transactions as $product) {
-                    $productList .= '<li>' . $product->product->name . ' | (Qty: ' . $product->amount . ')</li>';
-                }
-                $productList .= '</ul>';
-                return $productList;
-            })
-            ->addColumn('formatted_created_at', function ($transaction) {
-                return $transaction->created_at->format('D, d-m-y, G:i');
-            })
-            ->addColumn('formatted_updated_at', function ($transaction) {
-                return $transaction->updated_at->format('D, d-m-y, G:i');
-            })
-            ->addColumn('action', 'partials.button-table.product-transaction-action')
-            ->rawColumns(['action', 'products'])
-            ->addIndexColumn()
-            ->make(true);
+    public function getWaitTransactions()
+    {
+        $transactions = $this->transactionRepository->getByStatus(0);
+        return $this->transactionService->table($transactions);
+    }
+
+    public function getFinishTransactions()
+    {
+        $transactions = $this->transactionRepository->getByStatus(1);
+        return $this->transactionService->table($transactions);
     }
 
     public function create(): View
@@ -100,13 +90,19 @@ class TransactionController extends Controller
         $this->transactionService->storeIncomingProducts($transaction, $input['selected_products']);
         // $this->transactionService->updateProductAmounts($amountChanges);
         $this->transactionService->addChart($transaction);
-        return redirect()->back()->with('success', 'Product Transaction created successfully !');
+        return redirect()->route('transaction.index')->with('success', 'Product Transaction created successfully !');
     }
 
     public function show(string $id): JsonResponse
     {
         $transaction = $this->transactionRepository->find($id);
         return response()->json($transaction);
+    }
+
+    public function isiPesanan($id): View
+    {
+        $transaction = $this->transactionRepository->find($id);
+        return view('transaction.editPesanan', compact('transaction'));
     }
 
     public function edit(string $id): View

@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Transaction;
+use Carbon\Carbon;
+use Yajra\DataTables\Facades\DataTables;
 
 class TransactionRepository
 {
@@ -80,6 +82,15 @@ class TransactionRepository
             'product_transactions.product.qualifier',
             'product_transactions.product.material'
         ])->paginate($num);
+    }
+
+    public function getByStatus($status)
+    {
+        return $this->model->with([
+            'supplier',
+            'product_transactions.product.qualifier',
+            'product_transactions.product.material'
+        ])->where('status', $status);
     }
 
     public function create($data)

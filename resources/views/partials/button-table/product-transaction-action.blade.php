@@ -3,12 +3,19 @@
     Edit
 </a>
 @endcan
-<button id="show-incoming-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+@if($status == 0)
+@can('create product location')
+<a href="/transaction/placing/{{ $id }}" id="isi" data-id="{{ $id }}" class="isi btn btn-success">
+    Process
+</a>
+@endcan
+@endif
+{{-- <button id="show-incoming-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
     Details
-</button>
+</button> --}}
 @can('delete transaction')
 <button id="delete" data-id="{{ $id }}" data-supplier="{{ $supplier_id }}" data-original-title="Delete" class="delete btn btn-danger">
-Delete
+    Delete
 </button>
 @endcan
 

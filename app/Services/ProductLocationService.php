@@ -14,10 +14,8 @@ class ProductLocationService
         $this->repository = $repository;
     }
 
-    public function table()
+    public function table($datas)
     {
-        $datas = $this->repository->all();
-
         return DataTables::of($datas)
             ->addColumn('id', function ($data) {
                 return $data->id;

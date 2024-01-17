@@ -40,6 +40,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/productTransaction', ProductTransactionController::class);
     Route::resource('/productLocation', ProductLocationController::class);
     Route::resource('/productPlanning', ProductPlanningController::class);
+    Route::get('/transaction/placing/{id}', [TransactionController::class, 'isiPesanan'])->name('placing.transaction');
+    Route::get('/transactions/finish', [TransactionController::class, 'finish'])->name('transaction.finish');
+    Route::get('/transactions/wait', [TransactionController::class, 'wait'])->name('transaction.wait');
 });
 
 Route::get('/get-table/unread-notifications', [NotificationController::class, 'getTableUnreadNotifications'])->name('get-table.unread-notifications');
@@ -92,6 +95,8 @@ Route::prefix('/json')->group(function () {
     Route::get('/select-product-locations', [ProductLocationController::class, 'select'])->name('select-product-locations');
     Route::get('/select-product-locations-param', [ProductLocationController::class, 'selectWithParam'])->name('select-product-locations-param');
     Route::get('/get-transactions', [TransactionController::class, 'getTransactions'])->name('get-json-transactions');
+    Route::get('/get-transactions/wait', [TransactionController::class, 'getWaitTransactions'])->name('get-json-transactions-wait');
+    Route::get('/get-transactions/finish', [TransactionController::class, 'getFinishTransactions'])->name('get-json-transactions-finish');
     Route::get('/get-rpps', [ProcessPlanController::class, 'getJsonRpps'])->name('get-json-rpps');
     Route::get('/get-products', [ProductController::class, 'getJsonProducts'])->name('get-json-products');
     Route::get('/get-products/{category}', [ProductController::class, 'getJsonProductsByCategory'])->name('get-json-products-by-category');
