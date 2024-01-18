@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Customer')
+@section('title', 'Pelanggan')
 
 @section('content_header')
     <h1>Add Customer</h1>
@@ -47,7 +47,7 @@
                     <x-adminlte-input fgroup-class="mb-3" name="max" label="Max Tahun" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
                 </div>
             </div>
-            <button class="form-control btn btn-outline-success" type="submit">Save</button>
+            <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
             </form>
         </div>
     </div>

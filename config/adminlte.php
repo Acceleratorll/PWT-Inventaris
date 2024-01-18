@@ -336,21 +336,21 @@ return [
             'label_color' => 'success',
         ],
         [
-            'header' => 'product_settings',
+            'header' => 'Peraturan Barang',
         ],
         [
-            'text'    => 'Category Product',
+            'text'    => 'Kategori Barang',
             'icon'    => 'nav-icon fas fa-th',
             'submenu' => [
                 [
-                    'text'    => 'All Data',
+                    'text'    => 'Semua Data',
                     'route'   => 'category.index',
                     'shift'   => 'ml-3',
                     'icon'    => 'nav-icon fas fa-book',
                     'can'     => 'view category',
                 ],
                 [
-                    'text'    => 'Add Category',
+                    'text'    => 'Tambah Kategori',
                     'route'   => 'category.create',
                     'shift'   => 'ml-3',
                     'icon'    => 'nav-icon fas fa-edit',
@@ -363,21 +363,21 @@ return [
             'icon' => 'nav-icon fas fa-th',
             'submenu' => [
                 [
-                    'text'    => 'All Data',
+                    'text'    => 'Semua Data',
                     'route'   => 'product.index',
                     'shift'   => 'ml-3',
                     'icon'    => 'nav-icon fas fa-book',
                     'can'     => 'view product',
                 ],
                 [
-                    'text'    => 'Location',
+                    'text'    => 'Lokasi Barang',
                     'route'     => 'productLocation.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fa-solid fa-location-arrow',
                     'can'     => 'view product location',
                 ],
                 [
-                    'text'    => 'Add Product',
+                    'text'    => 'Tambah Barang',
                     'route'     => 'product.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
@@ -386,18 +386,18 @@ return [
             ],
         ],
         [
-            'text'    => 'Location',
+            'text'    => 'Lokasi',
             'icon' => 'nav-icon fas fa-th',
             'submenu' => [
                 [
-                    'text'    => 'All Data',
+                    'text'    => 'Semua Data',
                     'route'     => 'location.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                     'can'     => 'view location',
                 ],
                 [
-                    'text'    => 'Add Location',
+                    'text'    => 'Tambah Lokasi',
                     'route'     => 'location.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
@@ -406,18 +406,18 @@ return [
             ],
         ],
         [
-            'text'    => 'Order Type',
+            'text'    => 'Jenis Pesanan',
             'icon' => 'nav-icon fas fa-th',
             'submenu' => [
                 [
-                    'text'    => 'All Data',
+                    'text'    => 'Semua Data',
                     'route'     => 'orderType.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                     'can'     => 'view type',
                 ],
                 [
-                    'text'    => 'Add Order Type',
+                    'text'    => 'Tambah Jenis Pesanan',
                     'route'     => 'orderType.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
@@ -426,21 +426,21 @@ return [
             ],
         ],
         [
-            'header' => 'transactions_settings',
+            'header' => 'Peraturan Transaksi',
         ],
         [
-            'text'    => 'rpp',
+            'text'    => 'RPP',
             'icon' => 'nav-icon fas fa-th',
             'submenu' => [
                 [
-                    'text'    => 'All Data',
+                    'text'    => 'Semua Data',
                     'route'     => 'rpp.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                     'can'     => 'view rpp',
                 ],
                 [
-                    'text'    => 'Add RPP',
+                    'text'    => 'Tambah RPP',
                     'route'     => 'rpp.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
@@ -449,18 +449,18 @@ return [
             ],
         ],
         [
-            'text'    => 'nota_dinas',
+            'text'    => 'Nota Dinas',
             'icon' => 'nav-icon fas fa-th',
             'submenu' => [
                 [
-                    'text'    => 'All Data',
+                    'text'    => 'Semua Data',
                     'route'     => 'notaDinas.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                     'can'     => 'view nota dinas',
                 ],
                 [
-                    'text'    => 'Add Nota Dinas',
+                    'text'    => 'Tambah Nota Dinas',
                     'route'     => 'notaDinas.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
@@ -469,32 +469,32 @@ return [
             ],
         ],
         [
-            'text'    => 'product_transactions',
+            'text'    => 'Transaksi',
             'icon' => 'nav-icon fas fa-th',
             'submenu' => [
                 [
-                    'text'    => 'All Data',
+                    'text'    => 'Semua Data',
                     'route'     => 'transaction.index',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                     'can'     => 'view transaction',
                 ],
                 [
-                    'text'    => 'Waiting',
+                    'text'    => 'Menunggu',
                     'url'     => '/transactions/wait',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                     'can'     => 'view transaction',
                 ],
                 [
-                    'text'    => 'Finished',
+                    'text'    => 'Selesai',
                     'url'     => '/transactions/finish',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-book',
                     'can'     => 'view transaction',
                 ],
                 [
-                    'text'    => 'Add Transaction',
+                    'text'    => 'Tambah Transaksi',
                     'route'     => 'transaction.create',
                     'shift'   => 'ml-3',
                     'icon' => 'nav-icon fas fa-edit',
@@ -503,10 +503,10 @@ return [
             ],
         ],
         [
-            'header' => 'account_settings',
+            'header' => 'Peraturan Akun',
         ],
         [
-            'text' => 'User',
+            'text' => 'Pengguna',
             'route'  => 'profile.index',
             'icon' => 'fas fa-fw fa-user',
             'can' => 'view user',
@@ -518,7 +518,7 @@ return [
             'can'     => 'view supplier',
         ],
         [
-            'text' => 'customer',
+            'text' => 'Pelanggan',
             'route'  => 'customer.index',
             'icon' => 'fas fa-fw fa-user',
             'can'     => 'view customer',

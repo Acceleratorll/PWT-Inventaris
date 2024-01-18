@@ -3,7 +3,7 @@
 @section('title', 'Product Location')
 
 @section('content_header')
-    <h1>List Product Location</h1>
+    <h1>Daftar Product Location</h1>
 @stop
 
 @section('content')
@@ -20,18 +20,18 @@
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="myTable">
-                    <caption>Table Barang</caption>
+                    <caption>Tabel Barang</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Product</th>
-                            <th scope="col" class="text-center">Location</th>
-                            <th scope="col" class="text-center">Amount</th>
-                            <th scope="col" class="text-center">Purchase</th>
-                            <th scope="col" class="text-center">Expired</th>
-                            <th scope="col" class="text-center">Last Updated</th>
+                            <th scope="col" class="text-center">Barang</th>
+                            <th scope="col" class="text-center">Lokasi</th>
+                            <th scope="col" class="text-center">Jumlah</th>
+                            <th scope="col" class="text-center">Pembelian</th>
+                            <th scope="col" class="text-center">Kadaluarsa</th>
+                            <th scope="col" class="text-center">Diubah</th>
                             <th scope="col" class="text-center">Dibuat</th>
-                            {{-- <th scope="col" class="text-center" width="14%">Action</th> --}}
+                            {{-- <th scope="col" class="text-center" width="14%">Tindakan</th> --}}
                         </tr>
                     </thead>
                 </table>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Import</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </div>
             </form>
         </div>

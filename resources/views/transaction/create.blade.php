@@ -42,7 +42,7 @@
         <div id="selected-products"></div>
         <div class="row justify-content-end">
             <div class="col-md-3">
-                <button class="form-control btn-success" type="submit">Save</button>
+                <button class="form-control btn-success" type="submit">Simpan</button>
             </div>
         </div>
     </form>
@@ -122,12 +122,12 @@
                                 </div>
                                 <div class="col-md-1"></div>
                                 <div class="col-md-3">
-                                    <label>Amount</label>
+                                    <label>Jumlah</label>
                                     <input type="number" class="form-control mb-3" name="selected_products[${productId}][amount]" placeholder="Amount" required>
                                 </div>
                                 <div class="col-md-1"></div>
                                 <div class="col-md-2">
-                                    <label>Qualifier</label>
+                                    <label>Satuan</label>
                                     <select name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" required>
                                         <option value="${data.qualifier_id}" selected>${data.qualifier.name}</option>
                                     </select>
@@ -148,15 +148,15 @@
                                         <div class="row">
                                             <div class="col-md-4"></div>
                                             <div class="col-md-4">
-                                                <label>Location</label>
+                                                <label>Lokasi</label>
                                                 <input type="text" name="selected_products[${productId}][location_ids][${location.id}][name]" class="form-control mb-3" value="${location.text}" placeholder="Amount">
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Amount</label>
+                                                <label>Jumlah</label>
                                                 <input type="number" name="selected_products[${productId}][location_ids][${location.id}][amount]" class="form-control mb-3" placeholder="Amount" required>
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Expired</label>
+                                                <label>Kadaluarsa</label>
                                                 <input type="date" name="selected_products[${productId}][location_ids][${location.id}][expired]" class="form-control mb-3" required>
                                             </div>
                                         </div>

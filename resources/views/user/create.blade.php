@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Create Profile Page')
+@section('title', 'Create Profile Halaman')
 
 @section('content-header')
     <h1>Create Profile</h1>
@@ -37,7 +37,7 @@
             <br>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-outline-success" type="submit">Save</button>
+                    <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
                 </div>
             </div>
         </div>

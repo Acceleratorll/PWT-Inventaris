@@ -72,7 +72,7 @@ class TransactionService
                 return $productList;
             })
             ->addColumn('status', function ($transaction) {
-                return $transaction->status ? 'Finished' : 'Waiting';
+                return $transaction->status ? 'Selesai' : 'Menunggu';
             })
             ->addColumn('formatted_created_at', function ($transaction) {
                 return $transaction->created_at->format('D, d-m-y, G:i');

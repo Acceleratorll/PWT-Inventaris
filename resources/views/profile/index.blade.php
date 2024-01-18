@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Profile Page')
+@section('title', 'Profil Halaman')
 
 @section('content-header')
-    <h1>Profile</h1>
+    <h1>Profil</h1>
 @endsection
 
 @section('content')
@@ -13,7 +13,7 @@
             <div class="button-action" style="margin-bottom: 20px">
                 @can('create user')
                 <a class="btn btn-primary" href="{{route('profile.create')}}">
-                    <span>+ Add</span>
+                    <span>+ Tambah</span>
                 </a>
                 <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                     <span>Import</span>
@@ -33,16 +33,16 @@
             </div> --}}
             <div class="table-responsive">
                 <table class="table table-bordered" id="myTable">
-                    <caption>Table Barang</caption>
+                    <caption>Tabel Pengguna</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Name</th>
+                            <th scope="col" class="text-center">Nama</th>
                             <th scope="col" class="text-center">Email</th>
                             <th scope="col" class="text-center">Role</th>
-                            <th scope="col" class="text-center">Last Updated</th>
+                            <th scope="col" class="text-center">Diubah</th>
                             <th scope="col" class="text-center">Dibuat</th>
-                            <th scope="col" class="text-center" width="14%">Action</th>
+                            <th scope="col" class="text-center" width="14%">Tindakan</th>
                         </tr>
                     </thead>
                 </table>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Import</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </div>
             </form>
         </div>

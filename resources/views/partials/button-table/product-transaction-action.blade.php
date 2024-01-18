@@ -11,7 +11,7 @@
 @endcan
 @endif
 {{-- <button id="show-incoming-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
-    Details
+    Detail
 </button> --}}
 @can('delete transaction')
 <button id="delete" data-id="{{ $id }}" data-supplier="{{ $supplier_id }}" data-original-title="Delete" class="delete btn btn-danger">

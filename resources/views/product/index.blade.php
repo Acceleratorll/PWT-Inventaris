@@ -3,7 +3,7 @@
 @section('title', 'Product')
 
 @section('content_header')
-    <h1>List Barang</h1>
+    <h1>Daftar Barang</h1>
 @stop
 
 @section('content')
@@ -13,7 +13,7 @@
             <div class="button-action" style="margin-bottom: 20px">
             @can('create product')
                 <a class="btn btn-primary" href="{{route('product.create')}}">
-                    <span>+ Add</span>
+                    <span>+ Tambah</span>
                 </a>
                 <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                     <span>Import</span>
@@ -26,30 +26,30 @@
             <div class="button-action" style="margin-bottom: 20px">
                 <label for="stock-filter">Stock Filter:</label>
                 <select id="stock-filter">
-                    <option value="all">All</option>
-                    <option value="Daily">Daily</option>
-                    <option value="Slow Moving">Slow Moving</option>
-                    <option value="Unused">Unused</option>
+                    <option value="all" selected disabled>All</option>
+                    @foreach ($category as $item)
+                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">
-                    <caption>Table Barang</caption>
+                    <caption>Tabel Barang</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Name</th>
-                            <th scope="col" class="text-center">Material</th>
+                            <th scope="col" class="text-center">Nama</th>
+                            <th scope="col" class="text-center">Bahan</th>
                             <th scope="col" class="text-center">Tipe Barang</th>
                             <th scope="col" class="text-center">Kategory</th>
-                            <th scope="col" class="text-center">Code</th>
+                            <th scope="col" class="text-center">Kode</th>
                             <th scope="col" class="text-center">Satuan</th>
                             <th scope="col" class="text-center">Stock</th>
                             <th scope="col" class="text-center">Stock Maksimal</th>
-                            <th scope="col" class="text-center">Last Updated</th>
+                            <th scope="col" class="text-center">Diubah</th>
                             <th scope="col" class="text-center">Dibuat</th>
                             <th scope="col" class="text-center">Keterangan</th>
-                            <th scope="col" class="text-center" width="14%">Action</th>
+                            <th scope="col" class="text-center" width="14%">Tindakan</th>
                         </tr>
                     </thead>
                 </table>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Import</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </div>
             </form>
         </div>
@@ -180,10 +180,10 @@
                 <thead>
                     <tr style="border-bottom: 2px solid #ccc;">
                         <th style="padding: 8px; text-align: left;">Date</th>
-                        <th style="padding: 8px; text-align: left;">Code</th>
+                        <th style="padding: 8px; text-align: left;">Kode</th>
                         <th style="padding: 8px; text-align: left;">Details</th>
                         <th style="padding: 8px; text-align: left;">Type</th>
-                        <th style="padding: 8px; text-align: left;">Amount</th>
+                        <th style="padding: 8px; text-align: left;">Jumlah</th>
                         <th style="padding: 8px; text-align: left;">Original</th>
                     </tr>
                 </thead>

@@ -11,7 +11,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                <h5 class="modal-title" id="editModalLabel">Ubah Kategori</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -21,7 +21,7 @@
                     @csrf
                     @method('PATCH')
                     <div class="form-group">
-                        <label for="categoryName">Category Name</label>
+                        <label for="categoryName">Nama Kategori</label>
                         <input type="text" class="form-control" id="categoryName" name="name">
                     </div>
                     <div class="form-group">
@@ -39,20 +39,20 @@
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
                 @can('create category')
-                <a href="{{ route('category.create') }}" class="btn btn-primary">+ Add</a>
+                <a href="{{ route('category.create') }}" class="btn btn-primary">+ Tambah</a>
                 @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">
-                    <caption>Table Kategori Barang</caption>
+                    <caption>Tabel Kategori Barang</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Name</th>
+                            <th scope="col" class="text-center">Nama</th>
                             <th scope="col" class="text-center">Minimal</th>
-                            <th scope="col" class="text-center">Last Update</th>
-                            <th scope="col" class="text-center">Created At</th>
-                            <th scope="col" class="text-center" width="14%">Action</th>
+                            <th scope="col" class="text-center">Diubah</th>
+                            <th scope="col" class="text-center">Dibuat</th>
+                            <th scope="col" class="text-center" width="14%">Tindakan</th>
                         </tr>
                     </thead>
                 </table>

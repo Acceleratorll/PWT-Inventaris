@@ -8,33 +8,6 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-3">
-        @if($message = Session::get('info'))
-        <x-adminlte-alert theme="info" title="Info">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('success'))
-        <x-adminlte-alert theme="success" title="Success">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('warning'))
-        <x-adminlte-alert theme="warning" title="Warning">
-            {{ $message }}
-        </x-adminlte-alert>
-    </div>
-    <div class="col-md-3">
-        @elseif($message =  Session::get('error'))
-        <x-adminlte-alert theme="danger" title="Danger">
-            {{ $message }}
-        </x-adminlte-alert>
-        @endif
-    </div>
-</div>
-<div class="row">
     <div class="card col-md-12">
         <div class="card-body">
             <form action="{{ route('category.edit', ['category' => $category->id]) }}" method="post">
@@ -48,7 +21,7 @@
                     <x-adminlte-input fgroup-class="mb-3" name="max" label="Max Tahun" value="{{ $category->max }}" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
                 </div>
             </div>
-            <button class="form-control btn btn-outline-success" type="submit">Save</button>
+            <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
             </form>
         </div>
     </div>
@@ -63,7 +36,25 @@
     
     @section('js')
     <script>
-        
+        if ('{{ Session::has('error') }}') {
+            Swal.fire({
+                icon: 'error',
+                type: 'error',
+                timer: 3000,
+                title: 'Error',
+                text: '{{ Session::get('error') }}',
+            });
+        }
+    
+        if ('{{ Session::has('success') }}') {
+            Swal.fire({
+                icon: 'success',
+                type: 'success',
+                title: 'Success',
+                timer: 3000,
+                text: '{{ Session::get('success') }}',
+            });
+        }
     </script>
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>

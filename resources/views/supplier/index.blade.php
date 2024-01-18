@@ -12,19 +12,19 @@
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
                 @can('create supplier')
-                <button class="btn btn-primary" onclick="add()">+ Add</button>
+                <button class="btn btn-primary" onclick="add()">+ Tambah</button>
                 @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">
-                    <caption>Table Supplier</caption>
+                    <caption>Tabel Supplier</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Name</th>
-                            <th scope="col" class="text-center">Last Update</th>
-                            <th scope="col" class="text-center">Created At</th>
-                            <th scope="col" class="text-center" width="14%">Action</th>
+                            <th scope="col" class="text-center">Nama</th>
+                            <th scope="col" class="text-center">Diubah</th>
+                            <th scope="col" class="text-center">Dibuat</th>
+                            <th scope="col" class="text-center" width="14%">Tindakan</th>
                         </tr>
                     </thead>
                 </table>
@@ -47,6 +47,26 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
+    if ('{{ Session::has('error') }}') {
+        Swal.fire({
+            icon: 'error',
+            type: 'error',
+            timer: 3000,
+            title: 'Error',
+            text: '{{ Session::get('error') }}',
+        });
+    }
+
+    if ('{{ Session::has('success') }}') {
+        Swal.fire({
+            icon: 'success',
+            type: 'success',
+            title: 'Success',
+            timer: 3000,
+            text: '{{ Session::get('success') }}',
+        });
+    }
+        
     const column = [
         { data: 'id', name: 'id' },
         { data: 'name', name: 'name' },

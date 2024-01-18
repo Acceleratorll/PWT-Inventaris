@@ -40,7 +40,7 @@ Hapus
                         @if (isset($product_transactions) && auth()->user()->can('view transaction'))
                         <div class="table-responsive">
                             <table class="table table-bordered text-center w-100" id="table-transactions">
-                                <caption>Table Masuk</caption>
+                                <caption>Tabel Masuk</caption>
                                 <thead class="thead-light">
                                     <tr>
                                         <th scope="col" class="text-center">Status</th>
@@ -77,7 +77,7 @@ Hapus
                         @if (isset($outgoing_products) && auth()->user()->can('view rpp'))
                         <div class="table-responsive">
                             <table class="table table-bordered text-center w-100" id="table-process-plans">
-                                <caption>Table Keluar</caption>
+                                <caption>Tabel Keluar</caption>
                                 <thead class="thead-light">
                                     <tr>
                                         <th scope="col" class="text-center">Saldo Awal</th>
@@ -105,7 +105,7 @@ Hapus
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="tutup btn btn-outline-secondary" onclick="closeModal()">Close</button>
+                <button type="button" class="tutup btn btn-outline-secondary" onclick="closeModal()">Tutup</button>
             </div>
         </div>
     </div>

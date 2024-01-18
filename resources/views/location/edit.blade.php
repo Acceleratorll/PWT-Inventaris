@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Location')
+@section('title', 'Lokasi')
 
 @section('content_header')
     <h1>Edit Location Barang</h1>
@@ -20,13 +20,13 @@
                     <x-adminlte-input fgroup-class="mb-3" value="{{ $data->location }}" name="location" label="Exact Location" placeholder="Masukkan Location" disable-feedback/>
                 </div>
                 <div class="col-md-6">
-                    <label for="desc">Description</label>
+                    <label for="desc">Deskripsi</label>
                     <textarea name="desc" id="desc" class="form-control mb-3" placeholder="Description">{{ $data->desc }}</textarea>
                 </div>
             </div>
             <div class="row">
             </div>
-            <button class="form-control btn btn-outline-success" type="submit">Save</button>
+            <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
             </form>
         </div>
     </div>

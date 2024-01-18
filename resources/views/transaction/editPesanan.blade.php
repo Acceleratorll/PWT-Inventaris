@@ -45,7 +45,7 @@
                 </div>
                 <div class="row justify-content-end">
                     <div class="col-md-3">
-                        <button class="form-control btn btn-outline-success" type="submit">Save</button>
+                        <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
                     </div>
                 </div>
             </div>
@@ -173,19 +173,19 @@
                                     <input type="text" class="form-control mb-3" value="${productName}" disabled>
                                 </div>
                                 <div class="col-md-3">
-                                    <label>Location</label>
+                                    <label>Lokasi</label>
                                     <select name="selected_products[${productId}][location][]" id="${uniqueLocationId}" class="form-control mb-3" multiple required></select>
                                 </div>
                                 <div class="col-md-1">
-                                    <label>Real</label>
+                                    <label>Saldo</label>
                                     <input type="text" name="selected_products[${productId}][real_amounts]" class="real-amount form-control mb-3" placeholder="Amount" required readonly>
                                 </div>
                                 <div class="col-md-1">
-                                    <label>Order</label>
+                                    <label>Saldo Beli</label>
                                     <input type="text" name="selected_products[${productId}][order_amount]" class="form-control mb-3" value="${getProductQty(productId)}" placeholder="Amount" required readonly>
                                 </div>
                                 <div class="col-md-2">
-                                    <label>Qualifier</label>
+                                    <label>Satuan</label>
                                     <input type="text" name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" value="${qualifier.name}" placeholder="Qualifier" required readonly>
                                 </div>
                             </div>
@@ -212,15 +212,15 @@
                                     <div class="row">
                                         <div class="col-md-4"></div>
                                         <div class="col-md-4">
-                                            <label>Location Name</label>
+                                            <label>Nama Lokasi</label>
                                             <input type="text" class="form-control mb-3" value="${location.text}" disabled>
                                         </div>
                                         <div class="col-md-2">
-                                            <label>Expired</label>
+                                            <label>Kadaluarsa</label>
                                             <input type="date" name="selected_products[${productId}][location_ids][${location.id}][expired]" class="form-control mb-3" required>
                                         </div>
                                         <div class="col-md-2">
-                                            <label>Amount</label>
+                                            <label>Jumlah</label>
                                             <input type="number" name="selected_products[${productId}][location_ids][${location.id}][amount]" class="form-control mb-3" placeholder="Amount" required>
                                         </div>
                                     </div>

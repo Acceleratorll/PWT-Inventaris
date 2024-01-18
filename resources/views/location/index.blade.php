@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Location')
+@section('title', 'Lokasi')
 
 @section('content_header')
-    <h1>Location</h1>
+    <h1>Lokasi</h1>
 @stop
 
 @section('content')
@@ -12,21 +12,21 @@
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
                 @can('create location')
-                <a href="{{ route('location.create') }}" class="btn btn-primary">+ Add</a>
+                <a href="{{ route('location.create') }}" class="btn btn-primary">+ Tambah</a>
                 @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">
-                    <caption>Table Location</caption>
+                    <caption>Tabel Location</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Name</th>
-                            <th scope="col" class="text-center">Location</th>
-                            <th scope="col" class="text-center">Last Update</th>
-                            <th scope="col" class="text-center">Created At</th>
-                            <th scope="col" class="text-center">Description</th>
-                            <th scope="col" class="text-center" width="14%">Action</th>
+                            <th scope="col" class="text-center">Nama</th>
+                            <th scope="col" class="text-center">Lokasi</th>
+                            <th scope="col" class="text-center">Diubah</th>
+                            <th scope="col" class="text-center">Dibuat</th>
+                            <th scope="col" class="text-center">Deskripsi</th>
+                            <th scope="col" class="text-center" width="14%">Tindakan</th>
                         </tr>
                     </thead>
                 </table>

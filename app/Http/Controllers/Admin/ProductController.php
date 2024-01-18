@@ -37,7 +37,8 @@ class ProductController extends Controller
 
     public function index(): View
     {
-        return view('product.index');
+        $category = $this->categoryProductRepository->all();
+        return view('product.index', compact('category'));
     }
 
     public function getProductsByCategory($category)

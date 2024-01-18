@@ -12,23 +12,23 @@
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
                 @can('create nota dinas')
-                <a href="{{ route('notaDinas.create') }}" class="btn btn-primary">+ Add</a>
+                <a href="{{ route('notaDinas.create') }}" class="btn btn-primary">+ Tambah</a>
                 @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered text-center" id="table">
-                    <caption>Table Nota Dinas</caption>
+                    <caption>Tabel Nota Dinas</caption>
                     <thead class="thead-light">
                         <tr>
                             <th></th>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Code</th>
-                            <th scope="col" class="text-center">Period</th>
-                            <th scope="col" class="text-center">Authorized</th>
-                            <th scope="col" class="text-center">Last Update</th>
-                            <th scope="col" class="text-center">Created At</th>
-                            <th scope="col" class="text-center">Description</th>
-                            <th scope="col" class="text-center" width="14%">Action</th>
+                            <th scope="col" class="text-center">Kode</th>
+                            <th scope="col" class="text-center">Periode</th>
+                            <th scope="col" class="text-center">Otorisasi</th>
+                            <th scope="col" class="text-center">Diubah</th>
+                            <th scope="col" class="text-center">Dibuat</th>
+                            <th scope="col" class="text-center">Deskripsi</th>
+                            <th scope="col" class="text-center" width="14%">Tindakan</th>
                         </tr>
                     </thead>
                 </table>
@@ -109,9 +109,9 @@
                 <table style="width:100%; border-collapse: collapse;">
                     <thead>
                         <tr style="border-bottom: 2px solid #ccc;">
-                            <th style="padding: 8px; text-align: left;">Name</th>
+                            <th style="padding: 8px; text-align: left;">Nama</th>
                             <th style="padding: 8px; text-align: left;">Required</th>
-                            <th style="padding: 8px; text-align: left;">Ready</th>
+                            <th style="padding: 8px; text-align: left;">Saldo</th>
                             <th style="padding: 8px; text-align: left;">Procurement Plan</th>
                         </tr>
                     </thead>

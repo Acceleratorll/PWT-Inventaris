@@ -13,7 +13,7 @@
             @csrf
             <div class="row">
                 <div class="col-md-7">
-                    <label for="code">Code</label>
+                    <label for="code">Kode</label>
                     <input type="text" name="code" id="code" class="form-control mb-3" placeholder="Code here~~" required>
                 </div>
                 <div class="col-md-2">
@@ -31,14 +31,14 @@
                     <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple></select>
                 </div>
                 <div class="col-md-5">
-                    <label for="desc">Description</label>
+                    <label for="desc">Deskripsi</label>
                     <textarea name="desc" id="desc" class="form-control mb-3" placeholder="Description"></textarea>
                 </div>
             </div>
             <div id="selected-products"></div>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-outline-success" type="submit">Save</button>
+                    <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
                 </div>
             </div>
             </form>
@@ -122,7 +122,7 @@
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" placeholder="Procurement plan amount" required>
                             </div>
                             <div class="col-md-2">
-                                <label>Qualifier</label>
+                                <label>Satuan</label>
                                 <input type="text" class="form-control mb-3" name="selected_products[${productId}][qualifier]" value="${data.qualifier.name}" required readonly>
                             </div>
                         </div>

@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Product Transaction')
+@section('title', 'Barang Masuk')
 
 @section('content_header')
-    <h1>Product Transaction</h1>
+    <h1>Transaksi Barang Masuk</h1>
 @stop
 
 @section('content')
@@ -15,7 +15,7 @@
                 <div class="button-action" style="margin-bottom: 20px">
                     @can('create transaction')
                     <a class="btn btn-primary" href="{{ route('transaction.create') }}">
-                        <span>+ Add</span>
+                        <span>+ Tambah</span>
                     </a>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
@@ -27,29 +27,29 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table">
-                        <caption>List of Product Transactions</caption>
+                        <caption>Daftar Barang Masuk</caption>
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
-                                <th scope="col" class="text-center">Code</th>
+                                <th scope="col" class="text-center">Kode</th>
                                 <th scope="col" class="text-center">Supplier</th>
                                 <th scope="col" class="text-center">Tanggal Beli</th>
                                 <th scope="col" class="text-center">Barang</th>
                                 <th scope="col" class="text-center">Status</th>
-                                <th scope="col" class="text-center">Last Updated</th>
+                                <th scope="col" class="text-center">Diubah</th>
                                 <th scope="col" class="text-center">Dibuat</th>
-                                <th scope="col" class="text-center" width="14%">Action</th>
+                                <th scope="col" class="text-center" width="14%">Tindakan</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
-                                <th scope="col" class="text-center">Code</th>
+                                <th scope="col" class="text-center">Kode</th>
                                 <th scope="col" class="text-center">Supplier</th>
                                 <th scope="col" class="text-center">Tanggal Beli</th>
                                 <th scope="col" class="text-center">Barang</th>
                                 <th scope="col" class="text-center">Status</th>
-                                <th scope="col" class="text-center">Last Updated</th>
+                                <th scope="col" class="text-center">Diubah</th>
                                 <th scope="col" class="text-center">Dibuat</th>
                             </tr>
                         </tfoot>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-outline-primary">Import</button>
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit Profile Page')
+@section('title', 'Edit Profile Halaman')
 
 @section('content-header')
     <h1>Edit Profile</h1>

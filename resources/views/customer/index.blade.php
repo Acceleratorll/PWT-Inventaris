@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Customer')
+@section('title', 'Pelanggan')
 
 @section('content_header')
-    <h1>Customer</h1>
+    <h1>Pelanggan</h1>
 @stop
 
 @section('content')
@@ -12,19 +12,19 @@
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
                 @can('create customer')
-                <button class="btn btn-primary" onclick="addModal()">+ Add</button>
+                <button class="btn btn-primary" onclick="addModal()">+ Tambah</button>
                 @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">
-                    <caption>Table Customer</caption>
+                    <caption>Tabel Customer</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Name</th>
-                            <th scope="col" class="text-center">Last Update</th>
-                            <th scope="col" class="text-center">Created At</th>
-                            <th scope="col" class="text-center" width="14%">Action</th>
+                            <th scope="col" class="text-center">Nama</th>
+                            <th scope="col" class="text-center">Diubah</th>
+                            <th scope="col" class="text-center">Dibuat</th>
+                            <th scope="col" class="text-center" width="14%">Tindakan</th>
                         </tr>
                     </thead>
                 </table>

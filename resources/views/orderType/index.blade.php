@@ -3,7 +3,7 @@
 @section('title', 'Order Type')
 
 @section('content_header')
-    <h1>Order Type</h1>
+    <h1>Jenis Pesanan</h1>
 @stop
 
 @section('content')
@@ -12,19 +12,19 @@
         <div class="card-body">
             <div class="button-action" style="margin-bottom: 20px">
                 @can('create type')
-                <button class="btn btn-primary" onclick="add()">+ Add</button>
+                <button class="btn btn-primary" onclick="add()">+ Tambah</button>
                 @endcan
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table">
-                    <caption>Table Order Type</caption>
+                    <caption>Tabel Jenis Pesanan</caption>
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center">Name</th>
-                            <th scope="col" class="text-center">Last Update</th>
-                            <th scope="col" class="text-center">Created At</th>
-                            <th scope="col" class="text-center" width="14%">Action</th>
+                            <th scope="col" class="text-center">Nama</th>
+                            <th scope="col" class="text-center">Diubah</th>
+                            <th scope="col" class="text-center">Dibuat</th>
+                            <th scope="col" class="text-center" width="14%">Tindakan</th>
                         </tr>
                     </thead>
                 </table>

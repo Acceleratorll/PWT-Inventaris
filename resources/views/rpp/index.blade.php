@@ -15,7 +15,7 @@
                 <div class="button-action" style="margin-bottom: 20px">
                     @can('create rpp')
                     <a class="btn btn-primary" href="{{ route('rpp.create') }}">
-                        <span>+ Add</span>
+                        <span>+ Tambah</span>
                     </a>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
@@ -27,30 +27,30 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table">
-                        <caption>List of Rpps</caption>
+                        <caption>Daftar of Rpps</caption>
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
-                                <th scope="col" class="text-center">Code</th>
-                                <th scope="col" class="text-center">Customer</th>
-                                <th scope="col" class="text-center">Order Type</th>
-                                <th scope="col" class="text-center">Products</th>
-                                <th scope="col" class="text-center">Last Updated</th>
+                                <th scope="col" class="text-center">Kode</th>
+                                <th scope="col" class="text-center">Pelanggan</th>
+                                <th scope="col" class="text-center">Jenis Pesanan</th>
+                                <th scope="col" class="text-center">Barang-barang</th>
+                                <th scope="col" class="text-center">Diubah</th>
                                 <th scope="col" class="text-center">Dibuat</th>
-                                <th scope="col" class="text-center">Description</th>
-                                <th scope="col" class="text-center" width="14%">Action</th>
+                                <th scope="col" class="text-center">Deskripsi</th>
+                                <th scope="col" class="text-center" width="14%">Tindakan</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
-                                <th scope="col" class="text-center">Code</th>
-                                <th scope="col" class="text-center">Customer</th>
-                                <th scope="col" class="text-center">Order Type</th>
-                                <th scope="col" class="text-center">Products</th>
-                                <th scope="col" class="text-center">Last Updated</th>
+                                <th scope="col" class="text-center">Kode</th>
+                                <th scope="col" class="text-center">Pelanggan</th>
+                                <th scope="col" class="text-center">Jenis Pesanan</th>
+                                <th scope="col" class="text-center">Barang-barang</th>
+                                <th scope="col" class="text-center">Diubah</th>
                                 <th scope="col" class="text-center">Dibuat</th>
-                                <th scope="col" class="text-center">Description</th>
+                                <th scope="col" class="text-center">Deskripsi</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Import</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>

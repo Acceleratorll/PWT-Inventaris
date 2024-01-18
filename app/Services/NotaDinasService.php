@@ -75,11 +75,11 @@ class NotaDinasService
                 return $data->desc;
             })
             ->addColumn('authorized', function ($data) {
-                $label = 'Waiting for Approval';
+                $label = 'Menunggu di Setujui';
                 if ($data->authorized == 1) {
-                    $label = 'Approved';
+                    $label = 'Telah di Setujui';
                 } else if ($data->authorized == 2) {
-                    $label = 'Declined';
+                    $label = 'Tertolak';
                 }
 
                 return $label;
@@ -117,11 +117,11 @@ class NotaDinasService
                 return $data->desc;
             })
             ->addColumn('authorized', function ($data) {
-                $label = 'Waiting for Approval';
+                $label = 'Menunggu di Setujui';
                 if ($data->authorized == 1) {
-                    $label = 'Approved';
+                    $label = 'Telah di Setujui';
                 } else if ($data->authorized == 2) {
-                    $label = 'Declined';
+                    $label = 'Tertolak';
                 }
 
                 return $label;

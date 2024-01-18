@@ -142,7 +142,7 @@
                         <thead class="thead-light" id="table">
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
-                                <th scope="col" class="text-center">Name</th>
+                                <th scope="col" class="text-center">Nama</th>
                                 <th scope="col" class="text-center">Last Used</th>
                             </tr>
                         </thead>

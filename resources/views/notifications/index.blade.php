@@ -15,14 +15,14 @@
                 @else
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table">
-                        <caption>Table Notifications</caption>
+                        <caption>Tabel Notifications</caption>
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" class="text-center">Name</th>
+                                <th scope="col" class="text-center">Nama</th>
                                 <th scope="col" class="text-center">Status</th>
                                 <th scope="col" class="text-center">Updated</th>
                                 <th scope="col" class="text-center">Created</th>
-                                <th scope="col" class="text-center">Action</th>
+                                <th scope="col" class="text-center">Tindakan</th>
                             </tr>
                         </thead>
                         <tbody class="text-center"></tbody>
@@ -46,7 +46,7 @@
                         <caption>History Notifications</caption>
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" class="text-center">Name</th>
+                                <th scope="col" class="text-center">Nama</th>
                                 <th scope="col" class="text-center">Status</th>
                                 <th scope="col" class="text-center">Updated</th>
                                 <th scope="col" class="text-center">Created</th>

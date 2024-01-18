@@ -25,7 +25,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <label for="material_id">Material</label>
+                    <label for="material_id">Bahan</label>
                     <select name="material_id" id="material_id" class="form-control mb-3" width="100%" required>
                         @if($product->material)
                         <option value="{{ $product->material_id }}" selected>{{ $product->material->name }}</option>
@@ -74,7 +74,7 @@
             <br>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-outline-success" type="submit">Save</button>
+                    <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
                 </div>
             </div>
         </div>

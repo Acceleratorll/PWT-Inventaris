@@ -14,7 +14,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <label for="customer_id">Customer</label>
+                    <label for="customer_id">Pelanggan</label>
                     <select name="customer_id" id="customer_id" class="form-control" required></select>
                 </div>
                 <div class="col-md-6">
@@ -39,7 +39,7 @@
                 <div id="selected-products"></div>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-outline-success" type="submit">Save</button>
+                    <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
                 </div>
             </div>
         </div>
@@ -111,11 +111,11 @@
                             <input type="text" class="form-control mb-3" value="${productName}" disabled>
                         </div>
                         <div class="col-md-5">
-                            <label>Location</label>
+                            <label>Lokasi</label>
                             <select name="selected_products[${productId}][location][]" id="${uniqueLocationId}" class="form-control mb-3" multiple required></select>
                         </div>
                         <div class="col-md-2">
-                            <label>Qualifier</label>
+                            <label>Satuan</label>
                             <select name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" required>
                                 <option value="${data.qualifier_id}" selected>${data.qualifier.name}</option>
                             </select>
@@ -138,24 +138,24 @@
                                 const inputFields = `
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <label>Location</label>
+                                                <label>Lokasi</label>
                                                 <input type="text" name="selected_products[${productId}][pro_loc_ids][${location.id}][name]" class="form-control mb-3" value="${data.data.location.name}" placeholder="Amount">
                                                 <input type="hidden" name="selected_products[${productId}][pro_loc_ids][${location.id}][location_id]" class="form-control mb-3" value="${data.data.location_id}">
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Amount</label>
+                                                <label>Jumlah</label>
                                                 <input type="number" name="selected_products[${productId}][pro_loc_ids][${location.id}][amount]" class="form-control mb-3" placeholder="Amount" required>
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Ready</label>
+                                                <label>Saldo</label>
                                                 <input type="number" name="selected_products[${productId}][pro_loc_ids][${location.id}][oriAmount]" value="${data.data.amount}" class="form-control mb-3" required readonly>
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Expired</label>
+                                                <label>Kadaluarsa</label>
                                                 <input type="date" name="selected_products[${productId}][pro_loc_ids][${location.id}][expired]" value="${formatDate(data.data.expired)}" class="form-control mb-3" required>
                                             </div>
                                             <div class="col-md-2">
-                                                <label>Purchase Date</label>
+                                                <label>Tanggal Pembelian</label>
                                                 <input type="date" name="selected_products[${productId}][pro_loc_ids][${location.id}][purchase_date]" value="${formatDate(data.data.purchase_date)}" class="form-control mb-3" required>
                                             </div>
                                         </div>

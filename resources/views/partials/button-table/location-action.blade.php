@@ -11,7 +11,7 @@
     class="masuk btn btn-primary"
     data-bs-toggle="modal"
     data-bs-target="#transactionHistoryModal"   >
-    Details
+    Detail
 </button>
 @endcan
 @can('delete location')
@@ -49,14 +49,14 @@ Hapus
                     <div class="tab-pane fade show active" id="productTransactions" role="tabpanel" aria-labelledby="productTransactions-tab">
                         <div class="table-responsive">
                             <table class="table table-bordered text-center w-100" id="table-kertas">
-                                <caption>Table Barang</caption>
+                                <caption>Tabel Barang</caption>
                                 <thead class="thead-light">
                                     <tr>
-                                        <th scope="col" class="text-center">Code</th>
+                                        <th scope="col" class="text-center">Kode</th>
                                         <th scope="col" class="text-center">Nama</th>
                                         <th scope="col" class="text-center">Stock</th>
                                         <th scope="col" class="text-center">Satuan</th>
-                                        <th scope="col" class="text-center">Expired</th>
+                                        <th scope="col" class="text-center">Kadaluarsa</th>
                                     </tr>
                                 </thead>
                                 {{-- @foreach ($product_locations as $location)
@@ -81,14 +81,14 @@ Hapus
                         @if (isset($product_locations))
                             <div class="table-responsive">
                                 <table class="table table-bordered text-center w-100" id="table-tinta">
-                                    <caption>Table Barang</caption>
+                                    <caption>Tabel Barang</caption>
                                     <thead class="thead-light">
                                         <tr>
-                                            <th scope="col" class="text-center">Code</th>
+                                            <th scope="col" class="text-center">Kode</th>
                                             <th scope="col" class="text-center">Nama</th>
                                             <th scope="col" class="text-center">Stock</th>
                                             <th scope="col" class="text-center">Satuan</th>
-                                            <th scope="col" class="text-center">Expired</th>
+                                            <th scope="col" class="text-center">Kadaluarsa</th>
                                         </tr>
                                     </thead>
                                     {{-- @foreach ($product_locations as $location)
@@ -110,7 +110,7 @@ Hapus
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Tutup</button>
             </div>
         </div>
     </div>

@@ -15,7 +15,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <label for="customer_id">Customer</label>
+                    <label for="customer_id">Pelanggan</label>
                     <select name="customer_id" id="customer_id" class="form-control" required>
                         <option value="{{ $rpp->customer_id }}">{{ $rpp->customer->name }}</option>
                     </select>
@@ -45,7 +45,7 @@
             </div>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-outline-success" type="submit">Save</button>
+                    <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
                 </div>
             </div>
         </div>
@@ -118,11 +118,11 @@
                                     <input type="text" class="form-control mb-3" value="${productName}" disabled>
                                 </div>
                                 <div class="col-md-2">
-                                    <label>Qty</label>
+                                    <label>Jumlah</label>
                                     <input type="number" name="selected_products[${productId}][qty]" value="${getProductQty(productId)}" class="form-control mb-3" placeholder="Quantity" required>
                                 </div>
                                 <div class="col-md-2">
-                                    <label>Qualifier</label>
+                                    <label>Satuan</label>
                                     <input type="text" name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" value="${qualifier.name}" placeholder="Qualifier" required>
                                 </div>
                             </div>
