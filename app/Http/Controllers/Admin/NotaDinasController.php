@@ -81,15 +81,39 @@ class NotaDinasController extends Controller
         }
     }
 
+    public function approve($id)
+    {
+        $this->notaDinasService->getById($id)->update(['authorized' => 1]);
+        return redirect()->route('notaDinas.index')->with('success', 'Data status changed to Approved!');
+    }
+
+    public function wait($id)
+    {
+        $this->notaDinasService->getById($id)->update(['authorized' => 0]);
+        return redirect()->route('notaDinas.index')->with('success', 'Data status changed to Wait!');
+    }
+
+    public function decline($id)
+    {
+        $this->notaDinasService->getById($id)->update(['authorized' => 2]);
+        return redirect()->route('notaDinas.index')->with('success', 'Data status changed to Declined!');
+    }
+
     public function destroy($id): JsonResponse
     {
         $this->notaDinasService->delete($id);
-        return response()->json(['message' => 'Data has been found!'], 200);
+        return response()->json(['message' => 'Data deleted successfully!'], 200);
     }
 
     public function table()
     {
         return $this->notaDinasService->table();
+    }
+
+    public function tableAuthorized()
+    {
+        $data = $this->notaDinasService->getByAuthorized(1);
+        return $this->notaDinasService->tableParam($data);
     }
 
     public function select(Request $request)

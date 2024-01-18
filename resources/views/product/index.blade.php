@@ -37,7 +37,6 @@
                     <caption>Table Barang</caption>
                     <thead class="thead-light">
                         <tr>
-                            <th></th>
                             <th scope="col" class="text-center">ID</th>
                             <th scope="col" class="text-center">Name</th>
                             <th scope="col" class="text-center">Material</th>
@@ -134,7 +133,7 @@
     var maxAmountArray = [];
     var detailRows = [];
     var columns = [
-        { data: null, defaultContent: '', className: 'dt-control', orderable: false },
+        // { data: null, defaultContent: '', className: 'dt-control', orderable: false },
         { data: 'id', name: 'id' },
         { data: 'name', name: 'name' },
         { 
@@ -292,23 +291,23 @@
             },
         });
 
-        $('#table tbody').on('click', 'td.dt-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
+        // $('#table tbody').on('click', 'td.dt-control', function () {
+        //     var tr = $(this).closest('tr');
+        //     var row = table.row(tr);
          
-            if (row.child.isShown()) {
-                row.child.hide();
-            }
-            else {
-                row.child(format(row.data())).show();
-            }
-        });
+        //     if (row.child.isShown()) {
+        //         row.child.hide();
+        //     }
+        //     else {
+        //         row.child(format(row.data())).show();
+        //     }
+        // });
 
-        table.on('draw', function () {
-            detailRows.forEach(function (id, i) {
-                $('#' + id + ' td.dt-control').trigger('click');
-            });
-        });
+        // table.on('draw', function () {
+        //     detailRows.forEach(function (id, i) {
+        //         $('#' + id + ' td.dt-control').trigger('click');
+        //     });
+        // });
 
         $(table.table().container() ).on( 'keyup', 'tfoot input', function () {
                 table

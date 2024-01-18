@@ -1,11 +1,22 @@
 @can('update nota dinas')
 <a href="{{ route('notaDinas.edit', ['notaDina' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
-    Edit
+    Ubah
+</a>
+@endcan
+@can('authorize nota dinas')
+<a href="{{ route('notaDinas.authorize', ['id' => $id]) }}" class="auth btn btn-primary">
+    Authorize
+</a>
+<a href="{{ route('notaDinas.wait', ['id' => $id]) }}" class="auth btn btn-success">
+    Wait
+</a>
+<a href="{{ route('notaDinas.decline', ['id' => $id]) }}" class="auth btn btn-warning">
+    Decline
 </a>
 @endcan
 @can('delete nota dinas')
 <button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
-Delete
+Hapus
 </button>
 @endcan
 <form action="{{ route('notaDinas.destroy',['notaDina' => $id]) }}" id="deleteForm" method="post">

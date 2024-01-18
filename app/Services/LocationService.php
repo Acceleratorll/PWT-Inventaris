@@ -53,7 +53,7 @@ class LocationService
             ->addColumn('action', 'partials.button-table.location-action')
             ->rawColumns(['action'])
             ->addIndexColumn()
-            ->make(true);
+            ->toJson();
     }
 
     public function getById($id)

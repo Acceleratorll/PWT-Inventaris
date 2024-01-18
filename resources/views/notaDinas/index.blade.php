@@ -25,9 +25,9 @@
                             <th scope="col" class="text-center">Code</th>
                             <th scope="col" class="text-center">Period</th>
                             <th scope="col" class="text-center">Authorized</th>
-                            <th scope="col" class="text-center">Description</th>
                             <th scope="col" class="text-center">Last Update</th>
                             <th scope="col" class="text-center">Created At</th>
+                            <th scope="col" class="text-center">Description</th>
                             <th scope="col" class="text-center" width="14%">Action</th>
                         </tr>
                     </thead>
@@ -47,15 +47,25 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
+    var url = '{{ route('get-table-nota-dinas') }}';
+    if ('{{ auth()->user()->getRoleNames()[0] }}' == 'logistik'){
+        url = '{{ route('get-table-nota-dinas-authorized') }}';
+        console.log('User', 'True Logistik');
+        console.log('URL', url);
+    }else{
+        console.log('User', 'False not Logistik');
+        console.log('URL', url);
+    }
+
     const column = [
         { data: null, defaultContent: '', className: 'dt-control', orderable: false },
         { data: 'id', name: 'id' },
         { data: 'code', name: 'code' },
         { data: 'period', name: 'period' },
         { data: 'authorized', name: 'authorized' },
-        { data: 'desc', name: 'desc' },
         { data: 'updated_at', name: 'updated_at' },
         { data: 'created_at', name: 'created_at' },
+        { data: 'desc', name: 'desc' },
         { data: 'action', name: 'action', orderable: false },
     ];
 
@@ -87,7 +97,7 @@
         var table = $('#table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('get-table-nota-dinas') }}',
+            ajax: url,
             columns: column,
         });
 

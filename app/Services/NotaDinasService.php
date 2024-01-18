@@ -20,6 +20,11 @@ class NotaDinasService
         return $this->repository->find($id);
     }
 
+    public function getByAuthorized($num)
+    {
+        return $this->repository->getByAuthorized($num);
+    }
+
     public function create($data)
     {
         return $this->repository->create($data);
@@ -67,10 +72,59 @@ class NotaDinasService
                 return $data->product_plannings;
             })
             ->addColumn('desc', function ($data) {
-                return $data->desc ?? 'NaN';
+                return $data->desc;
             })
             ->addColumn('authorized', function ($data) {
-                return $data->authorized;
+                $label = 'Waiting for Approval';
+                if ($data->authorized == 1) {
+                    $label = 'Approved';
+                } else if ($data->authorized == 2) {
+                    $label = 'Declined';
+                }
+
+                return $label;
+            })
+            ->addColumn('created_at', function ($data) {
+                return $data->created_at->format('d-m-Y');
+            })
+            ->addColumn('updated_at', function ($data) {
+                return $data->updated_at->format('d-m-Y');
+            })
+            ->addColumn('action', 'partials.button-table.nota-dinas-action')
+            ->rawColumns(['action'])
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    public function tableParam($datas)
+    {
+        return DataTables::of($datas)
+            ->addColumn('id', function ($data) {
+                return $data->id;
+            })
+            ->addColumn('code', function ($data) {
+                return $data->code;
+            })
+            ->addColumn('period', function ($data) {
+                $fromDate = new DateTime($data->from_date);
+                $toDate = new DateTime($data->to_date);
+                return $fromDate->format('M') . ' - ' . $toDate->format('M');
+            })
+            ->addColumn('products', function ($data) {
+                return $data->product_plannings;
+            })
+            ->addColumn('desc', function ($data) {
+                return $data->desc;
+            })
+            ->addColumn('authorized', function ($data) {
+                $label = 'Waiting for Approval';
+                if ($data->authorized == 1) {
+                    $label = 'Approved';
+                } else if ($data->authorized == 2) {
+                    $label = 'Declined';
+                }
+
+                return $label;
             })
             ->addColumn('created_at', function ($data) {
                 return $data->created_at->format('d-m-Y');

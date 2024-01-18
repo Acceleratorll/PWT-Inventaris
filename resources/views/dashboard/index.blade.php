@@ -57,14 +57,14 @@
 <div id="custom-target"></div>
 <div class="row">
     <div class="col-md-6">
-        <x-adminlte-card title="Pengadaan Kertas S1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+        <x-adminlte-card title="Pengadaan Kertas SEMESTER 1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="rounded shadow justify-center" id="chart-category">
                 <canvas id="planPaper1Chart" style="width: 100%;"></canvas>
             </div>
         </x-adminlte-card>
     </div>
     <div class="col-md-6">
-        <x-adminlte-card title="Pengadaan Tinta S1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+        <x-adminlte-card title="Pengadaan Tinta SEMESTER 1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="rounded shadow justify-center" id="chart-category">
                 <canvas id="planInk1Chart" style="width: 100%;"></canvas>
             </div>
@@ -73,26 +73,38 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <x-adminlte-card title="Pengadaan Kertas S2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+        <x-adminlte-card title="Pengadaan Kertas SEMESTER 2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="rounded shadow justify-center" id="chart-category">
                 <canvas id="planPaper2Chart" style="width: 100%;"></canvas>
             </div>
         </x-adminlte-card>
     </div>
     <div class="col-md-6">
-        <x-adminlte-card title="Pengadaan Tinta S2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+        <x-adminlte-card title="Pengadaan Tinta SEMESTER 2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="rounded shadow justify-center" id="chart-category">
                 <canvas id="planInk2Chart" style="width: 100%;"></canvas>
             </div>
         </x-adminlte-card>
     </div>
 </div>
+
 <div class="row">
-    <div class="col-md-4">
-        <x-adminlte-card title="Info Barang" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="justify-center" id="chart-category">
-                <canvas id="categoryChart"></canvas>
+    <div class="col-md-12">
+        <x-adminlte-card title="Info RPP Setahun" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-rpp" style="height:630px">
+                <canvas id="rppChart"></canvas>
             </div>
+        </x-adminlte-card>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 justify-content-center">
+        <x-adminlte-card title="Info Barang" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <center>
+                <div class="justify-content-center" id="chart-category">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </center>
                 @foreach($categories as $category)
                 @if ($category->id == $unused->id)
                 <div id="category_{{ $category->id }}">
@@ -122,18 +134,8 @@
                 </div>
         </x-adminlte-card>
     </div>
-    <div class="col-md-8">
-        <x-adminlte-card title="Info RPP Setahun" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow justify-center" id="chart-rpp">
-                <canvas id="rppChart"></canvas>
-            </div>
-        </x-adminlte-card>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <x-adminlte-card title="Unused Barang" icon="fas fa-trash" theme="danger" theme-mode="outline">
+    <div class="col-md-6">
+        <x-adminlte-card title="Barang Tidak Bergerak" icon="fas fa-trash" theme="danger" theme-mode="outline">
             <div class="d-flex justify-content-between">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table">
@@ -149,25 +151,24 @@
             </div>
         </x-adminlte-card>
     </div>
-    <div class="col-md-8">
+</div>
+
+<div class="row">
+    <div class="col-md-6">
         <x-adminlte-card title="Barang Masuk" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="rounded shadow justify-center" id="chart-productTransaction">
                 <canvas id="productTransactionChart"></canvas>
             </div>
         </x-adminlte-card>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <x-adminlte-card title="Barang Keluar RPP" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="chart-container" style="position: relative; height:85vh;">
+            <div class="chart-container" style="position: relative;">
                 <canvas id="tintaChart" style="width: 100%;"></canvas>
             </div>
         </x-adminlte-card>
     </div>
 </div>
-
 @stop
 
 @section('css')
@@ -183,7 +184,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         $(document).ready(function() {
-            
             let tChart;
             let rChart;
             let cChart;

@@ -1,6 +1,6 @@
 @can('view product location')
 <a href="{{ route('productLocation.edit', ['productLocation' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
-    Edit
+    Ubah
 </a>
 @endcan
 <button id="show-incoming-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
@@ -8,7 +8,7 @@
 </button>
 @can('delete product location')
 <button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
-Delete
+Hapus
 </button>
 @endcan
 

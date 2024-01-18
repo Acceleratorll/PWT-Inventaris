@@ -52,12 +52,12 @@ class LocationRepository
 
     public function all()
     {
-        return $this->model->with('product_locations')->get();
+        return $this->model->with('product_locations.product.material', 'product_locations.product.qualifier')->get();
     }
 
     public function paginate(int $num)
     {
-        return $this->model->with('product_locations')->paginate($num);
+        return $this->model->with('product_locations.product.material')->paginate($num);
     }
 
     public function create($data)

@@ -18,15 +18,6 @@
                     <span>Excel</span>
                 </a>
             </div>
-            <div class="button-action" style="margin-bottom: 20px">
-                <label for="stock-filter">Stock Filter:</label>
-                <select id="stock-filter">
-                    <option value="all">All</option>
-                    <option value="Daily">Daily</option>
-                    <option value="Slow Moving">Slow Moving</option>
-                    <option value="Unused">Unused</option>
-                </select>
-            </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="myTable">
                     <caption>Table Barang</caption>

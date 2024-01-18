@@ -8,7 +8,7 @@
 </button>
 @can('delete type')
 <button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
-    Delete
+    Hapus
 </button>
 @endcan
 <form action="{{ route('orderType.destroy',['orderType' => $id]) }}" id="deleteForm" method="post">

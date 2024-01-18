@@ -71,16 +71,19 @@ class ProductLocationController extends Controller
     {
         $input = $productLocationRequest->validated();
         $error = false;
-        DB::transaction(function () use ($input, $error) {
-            $transaction = $this->transactionRepository->find($input['transaction_id']);
-            try {
+        $msg = 'An error occurred during the transaction.';
+        try {
+            DB::transaction(function () use ($input, &$error, &$msg) {
+                $transaction = $this->transactionRepository->find($input['transaction_id']);
                 foreach ($input['selected_products'] as $productId => $productData) {
                     $realAmount = $transaction->product_transactions->where('product_id', $productId)->first()->amount;
                     $locationAmounts = array_column($productData['location_ids'], 'amount');
                     $sumLocationAmounts = array_sum($locationAmounts);
 
                     if ($realAmount != $sumLocationAmounts) {
-                        return back()->with('error', 'Invalid amount. Amount not matched');
+                        $error = true;
+                        $msg = 'Invalid amount. Amount not matched';
+                        return;
                     }
 
                     foreach ($productData['location_ids'] as $locationId => $locationData) {
@@ -104,14 +107,15 @@ class ProductLocationController extends Controller
 
                 $transaction->update(['status' => 1]);
                 DB::commit();
-            } catch (\Throwable $th) {
-                $error = true;
-                DB::rollBack();
-            }
-        });
+            });
+        } catch (\Throwable $th) {
+            $error = true;
+            $msg = $th->getMessage();
+            DB::rollBack();
+        }
 
         if ($error) {
-            return redirect()->back()->with('error', 'An error occurred during the transaction.');
+            return redirect()->back()->with('error', $msg);
         }
 
         return redirect()->route('transaction.index')->with('success', 'Product Location Added Successfully');

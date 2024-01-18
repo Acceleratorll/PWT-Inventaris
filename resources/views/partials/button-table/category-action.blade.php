@@ -1,11 +1,11 @@
 @can('update category')
 <a href="{{route('category.edit', ['category' => $id])}}" class="edit btn btn-success">
-    Edit
+    Ubah
 </a>
 @endcan
 @can('delete category')
 <button id="delete" data-id="{{ $id }}" data-name="{{ $name }}" data-original-title="Delete" class="delete btn btn-danger">
-Delete
+Hapus
 </button>
 @endcan
 <form action="{{ route('category.destroy',['category' => $id]) }}" id="deleteForm" method="post">

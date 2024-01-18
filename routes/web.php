@@ -43,6 +43,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/transaction/placing/{id}', [TransactionController::class, 'isiPesanan'])->name('placing.transaction');
     Route::get('/transactions/finish', [TransactionController::class, 'finish'])->name('transaction.finish');
     Route::get('/transactions/wait', [TransactionController::class, 'wait'])->name('transaction.wait');
+    Route::get('/notaDinas/authorize/{id}', [NotaDinasController::class, 'approve'])->name('notaDinas.authorize');
+    Route::get('/notaDinas/wait/{id}', [NotaDinasController::class, 'wait'])->name('notaDinas.wait');
+    Route::get('/notaDinas/decline/{id}', [NotaDinasController::class, 'decline'])->name('notaDinas.decline');
 });
 
 Route::get('/get-table/unread-notifications', [NotificationController::class, 'getTableUnreadNotifications'])->name('get-table.unread-notifications');
@@ -55,6 +58,7 @@ Route::get('/get-locations', [LocationController::class, 'getLocations'])->name(
 Route::get('/get-customers', [CustomerController::class, 'getCustomers'])->name('get-customers');
 Route::get('/get-orderTypes', [OrderTypeController::class, 'table'])->name('get-table-order-types');
 Route::get('/get-notaDinas', [NotaDinasController::class, 'table'])->name('get-table-nota-dinas');
+Route::get('/get-notaDinas/authorized', [NotaDinasController::class, 'tableAuthorized'])->name('get-table-nota-dinas-authorized');
 Route::get('/get-rpps', [ProcessPlanController::class, 'getRpps'])->name('get-rpps');
 Route::get('/get-transactions', [TransactionController::class, 'allTransactions'])->name('get-transactions');
 Route::get('/get-transaction/{transaction}', [TransactionController::class, 'getTransaction'])->name('get-transaction');

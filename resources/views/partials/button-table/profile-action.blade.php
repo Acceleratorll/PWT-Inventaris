@@ -1,11 +1,11 @@
 @if ($id == auth()->user()->id || auth()->user()->can('update user'))
 <a href="{{ route('profile.edit', ['profile' => $id]) }}" class="edit btn btn-success">
-    Edit
+    Ubah
 </a>
 @endif
 @can('delete user')
 <button id="delete" data-id="{{ $id }}" data-name="{{ $name }}" data-original-title="Delete" class="delete btn btn-danger">
-    Delete
+    Hapus
 </button>
 @endcan
 <form action="{{ route('profile.destroy',['profile' => $id]) }}" id="deleteForm" method="post">

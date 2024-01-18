@@ -19,11 +19,15 @@ class RoleAndPermissionSeeder extends Seeder
         $logistik = Role::create(['name' => 'logistik']);
         $ppic = Role::create(['name' => 'ppic']);
         $superadmin = Role::create(['name' => 'superadmin']);
+        $direksi = Role::create(['name' => 'direksi']);
+        $guest = Role::create(['name' => 'guest']);
 
         $userStaff = User::find(1);
         $userLogistik = User::find(2);
         $userPpic = User::find(3);
         $userSuperadmin = User::find(4);
+        $userDireksi = User::find(5);
+        $userGuest = User::find(6);
 
         // Create permissions
         $permissionAccessCategory = Permission::create(['name' => 'access category']);
@@ -75,7 +79,9 @@ class RoleAndPermissionSeeder extends Seeder
         $permissionUpdateUser = Permission::create(['name' => 'update user']);
         $permissionDeleteUser = Permission::create(['name' => 'delete user']);
 
+        $permissionAuthorizeNotaDinas = Permission::create(['name' => 'authorize nota dinas']);
         $permissionViewNotaDinas = Permission::create(['name' => 'view nota dinas']);
+        $permissionViewDeclinedNotaDinas = Permission::create(['name' => 'view declined nota dinas']);
         $permissionCreateNotaDinas = Permission::create(['name' => 'create nota dinas']);
         $permissionUpdateNotaDinas = Permission::create(['name' => 'update nota dinas']);
         $permissionDeleteNotaDinas = Permission::create(['name' => 'delete nota dinas']);
@@ -131,6 +137,7 @@ class RoleAndPermissionSeeder extends Seeder
         $ppic->givePermissionTo($permissionAccessTransaction);
         $ppic->givePermissionTo($permissionViewUser);
         $ppic->givePermissionTo($permissionViewNotaDinas);
+        $ppic->givePermissionTo($permissionViewDeclinedNotaDinas);
         $ppic->givePermissionTo($permissionCreateNotaDinas);
         $ppic->givePermissionTo($permissionUpdateNotaDinas);
         $ppic->givePermissionTo($permissionDeleteNotaDinas);
@@ -219,6 +226,16 @@ class RoleAndPermissionSeeder extends Seeder
         // $superadmin->givePermissionTo($permissionUpdateProductLocation);
         // $superadmin->givePermissionTo($permissionDeleteProductLocation);
 
+        $direksi->givePermissionTo($permissionViewProduct);
+        $direksi->givePermissionTo($permissionViewTransaction);
+        $direksi->givePermissionTo($permissionViewRpp);
+        $direksi->givePermissionTo($permissionViewNotaDinas);
+        $direksi->givePermissionTo($permissionViewDeclinedNotaDinas);
+        $direksi->givePermissionTo($permissionViewUser);
+        $direksi->givePermissionTo($permissionAuthorizeNotaDinas);
+
+        $guest->givePermissionTo($permissionViewProduct);
+        $guest->givePermissionTo($permissionViewUser);
 
         // Get all permissions
         $allPermissions = Permission::all();
@@ -231,5 +248,7 @@ class RoleAndPermissionSeeder extends Seeder
         $userLogistik->assignRole($logistik);
         $userPpic->assignRole($ppic);
         $userSuperadmin->assignRole($superadmin);
+        $userDireksi->assignRole($direksi);
+        $userGuest->assignRole($guest);
     }
 }

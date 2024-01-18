@@ -1,6 +1,6 @@
 @can('update transaction')
 <a href="{{ route('transaction.edit', ['transaction' => $id]) }}" data-original-title="Edit" class="edit btn btn-success edit">
-    Edit
+    Ubah
 </a>
 @endcan
 @if($status == 0)
@@ -15,7 +15,7 @@
 </button> --}}
 @can('delete transaction')
 <button id="delete" data-id="{{ $id }}" data-supplier="{{ $supplier_id }}" data-original-title="Delete" class="delete btn btn-danger">
-    Delete
+    Hapus
 </button>
 @endcan
 

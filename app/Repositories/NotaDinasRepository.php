@@ -42,6 +42,13 @@ class NotaDinasRepository
         return $this->model->with('product_plannings.product')->paginate($num);
     }
 
+    public function getByAuthorized($num)
+    {
+        return $this->model->with('product_plannings.product')
+            ->where('authorized', $num)
+            ->get();
+    }
+
     public function create($data)
     {
         return $this->model->create($data);
