@@ -56,48 +56,6 @@
 @section('content')
 <div id="custom-target"></div>
 <div class="row">
-    <div class="col-md-6">
-        <x-adminlte-card title="Pengadaan Kertas SEMESTER 1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow justify-center" id="chart-category">
-                <canvas id="planPaper1Chart" style="width: 100%;"></canvas>
-            </div>
-        </x-adminlte-card>
-    </div>
-    <div class="col-md-6">
-        <x-adminlte-card title="Pengadaan Tinta SEMESTER 1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow justify-center" id="chart-category">
-                <canvas id="planInk1Chart" style="width: 100%;"></canvas>
-            </div>
-        </x-adminlte-card>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <x-adminlte-card title="Pengadaan Kertas SEMESTER 2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow justify-center" id="chart-category">
-                <canvas id="planPaper2Chart" style="width: 100%;"></canvas>
-            </div>
-        </x-adminlte-card>
-    </div>
-    <div class="col-md-6">
-        <x-adminlte-card title="Pengadaan Tinta SEMESTER 2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow justify-center" id="chart-category">
-                <canvas id="planInk2Chart" style="width: 100%;"></canvas>
-            </div>
-        </x-adminlte-card>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <x-adminlte-card title="Info RPP Setahun" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
-            <div class="rounded shadow justify-center" id="chart-rpp" style="height:630px">
-                <canvas id="rppChart"></canvas>
-            </div>
-        </x-adminlte-card>
-    </div>
-</div>
-<div class="row">
     <div class="col-md-6 justify-content-center">
         <x-adminlte-card title="Info Barang" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <center>
@@ -152,7 +110,48 @@
         </x-adminlte-card>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-6">
+        <x-adminlte-card title="Pengadaan Kertas SEMESTER 1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-category">
+                <canvas id="planPaper1Chart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+    <div class="col-md-6">
+        <x-adminlte-card title="Pengadaan Tinta SEMESTER 1" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-category">
+                <canvas id="planInk1Chart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <x-adminlte-card title="Pengadaan Kertas SEMESTER 2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-category">
+                <canvas id="planPaper2Chart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+    <div class="col-md-6">
+        <x-adminlte-card title="Pengadaan Tinta SEMESTER 2" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-category">
+                <canvas id="planInk2Chart" style="width: 100%;"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-md-12">
+        <x-adminlte-card title="Info RPP Setahun" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+            <div class="rounded shadow justify-center" id="chart-rpp" style="height:630px">
+                <canvas id="rppChart"></canvas>
+            </div>
+        </x-adminlte-card>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-6">
         <x-adminlte-card title="Barang Masuk" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>

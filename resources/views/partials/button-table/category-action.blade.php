@@ -23,8 +23,6 @@ Hapus
                 title: 'Delete category',
                 text: 'Are you sure you want to delete this category?',
                 type: 'warning',
-icon: 'warning',
-icon: 'warning',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
@@ -44,8 +42,7 @@ icon: 'warning',
                             Swal.fire({
                                 title: 'category Deleted Successfully',
                                 type: 'success',
-icon: 'success',
-type: 'success',
+                                icon: 'success',
                                 timer: 1700,
                             });
                             Swal.showLoading();

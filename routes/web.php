@@ -45,13 +45,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/transactions/wait', [TransactionController::class, 'wait'])->name('transaction.wait');
     Route::get('/notaDinas/authorize/{id}', [NotaDinasController::class, 'approve'])->name('notaDinas.authorize');
     Route::get('/notaDinas/wait/{id}', [NotaDinasController::class, 'wait'])->name('notaDinas.wait');
+    Route::resource('/dashboard', AdminDashboardController::class);
     Route::get('/notaDinas/decline/{id}', [NotaDinasController::class, 'decline'])->name('notaDinas.decline');
 });
 
 Route::get('/get-table/unread-notifications', [NotificationController::class, 'getTableUnreadNotifications'])->name('get-table.unread-notifications');
 Route::get('/get-table/read-notifications', [NotificationController::class, 'getTableReadNotifications'])->name('get-table.read-notifications');
 Route::get('/get-table/read-notifications', [NotificationController::class, 'getTableReadNotifications'])->name('get-table.read-notifications');
-Route::resource('/dashboard', AdminDashboardController::class);
 Route::get('/get-profiles', [ProfileController::class, 'getProfiles'])->name('get-profiles');
 Route::get('/get-suppliers', [SupplierController::class, 'getSuppliers'])->name('get-suppliers');
 Route::get('/get-locations', [LocationController::class, 'getLocations'])->name('get-locations');
