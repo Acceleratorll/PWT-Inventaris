@@ -10,7 +10,7 @@
 <div class="row">
     <div class="card col-md-12">
         <div class="card-body">
-            <form action="{{ route('category.store') }}" method="post">
+            <form action="{{ route('category.store') }}" id="input-form" method="post">
                 @csrf
             <div class="row">
                 <div class="col-md-6">
@@ -20,7 +20,7 @@
                     <x-adminlte-input type="number" fgroup-class="mb-3" name="min" label="Minimal" placeholder="Masukkan Minimal Tahun Barang Ganti Kategori" disable-feedback/>
                 </div>
             </div>
-            <input value="Submit" class="form-control btn btn-outline-success" type="submit"/>
+            <button class="form-control btn btn-outline-success" type="button" onclick="confirmation()"></button>
             </form>
         </div>
     </div>
@@ -54,6 +54,22 @@
                 text: '{{ Session::get('success') }}',
                 onOpen: function() {
                     Swal.showLoading()
+                }
+            });
+        }
+
+        function confirmation() {
+            Swal.fire({
+                title: 'Apakah anda sudah yakin ?',
+                text: 'Apakah anda sudah yakin dengan inputan anda ?',
+                type: 'warning',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#input-form').submit();
                 }
             });
         }

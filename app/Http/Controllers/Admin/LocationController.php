@@ -41,12 +41,10 @@ class LocationController extends Controller
             $input = $locationRequest->validated();
             DB::transaction(function () use ($input) {
                 $this->locationService->store($input);
-                DB::commit();
             });
-            return redirect()->back()->with('success', 'Location created successfully !');
+            return redirect()->route('location.index')->with('success', 'Location created successfully !');
         } catch (\Throwable $th) {
-            DB::rollBack();
-            return redirect()->back()->with('error', $th);
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 
@@ -68,12 +66,10 @@ class LocationController extends Controller
             $input = $locationRequest->validated();
             DB::transaction(function () use ($input, $id) {
                 $this->locationService->update($id, $input);
-                DB::commit();
             });
             return redirect()->route('location.index')->with('success', 'Location updated successfully !');
         } catch (\Throwable $th) {
-            DB::rollBack();
-            return redirect()->back()->with('error', $th);
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 

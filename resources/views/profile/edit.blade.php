@@ -5,11 +5,10 @@
 @section('content-header')
     <h1>Edit Profile</h1>
 @endsection
-
 @section('content')
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('profile.update', ['profile' => $user->id]) }}" method="post">
+        <form action="{{ route('profile.update', ['profile' => $user->id]) }}" id="input-form" method="post">
         @csrf
         @method('PUT')
         <div class="card-body">
@@ -28,8 +27,10 @@
                 <div class="col-md-6">
                     <label for="role_id">Roles</label>
                     <select name="role_id" id="role_id" class="form-control mb-3" width="100%" required>
-                        @if($user->role_id)
-                        <option value="{{ $user->role_id }}" selected>{{ $user->role->name }}</option>
+                        @if($user->roles)
+                        @foreach ($user->roles as $role)
+                        <option value="{{ $role->id }}" selected>{{ $role->name }}</option>
+                        @endforeach
                         @else
                         <option value="" selected disabled>Pilih Roles</option>
                         @endif
@@ -44,7 +45,7 @@
             <br>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
+                    <button class="form-control btn btn-outline-success" type="button" onclick="confirmation()">Simpan</button>
                 </div>
             </div>
         </div>
@@ -66,6 +67,22 @@
         $(document).ready(function() {
             selectInput(role, role_url);
         });
+
+        function confirmation() {
+            Swal.fire({
+                title: 'Apakah anda sudah yakin ?',
+                text: 'Apakah anda sudah yakin dengan inputan anda ?',
+                type: 'warning',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#input-form').submit();
+                }
+            });
+        }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>

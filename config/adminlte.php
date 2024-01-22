@@ -416,13 +416,6 @@ return [
                     'icon' => 'nav-icon fas fa-book',
                     'can'     => 'view type',
                 ],
-                [
-                    'text'    => 'Tambah Jenis Pesanan',
-                    'route'     => 'orderType.create',
-                    'shift'   => 'ml-3',
-                    'icon' => 'nav-icon fas fa-edit',
-                    'can'     => 'create type',
-                ],
             ],
         ],
         [

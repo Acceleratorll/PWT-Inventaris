@@ -9,7 +9,7 @@
 @section('content')
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('rpp.store') }}" method="post">
+        <form action="{{ route('rpp.store') }}" id="input-form" method="post">
         @csrf
         <div class="card-body">
             <div class="row">
@@ -39,7 +39,7 @@
                 <div id="selected-products"></div>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
+                    <button class="form-control btn btn-outline-success" type="button" onclick="confirmation()">Simpan</button>
                 </div>
             </div>
         </div>
@@ -176,5 +176,21 @@
         });
     });
 });
+
+function confirmation() {
+    Swal.fire({
+        title: 'Apakah anda sudah yakin ?',
+        text: 'Apakah anda sudah yakin dengan inputan anda ?',
+        type: 'warning',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Lanjutkan',
+        cancelButtonText: 'Cancel',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#input-form').submit();
+        }
+    });
+}
 </script>
 @stop

@@ -24,7 +24,7 @@ class LocationRequest extends FormRequest
         return [
             'name' => 'required',
             'location' => 'required',
-            'desc' => 'nullable',
+            'desc' => '',
         ];
     }
 }

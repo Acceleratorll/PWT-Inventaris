@@ -1,19 +1,19 @@
 @extends('adminlte::page')
 
-@section('title', 'Lokasi')
+@section('title', 'Jenis Pesanan')
 
 @section('content_header')
-    <h1>Location Barang</h1>
+    <h1>jenis Pesanan</h1>
 @stop
 
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('location.store') }}" method="post">
+            <form action="{{ route('orderType.store') }}" id="input-form" method="post">
             @csrf
             <div class="row">
                 <div class="col-md-3">
-                    <x-adminlte-input fgroup-class="mb-3" name="name" label="Name" placeholder="Masukkan Nama Location" disable-feedback/>
+                    <x-adminlte-input fgroup-class="mb-3" name="name" label="Name" placeholder="Masukkan Nama Jenis Pesanan" disable-feedback/>
                 </div>
                 <div class="col-md-3">
                     <x-adminlte-input fgroup-class="mb-3" name="location" label="Exact Location" placeholder="Masukkan Location" disable-feedback/>
@@ -25,7 +25,7 @@
             </div>
             <div class="row">
             </div>
-            <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
+            <button class="form-control btn btn-outline-success" type="button" onclick="confirmation()">Simpan</button>
             </form>
         </div>
     </div>
@@ -58,6 +58,22 @@
             text: '{{ Session::get('success') }}',
             onOpen: function() {
                 Swal.showLoading()
+            }
+        });
+    }
+
+    function confirmation() {
+        Swal.fire({
+            title: 'Apakah anda sudah yakin ?',
+            text: 'Apakah anda sudah yakin dengan inputan anda ?',
+            type: 'warning',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#input-form').submit();
             }
         });
     }

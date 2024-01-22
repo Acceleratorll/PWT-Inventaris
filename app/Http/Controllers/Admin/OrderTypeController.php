@@ -27,7 +27,7 @@ class OrderTypeController extends Controller
 
     public function create(): View
     {
-        return view('orderType.create');
+        return view('orderType.index');
     }
 
     public function store(OrderTypeRequest $orderTypeRequest)
@@ -36,12 +36,10 @@ class OrderTypeController extends Controller
             DB::transaction(function () use ($orderTypeRequest) {
                 $input = $orderTypeRequest->validated();
                 $this->orderTypeService->create($input);
-                DB::commit();
             });
-            return true;
+            return redirect()->route('orderType.index')->with('success', 'Order Type Created Successfully!');
         } catch (\Throwable $th) {
-            DB::rollback();
-            return false;
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 
@@ -63,12 +61,10 @@ class OrderTypeController extends Controller
             DB::transaction(function () use ($id, $orderTypeRequest) {
                 $input = $orderTypeRequest->validated();
                 $this->orderTypeService->update($id, $input);
-                DB::commit();
             });
-            return true;
+            return redirect()->route('orderType.index')->with('success', 'Order Type Created Successfully');
         } catch (\Throwable $th) {
-            DB::rollback();
-            return false;
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 

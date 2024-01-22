@@ -9,7 +9,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('location.update', ['location' => $data->id]) }}" method="post">
+            <form action="{{ route('location.update', ['location' => $data->id]) }}" id="input-form" method="post">
             @csrf
             @method('PUT')
             <div class="row">
@@ -24,7 +24,7 @@
                     <textarea name="desc" id="desc" class="form-control mb-3" placeholder="Description">{{ $data->desc }}</textarea>
                 </div>
             </div>
-            <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
+            <button class="form-control btn btn-outline-success" type="button" onclick="confirmation()">Simpan</button>
             </form>
         </div>
     </div>
@@ -57,6 +57,22 @@
             text: '{{ Session::get('success') }}',
             onOpen: function() {
                 Swal.showLoading()
+            }
+        });
+    }
+
+    function confirmation() {
+        Swal.fire({
+            title: 'Apakah anda sudah yakin ?',
+            text: 'Apakah anda sudah yakin dengan inputan anda ?',
+            type: 'warning',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#input-form').submit();
             }
         });
     }

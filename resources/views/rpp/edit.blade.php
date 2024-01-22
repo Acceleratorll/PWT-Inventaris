@@ -9,7 +9,7 @@
 @section('content')
 <div class="row">
     <div class="card col-md-12">
-        <form action="{{ route('rpp.update',['rpp' =>$rpp->id]) }}" method="post">
+        <form action="{{ route('rpp.update',['rpp' =>$rpp->id]) }}" id="input-form" method="post">
             @csrf
             @method('PUT')
         <div class="card-body">
@@ -45,7 +45,7 @@
             </div>
             <div class="row justify-content-end">
                 <div class="col-md-3">
-                    <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
+                    <button class="form-control btn btn-outline-success" type="button" onclick="confirmation()">Simpan</button>
                 </div>
             </div>
         </div>
@@ -146,6 +146,22 @@
         });
 
         updateSelectedProducts();
+
+        function confirmation() {
+            Swal.fire({
+                title: 'Apakah anda sudah yakin ?',
+                text: 'Apakah anda sudah yakin dengan inputan anda ?',
+                type: 'warning',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#input-form').submit();
+                }
+            });
+        }
     });
 </script>
 

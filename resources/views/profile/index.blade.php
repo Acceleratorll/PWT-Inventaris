@@ -23,14 +23,6 @@
                     <span>Excel</span>
                 </a>
             </div>
-            {{-- <div class="button-action" style="margin-bottom: 20px">
-                <label for="stock-filter">Stock Filter:</label>
-                <select id="stock-filter">
-                    <option value="all">All</option>
-                    <option value="warning">Warning (30%)</option>
-                    <option value="error">Error (10%)</option>
-                </select>
-            </div> --}}
             <div class="table-responsive">
                 <table class="table table-bordered" id="myTable">
                     <caption>Tabel Pengguna</caption>

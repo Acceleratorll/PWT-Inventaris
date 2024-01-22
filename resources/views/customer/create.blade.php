@@ -37,7 +37,7 @@
 <div class="row">
     <div class="card col-md-12">
         <div class="card-body">
-            <form action="{{ route('category.store') }}" method="post">
+            <form action="{{ route('category.store') }}" id="input-form" method="post">
                 @csrf
             <div class="row">
                 <div class="col-md-6">
@@ -47,7 +47,7 @@
                     <x-adminlte-input fgroup-class="mb-3" name="max" label="Max Tahun" placeholder="Masukkan Maximal Tahun Barang Ganti Kategori" disable-feedback/>
                 </div>
             </div>
-            <button class="form-control btn btn-outline-success" type="submit">Simpan</button>
+            <button class="form-control btn btn-outline-success" type="button" onclick="confirmation()">Simpan</button>
             </form>
         </div>
     </div>
@@ -61,7 +61,21 @@
     
     @section('js')
     <script>
-        
+        function confirmation() {
+        Swal.fire({
+            title: 'Apakah anda sudah yakin ?',
+            text: 'Apakah anda sudah yakin dengan inputan anda ?',
+            type: 'warning',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#input-form').submit();
+            }
+        });
+    }
     </script>
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
