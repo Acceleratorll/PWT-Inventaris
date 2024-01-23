@@ -29,9 +29,10 @@ class ProductTransactionExport implements FromCollection, Responsable, WithHeadi
             return [
                 'Supplier' => $productTransaction->supplier->name,
                 'Code' => $productTransaction->code,
+                'Status' => $productTransaction->status ? 'Selesai' : 'Menunggu',
                 'Purchase Date' => $productTransaction->purchase_date,
-                'Incoming Products' => $this->formatIncomingProducts($productTransaction->product_transactions),
-                'Description' => $productTransaction->desc,
+                'Product Transactions' => $this->formatIncomingProducts($productTransaction->product_transactions),
+                'Description' => $productTransaction->note,
             ];
         });
     }
@@ -41,8 +42,9 @@ class ProductTransactionExport implements FromCollection, Responsable, WithHeadi
         return [
             'Supplier',
             'Code',
+            'Status',
             'Purchase Date',
-            'Incoming Products',
+            'Product Transactions',
             'Description',
         ];
     }
@@ -52,9 +54,10 @@ class ProductTransactionExport implements FromCollection, Responsable, WithHeadi
         $formattedIncomingProducts = $incomingProducts->map(function ($incomingProduct) {
             $productName = $incomingProduct->product->name;
             $qualifierAbb = $incomingProduct->product->qualifier->abbreviation;
-            $qty = $incomingProduct->qty;
+            $amount = $incomingProduct->amount;
+            $product_amount = $incomingProduct->product_amount;
 
-            return "{$productName} [Qty: {$qty} {$qualifierAbb}]";
+            return "{$productName} [Amount: {$amount} {$qualifierAbb}] [Saldo Awal: {$product_amount}]";
         })->toArray();
 
         return implode(', ', $formattedIncomingProducts);

@@ -60,10 +60,8 @@ class ProductLocationController extends Controller
             DB::transaction(function () use ($id, $productLocationRequest) {
                 $input = $productLocationRequest->validated();
 
-                DB::commit();
             });
         } catch (\Throwable $th) {
-            DB::rollBack();
         }
     }
 
@@ -106,12 +104,10 @@ class ProductLocationController extends Controller
                 }
 
                 $transaction->update(['status' => 1]);
-                DB::commit();
             });
         } catch (\Throwable $th) {
             $error = true;
             $msg = $th->getMessage();
-            DB::rollBack();
         }
 
         if ($error) {

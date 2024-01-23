@@ -174,11 +174,9 @@ class ProfileController extends Controller
 
             Excel::import(new UserImport, request()->file('file'));
 
-            DB::commit();
 
             return redirect()->back()->with('success', 'Import successful');
         } catch (\Exception $e) {
-            DB::rollBack();
 
             return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
         }

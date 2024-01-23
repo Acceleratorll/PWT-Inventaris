@@ -2,58 +2,58 @@
 
 namespace App\Imports;
 
-use App\Models\IncomingProduct;
 use App\Models\Product;
-use App\Models\productTransaction;
+use App\Models\ProductTransaction;
 use App\Models\Supplier;
+use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class productTransactionImport implements ToModel, WithHeadingRow
+class ProductTransactionImport implements ToModel, WithHeadingRow
 {
     private $productTransaction;
 
     public function model(array $row)
     {
-        $this->productTransaction = new ProductTransaction([
+        $this->productTransaction = Transaction::create([
             'supplier_id' => $this->getSupplierIdByName($row['supplier']),
             'code' => $row['code'],
-            'purchase_date' => $row['purchase_date'],
-            'desc' => $row['description'],
+            'status' => $row['status'] == 'Selesai' ? 1 : 0,
+            'purchase_date' => Carbon::parse($row['purchase_date'])->format('Y-m-d'),
+            'note' => $row['note'] ?? null,
         ]);
 
-        if ($row['description']) {
-            $this->productTransaction->desc = $row['description'];
-        }
+        $this->processIncomingProducts($row['product_transactions']);
 
-        $this->productTransaction->save();
-
-        return $this->processIncomingProducts($row['product_transactions']);
+        return $this->productTransaction;
     }
 
     private function processIncomingProducts($incomingProducts)
     {
-        preg_match_all('/\s([^\[\]]+)\s\(Qty:\s(\d+)\s\w+\]/', $incomingProducts, $matches, PREG_SET_ORDER);
-
+        preg_match_all('/\s*([^\[\]]+)\s*\[Amount: (\d+) [^\]]+\] \[Saldo Awal: (\d+)\],?/', $incomingProducts, $matches, PREG_SET_ORDER);
 
         $processedIncomingProducts = [];
 
         foreach ($matches as $match) {
-
-
             $productId = $this->getProductIdByName($match[1]);
             $qty = $match[2];
+            $product_amount = $match[3];
 
-            $incomingProduct = IncomingProduct::create([
-                'product_id' => $this->productTransaction->id,
-                'product_id' => $productId, // You need to retrieve the product ID based on $productName
-                'qty' => $qty,
-            ]);
+            if ($productId !== -1) {
+                $incomingProduct = ProductTransaction::create([
+                    'transaction_id' => $this->productTransaction->id,
+                    'product_id' => $productId,
+                    'amount' => $qty,
+                    'product_amount' => $product_amount,
+                ]);
 
-            $processedIncomingProducts[] = $incomingProduct;
+                $processedIncomingProducts[] = $incomingProduct;
+            }
         }
+
         return $processedIncomingProducts;
     }
 
@@ -77,4 +77,4 @@ class productTransactionImport implements ToModel, WithHeadingRow
             return -1;
         }
     }
-}
+};

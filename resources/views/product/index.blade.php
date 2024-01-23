@@ -45,7 +45,7 @@
                             <th scope="col" class="text-center">Kode</th>
                             <th scope="col" class="text-center">Satuan</th>
                             <th scope="col" class="text-center">Stock</th>
-                            <th scope="col" class="text-center">Stock Maksimal</th>
+                            <th scope="col" class="text-center">Stock Minimal</th>
                             <th scope="col" class="text-center">Diubah</th>
                             <th scope="col" class="text-center">Dibuat</th>
                             <th scope="col" class="text-center">Keterangan</th>

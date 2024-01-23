@@ -27,36 +27,33 @@ class ProductsExport implements FromCollection, Responsable, WithHeadings, WithC
 
     public function collection()
     {
-        $products = Product::with('material', 'product_type', 'qualifier', 'category_product')
-            ->select(
-                'id',
-                'name',
-                'product_code',
-                'amount',
-                'max_amount',
-                'note',
-                'material_id', // Include the foreign key columns
-                'product_type_id',
-                'qualifier_id',
-                'category_product_id'
-            )
-            ->get();
+        $products = Product::with(
+            'material',
+            'product_type',
+            'qualifier',
+            'category_product',
+            'outgoing_products',
+            'product_locations',
+            'product_transactions',
+            'product_plannings',
+        )->get();
 
-        // Now you can iterate through the products and include related data
         $data = [];
 
         foreach ($products as $product) {
             $data[] = [
                 'ID' => $product->id,
-                'Name' => $product->name,
-                'Product Code' => $product->product_code,
-                'Amount' => $product->amount,
-                'Max Amount' => $product->max_amount,
-                'Note' => $product->note,
-                'Material' => $product->material->name,
-                'Type' => $product->product_type->name,
-                'Qualifier' => $product->qualifier->name,
-                'Category' => $product->category_product->name,
+                'Nama' => $product->name,
+                'Bahan' => $product->material->name,
+                'Tipe Barang' => $product->product_type->name,
+                'Kategori' => $product->category_product->name,
+                'Kode' => $product->product_code,
+                'Satuan' => $product->qualifier->name,
+                'Stock' => $product->total_amount,
+                'Stock Minimal' => $product->minimal_amount,
+                'Diubah' => $product->updated_at->format('D, d-m-y, G:i'),
+                'Dibuat' => $product->created_at->format('D, d-m-y, G:i'),
+                'keterangan' => $product->note,
             ];
         }
 
@@ -65,7 +62,7 @@ class ProductsExport implements FromCollection, Responsable, WithHeadings, WithC
 
     public function headings(): array
     {
-        return ['ID', 'Name', 'Product Code', 'Amount', 'Max Amount', 'Note', 'Material', 'Type', 'Qualifier', 'Category'];
+        return ['ID', 'Nama', 'Bahan', 'Tipe Barang', 'Kategori', 'Kode', 'Satuan', 'Stock', 'Stock Minimal', 'Diubah', 'Dibuat', 'Keterangan'];
     }
 
     public function styles(Worksheet $sheet)

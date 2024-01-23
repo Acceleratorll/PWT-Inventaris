@@ -35,7 +35,7 @@ class ProductsImport implements ToModel, WithHeadingRow
             'name' => $row['name'],
             'product_code' => $row['product_code'],
             'amount' => $row['amount'],
-            'max_amount' => $row['max_amount'],
+            'minimal_amount' => $row['minimal_amount'],
             'note' => $row['note'],
             'material_id' => $materialId,
             'product_type_id' => $typeId,
@@ -43,5 +43,4 @@ class ProductsImport implements ToModel, WithHeadingRow
             'category_product_id' => $categoryProductId,
         ]);
     }
-
 }

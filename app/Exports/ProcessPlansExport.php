@@ -29,7 +29,7 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
             return [
                 'Customer' => $processPlan->customer->name,
                 'Code' => $processPlan->code,
-                'Order Type' => $processPlan->order_type,
+                'Order Type' => $processPlan->order_type->name,
                 'Outgoing Products' => $this->formatOutgoingProducts($processPlan->outgoing_products),
                 'Description' => $processPlan->desc,
             ];
@@ -52,9 +52,11 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
         $formattedOutgoingProducts = $outgoingProducts->map(function ($outgoingProduct) {
             $productName = $outgoingProduct->product->name;
             $qualifierAbb = $outgoingProduct->product->qualifier->abbreviation;
-            $qty = $outgoingProduct->qty;
+            $qty = $outgoingProduct->amount;
+            $product_amount = $outgoingProduct->product_amount;
+            $expired = $outgoingProduct->expired;
 
-            return "{$productName} [Qty: {$qty} {$qualifierAbb}]";
+            return "{$productName} [Amount: {$qty} {$qualifierAbb}] [Saldo Awal: {$product_amount} {$qualifierAbb}] [Expired: {$expired}]";
         })->toArray();
 
         return implode(', ', $formattedOutgoingProducts);

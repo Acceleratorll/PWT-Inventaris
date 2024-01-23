@@ -185,13 +185,10 @@ class ProcessPlanController extends Controller
 
                     event(new AddChartEvent('tChart', $addedData));
                     event(new DataAddedEvent($toastData, 'Rpp'));
-
-                    DB::commit();
                 });
                 return redirect()->route('rpp.index')->with('success', 'RPP berhasil dibuat !');
             }
         } catch (\Exception $e) {
-            DB::rollback();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -308,15 +305,11 @@ class ProcessPlanController extends Controller
     public function importProcessPlans()
     {
         try {
-            DB::beginTransaction();
-
-            Excel::import(new ProcessPlansImport, request()->file('file'));
-            DB::commit();
-
+            DB::Transaction(function () {
+                Excel::import(new ProcessPlansImport, request()->file('file'));
+            });
             return redirect()->back()->with('success', 'Import successful');
         } catch (\Exception $e) {
-            DB::rollBack();
-
             return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
         }
     }

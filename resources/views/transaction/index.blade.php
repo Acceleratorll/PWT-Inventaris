@@ -109,7 +109,8 @@
         Swal.fire({
             icon: 'error',
             type: 'error',
-            title: 'Error',timer: 3000,
+            title: 'Error',
+            timer: 3000,
             text: '{{ Session::get('error') }}',
             onOpen: function() {
                 Swal.showLoading()

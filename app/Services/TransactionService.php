@@ -7,7 +7,9 @@ use App\Events\DataAddedEvent;
 use App\Events\ProductNotificationEvent;
 use App\Events\UpdateChartEvent;
 use App\Events\UpdateDataEvent;
+use App\Exports\ProductTransactionExport;
 use App\Exports\TransactionExport;
+use App\Imports\ProductTransactionImport;
 use App\Imports\TransactionImport;
 use App\Notifications\CriticalProduct;
 use App\Notifications\WarningProduct;
@@ -258,22 +260,18 @@ class TransactionService
     {
         $transaction = $this->transactionRepository->all();
 
-        return (new TransactionExport($transaction))->download('product_transaction.xlsx');
+        return (new ProductTransactionExport($transaction))->download('product_transaction.xlsx');
     }
 
     public function import()
     {
         try {
-            DB::beginTransaction();
-
-            Excel::import(new TransactionImport, request()->file('file'));
-            DB::commit();
-
+            DB::transaction(function () {
+                Excel::import(new ProductTransactionImport, request()->file('file'));
+            });
             return redirect()->back()->with('success', 'Import successful');
         } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->with('error', 'Import failed: Supplier or Product values arent exist in database. Please input first and try again');
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
