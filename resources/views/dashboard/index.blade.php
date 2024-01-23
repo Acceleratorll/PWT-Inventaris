@@ -200,13 +200,14 @@
             
             var productNotif = pusher.subscribe('public.product.notification.1')
             .bind("product.notification", (data) => {
-                // console.log('Data : ', data);
-                // console.log('Data Message : ', data.message);
-                // console.log('Data Type : ', data.type);
-                // if (data.type === 'warning' || data.type === 'critical') {
-                //     handleNotification(data.data, data.type);
-                // }
-                location.reload();
+                console.log('Data : ', data);
+                console.log('Data Message : ', data.message);
+                console.log('Data Type : ', data.type);
+                if (data.type === 'warning' || data.type === 'critical') {
+                    handleNotification(data.data, data.type);
+                }else{
+                    location.reload();
+                }
             });
 
             var addChart = pusher.subscribe('public.add.chart.1')
@@ -219,16 +220,20 @@
             var updateChart = pusher.subscribe('public.update.chart.1')
             .bind("update.chart", (data) => {
                 console.log(data);
-                location.reload();
-                // if(data.chart === 'rChart'){
-                //     rppChart();
-                // }else if(data.chart === 'tChart'){
-                //     tintaChart();
-                // }else if(data.chart === 'pChart'){
-                //     productTransactionChart();
-                // }else{
-                    
-                // }
+                if(data.chart === 'rChart'){
+                    rppChart();
+                }else if(data.chart === 'tChart'){
+                    tintaChart();
+                }else if(data.chart === 'pChart'){
+                    productTransactionChart();
+                }else if(data.chart === 'pPChart'){
+                    planningPaper1Chart();
+                    planningPaper2Chart();
+                    planningInk1Chart();
+                    planningInk2Chart();
+                }else{
+                    location.reload();
+                }
             });
             
             var deleteChart = pusher.subscribe('public.delete.chart.1')
@@ -240,14 +245,15 @@
         
             var dataUpdated = pusher.subscribe('public.update.data.1')
             .bind("update.data", (data) => {
-                console.log(data);
-                
-                // if(data.name == 'Category'){
-                //     changeCategoryInfo(data);
-                // }else if(data.name == 'Product'){
-                //     affectedByProduct(data);
-                // }
-                location.reload();
+                if(data.name == 'Category'){
+                    changeCategoryInfo(data);
+                    $('#table').DataTable().ajax.reload();
+                }else if(data.name == 'Product'){
+                    affectedByProduct(data);
+                    $('#table').DataTable().ajax.reload();
+                }else{
+                    location.reload();
+                }
 
                 toastUpdateData(data);
             });

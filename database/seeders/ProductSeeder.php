@@ -158,7 +158,7 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-        // DB::table('products')->insert($data);
+        DB::table('products')->insert($data);
 
         // Product::factory()
         //     ->count(50)

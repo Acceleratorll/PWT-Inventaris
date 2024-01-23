@@ -283,14 +283,10 @@ class ProductController extends Controller
             'created_at' => $new->created_at,
         ];
 
-        if ($new->amount <= (0.1 * $new->max_amount)) {
+        if ($new->total_amount <= $new->minimal_amount) {
             auth()->user()->notify(new CriticalProduct($new));
             $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
             event(new ProductNotificationEvent('critical', $dataPro, $notif->data['message']));
-        } else if ($new->amount <= (0.3 * $new->max_amount)) {
-            auth()->user()->notify(new WarningProduct($new));
-            $notif = auth()->user()->unreadNotifications->where('data.type', 'warning')->last();
-            event(new ProductNotificationEvent('warning', $dataPro, $notif->data['message']));
         }
 
         event(new UpdateDataEvent($data, 'Product'));

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\UpdateChartEvent;
+use App\Events\UpdateDataEvent;
 use App\Exports\NotaDinasExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NotaDinasRequest;
@@ -55,7 +56,7 @@ class NotaDinasController extends Controller
                     $this->productPlanningService->create($proPlan);
                 }
             });
-            event(new UpdateChartEvent('pPChart', $input));
+            event(new UpdateChartEvent('pPChart', 'Nota Dinas'));
             return redirect()->route('notaDinas.index')->with('success', 'Nota dinas created successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -105,6 +106,7 @@ class NotaDinasController extends Controller
     public function destroy($id): JsonResponse
     {
         $this->notaDinasService->delete($id);
+        event(new UpdateChartEvent('pPChart', 'Nota Dinas'));
         return response()->json(['message' => 'Data deleted successfully!'], 200);
     }
 
@@ -131,6 +133,9 @@ class NotaDinasController extends Controller
             DB::Transaction(function () {
                 Excel::import(new NotaDinasImport, request()->file('file'));
             });
+
+            event(new UpdateChartEvent('pPChart', 'Nota Dinas'));
+
             return redirect()->back()->with('success', 'Import successful');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());

@@ -22,13 +22,13 @@ class CategoryProductSeeder extends Seeder
             ],
             [
                 'name' => 'Slow Moving',
-                'min' => '1',
+                'min' => '2',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Unused',
-                'min' => '2',
+                'name' => 'UnMoved',
+                'min' => '3',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
