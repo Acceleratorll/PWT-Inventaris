@@ -18,6 +18,7 @@ use App\Repositories\ProductRepository;
 use App\Repositories\ProductLocationRepository;
 use App\Repositories\ProductTransactionRepository;
 use App\Repositories\TransactionRepository;
+use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -26,6 +27,7 @@ use Yajra\DataTables\Facades\DataTables;
 class TransactionService
 {
     protected $productRepository;
+    protected $userRepository;
     protected $productTransactionRepository;
     protected $productLocationRepository;
     protected $materialRepository;
@@ -33,12 +35,14 @@ class TransactionService
 
     public function __construct(
         ProductRepository $productRepository,
+        UserRepository $userRepository,
         ProductTransactionRepository $productTransactionRepository,
         ProductLocationRepository $productLocationRepository,
         MaterialRepository $materialRepository,
         TransactionRepository $transactionRepository,
     ) {
         $this->productRepository = $productRepository;
+        $this->userRepository = $userRepository;
         $this->productTransactionRepository = $productTransactionRepository;
         $this->productLocationRepository = $productLocationRepository;
         $this->materialRepository = $materialRepository;
@@ -98,50 +102,50 @@ class TransactionService
         }
     }
 
-    private function deleteIncomingProduct($incomingProduct, &$amountChanges)
-    {
-        $amountChanges[$incomingProduct->product_id] = -$incomingProduct->amount;
-        $incomingProduct->delete();
-    }
+    // private function deleteIncomingProduct($incomingProduct, &$amountChanges)
+    // {
+    //     $amountChanges[$incomingProduct->product_id] = -$incomingProduct->amount;
+    //     $incomingProduct->delete();
+    // }
 
 
-    private function updateIncomingProduct($transaction, $productId, $productData, &$amountChanges)
-    {
-        $product = $this->productRepository->find($productId);
-        $oriAmount = $product->total_amount;
-        (int) $amount = 0;
+    // private function updateIncomingProduct($transaction, $productId, $productData, &$amountChanges)
+    // {
+    //     $product = $this->productRepository->find($productId);
+    //     $oriAmount = $product->total_amount;
+    //     (int) $amount = 0;
 
-        foreach ($productData['location_ids'] as $locationId => $locationData) {
-            $proLoc = $this->productLocationRepository->findByProductExpiredLocation($product->id, $locationId, $locationData['expired']);
-            $proLocOri = $this->productLocationRepository->findByProductExpiredPurchaseLocation($product->id, $locationId, $locationData['expired']);
+    //     foreach ($productData['location_ids'] as $locationId => $locationData) {
+    //         $proLoc = $this->productLocationRepository->findByProductExpiredLocation($product->id, $locationId, $locationData['expired']);
+    //         $proLocOri = $this->productLocationRepository->findByProductExpiredPurchaseLocation($product->id, $locationId, $locationData['expired']);
 
-            if (!$proLoc) {
-                $inputOutLoc = [
-                    'product_id' => $product->id,
-                    'location_id' => $locationId,
-                    'amount' => $locationData['amount'],
-                    'purchase_date' => $transaction->purchase_date,
-                    'expired' => $locationData['expired'],
-                ];
+    //         if (!$proLoc) {
+    //             $inputOutLoc = [
+    //                 'product_id' => $product->id,
+    //                 'location_id' => $locationId,
+    //                 'amount' => $locationData['amount'],
+    //                 'purchase_date' => $transaction->purchase_date,
+    //                 'expired' => $locationData['expired'],
+    //             ];
 
-                $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
-                $product->product_locations()->save($incomeLoc);
-            } else if ($proloc == $transa) {
-                $proLoc->update(['amount' => $proLoc->amount += $locationData['amount']]);
-            }
-            $amount += $locationData['amount'];
-        }
+    //             $incomeLoc = $this->productLocationRepository->create($inputOutLoc);
+    //             $product->product_locations()->save($incomeLoc);
+    //         } else if ($proloc == $transa) {
+    //             $proLoc->update(['amount' => $proLoc->amount += $locationData['amount']]);
+    //         }
+    //         $amount += $locationData['amount'];
+    //     }
 
-        $inputOutPro = [
-            'transaction_id' => $transaction->id,
-            'product_id' => $productId,
-            'amount' => (int)$amount,
-            'product_amount' => $oriAmount,
-        ];
+    //     $inputOutPro = [
+    //         'transaction_id' => $transaction->id,
+    //         'product_id' => $productId,
+    //         'amount' => (int)$amount,
+    //         'product_amount' => $oriAmount,
+    //     ];
 
-        $income = $this->productTransactionRepository->create($inputOutPro);
-        $transaction->product_transactions()->save($income);
-    }
+    //     $income = $this->productTransactionRepository->create($inputOutPro);
+    //     $transaction->product_transactions()->save($income);
+    // }
 
     private function createIncomingProduct($transaction, $productId, $productData, &$amountChanges)
     {
@@ -235,15 +239,15 @@ class TransactionService
 
     public function notifyProduct($transaction)
     {
-        $user = auth()->user();
         foreach ($transaction->product_transactions as $iProduct) {
             $product = $this->productRepository->find($iProduct->product_id);
-            if ($product->amount < (0.1 * $product->max_amount)) {
-                auth()->user()->notify(new CriticalProduct($product));
-                event(new ProductNotificationEvent('critical', $product));
-            } else if ($product->amount < (0.3 * $product->max_amount)) {
-                auth()->user()->notify(new WarningProduct($product));
-                event(new ProductNotificationEvent('warning', $product));
+            if ($product->total_amount <= $product->minimal_amount) {
+                $users = $this->userRepository->all();
+                foreach ($users as $user) {
+                    $user->notify(new CriticalProduct($product));
+                    $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
+                    event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
+                }
             }
         }
     }

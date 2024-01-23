@@ -18,15 +18,10 @@ class MonitorProductQuantity extends Command
     public function handle()
     {
         while (true) {
-            $products3 = Product::whereRaw('amount <= (0.3 * max_amount)')->get();
-            $products1 = Product::whereRaw('amount <= (0.1 * max_amount)')->get();
+            $products = Product::where('total_amount <= minimal_amount')->get();
 
-            foreach ($products3 as $product) {
-                event(new \App\Events\ProductQuantityLow($product, 30));
-            }
-
-            foreach ($products1 as $product) {
-                event(new \App\Events\ProductQuantityLow($product, 10));
+            foreach ($products as $product) {
+                
             }
 
             sleep(60);

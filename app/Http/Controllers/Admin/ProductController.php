@@ -16,6 +16,7 @@ use App\Notifications\CriticalProduct;
 use App\Notifications\WarningProduct;
 use App\Repositories\CategoryProductRepository;
 use App\Repositories\ProductRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -27,11 +28,16 @@ use Maatwebsite\Excel\Facades\Excel;
 class ProductController extends Controller
 {
     protected $productRepository;
+    protected $userRepository;
     protected $categoryProductRepository;
 
-    public function __construct(ProductRepository $productRepository, CategoryProductRepository $categoryProductRepository)
-    {
+    public function __construct(
+        ProductRepository $productRepository,
+        UserRepository $userRepository,
+        CategoryProductRepository $categoryProductRepository
+    ) {
         $this->productRepository = $productRepository;
+        $this->userRepository = $userRepository;
         $this->categoryProductRepository = $categoryProductRepository;
     }
 
@@ -234,10 +240,13 @@ class ProductController extends Controller
         $category = $this->categoryProductRepository->find($product->category_product_id);
         $count = $category->products->count();
 
-        if ($product->amount <= $product->minimal_amount) {
-            auth()->user()->notify(new CriticalProduct($product));
-            $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
-            event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
+        if ($product->total_amount <= $product->minimal_amount) {
+            $users = $this->userRepository->all();
+            foreach ($users as $user) {
+                $user->notify(new CriticalProduct($product));
+                $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
+                event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
+            }
         }
 
         $data = [
@@ -284,9 +293,12 @@ class ProductController extends Controller
         ];
 
         if ($new->total_amount <= $new->minimal_amount) {
-            auth()->user()->notify(new CriticalProduct($new));
-            $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
-            event(new ProductNotificationEvent('critical', $dataPro, $notif->data['message']));
+            $users = $this->userRepository->all();
+            foreach ($users as $user) {
+                $user->notify(new CriticalProduct($new));
+                $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
+                event(new ProductNotificationEvent('critical', $new, $notif->data['message']));
+            }
         }
 
         event(new UpdateDataEvent($data, 'Product'));
@@ -325,7 +337,7 @@ class ProductController extends Controller
 
     public function getJsonProductsByCategory($category): JsonResponse
     {
-        $products = $this->productRepository->getProductsByCategory($category);
+        $products = $this->productRepository->getByCategory($category);
         return response()->json($products);
     }
 

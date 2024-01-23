@@ -26,11 +26,10 @@ class CheckProductQuantities extends Command
      */
     public function handle()
     {
-        $products = Product::where('amount', '<', 0.5 * 'max_amount')->get();
+        $products = Product::where('total_amount', '<=', 'minimal_amount')->get();
 
         foreach ($products as $product) {
             event(new \App\Events\ProductQuantityLow($product, 50)); // Notifikasi saat kuantitas produk kurang dari 50%
-            event(new \App\Events\ProductQuantityLow($product, 30)); // Notifikasi saat kuantitas produk kurang dari 30%
         }
     }
 }

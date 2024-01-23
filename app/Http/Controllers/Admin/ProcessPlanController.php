@@ -244,9 +244,12 @@ class ProcessPlanController extends Controller
         foreach ($rpp->outgoing_products as $oProduct) {
             $cproduct = $this->productRepository->find($oProduct->product_id);
             if ($cproduct->amount <= $cproduct->minimal_amount) {
-                auth()->user()->notify(new CriticalProduct($cproduct));
-                $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
-                event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
+                $users = $this->userRepository->all();
+                foreach ($users as $user) {
+                    $user->notify(new CriticalProduct($cproduct));
+                    $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
+                    event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
+                }
             }
         }
 
