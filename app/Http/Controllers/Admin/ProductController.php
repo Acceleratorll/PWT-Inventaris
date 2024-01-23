@@ -347,14 +347,12 @@ class ProductController extends Controller
     public function importProducts()
     {
         try {
-            DB::beginTransaction();
-
-            Excel::import(new ProductsImport, request()->file('file'));
-
+            DB::transaction(function () {
+                Excel::import(new ProductsImport, request()->file('file'));
+            });
 
             return redirect()->back()->with('success', 'Import successful');
         } catch (\Exception $e) {
-
             return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
         }
     }

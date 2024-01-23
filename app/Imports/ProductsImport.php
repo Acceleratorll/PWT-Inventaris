@@ -15,28 +15,28 @@ class ProductsImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         // Retrieve the material ID
-        $materialName = $row['material'];
+        $materialName = $row['bahan'];
         $material = Material::where("name", "like", "%" . $materialName . "%")->first();
         $materialId = $material ? $material->id : null;
 
         // Retrieve the product type ID
-        $type = ProductType::where("name", "like", "%" . $row['type'] . "%")->first();
+        $type = ProductType::where("name", "like", "%" . $row['tipe_barang'] . "%")->first();
         $typeId = $type ? $type->id : null;
 
         // Retrieve the qualifier ID
-        $qualifier = Qualifier::where("name", "like", "%" . $row['qualifier'] . "%")->first();
+        $qualifier = Qualifier::where("name", "like", "%" . $row['satuan'] . "%")->first();
         $qualifierId = $qualifier ? $qualifier->id : null;
 
         // Retrieve the category product ID
-        $category = CategoryProduct::where("name", "like", "%" . $row['category'] . "%")->first();
+        $category = CategoryProduct::where("name", "like", "%" . $row['kategori'] . "%")->first();
         $categoryProductId = $category ? $category->id : null;
 
         return new Product([
-            'name' => $row['name'],
-            'product_code' => $row['product_code'],
-            'amount' => $row['amount'],
-            'minimal_amount' => $row['minimal_amount'],
-            'note' => $row['note'],
+            'name' => $row['nama'],
+            'product_code' => $row['kode'],
+            'total_amount' => $row['stock'],
+            'minimal_amount' => $row['stock_minimal'],
+            'note' => $row['keterangan'],
             'material_id' => $materialId,
             'product_type_id' => $typeId,
             'qualifier_id' => $qualifierId,
