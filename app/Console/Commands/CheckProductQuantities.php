@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Models\User;
+use App\Notifications\CriticalProduct;
 use Illuminate\Console\Command;
 
 class CheckProductQuantities extends Command
@@ -29,7 +31,7 @@ class CheckProductQuantities extends Command
         $products = Product::where('total_amount', '<=', 'minimal_amount')->get();
 
         foreach ($products as $product) {
-            event(new \App\Events\ProductQuantityLow($product, 50)); // Notifikasi saat kuantitas produk kurang dari 50%
+            
         }
     }
 }
