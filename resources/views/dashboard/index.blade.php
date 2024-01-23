@@ -260,12 +260,14 @@
 
             var dataAdded = pusher.subscribe('public.data.added.1')
             .bind("data.added", (data) => {
-                console.log(data);
                 
                 if(data.name == 'Category'){
                     changeCategoryInfo(data);
                 }else if(data.name == 'Product'){
                     affectedByProduct(data);
+                    $('#table').DataTable().ajax.reload();
+                }else if(data.name == 'Import'){
+                    location.reload();
                 }
                 
                 toastAddData(data);

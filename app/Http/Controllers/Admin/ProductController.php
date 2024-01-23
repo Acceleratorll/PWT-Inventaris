@@ -234,18 +234,18 @@ class ProductController extends Controller
         $category = $this->categoryProductRepository->find($product->category_product_id);
         $count = $category->products->count();
 
+        if ($product->amount <= $product->minimal_amount) {
+            auth()->user()->notify(new CriticalProduct($product));
+            $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
+            event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
+        }
+
         $data = [
             'id' => $product->category_product_id,
             'name' => $product->category_product->name,
             'qty' => $count,
             'context' => 'create',
         ];
-
-        if ($product->amount <= $product->minimal_amount) {
-            auth()->user()->notify(new CriticalProduct($product));
-            $notif = auth()->user()->unreadNotifications->where('data.type', 'critical')->last();
-            event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
-        }
 
         event(new DataAddedEvent($data, 'Product'));
         return redirect()->route('product.index')->with('success', 'Product created successfully');
@@ -347,6 +347,12 @@ class ProductController extends Controller
                 Excel::import(new ProductsImport, request()->file('file'));
             });
 
+            $data = [
+                'name' => 'Import',
+                'context' => 'create',
+            ];
+
+            event(new DataAddedEvent($data, 'Import'));
             return redirect()->back()->with('success', 'Import successful');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
