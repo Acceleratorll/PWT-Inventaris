@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Events\ProductNotificationEvent;
 use Illuminate\Console\Command;
 use App\Models\Product;
 use App\Models\User;
@@ -19,17 +20,17 @@ class MonitorProductQuantity extends Command
 
     public function handle()
     {
-        while (true) {
-            $products = Product::where('total_amount <= minimal_amount')->get();
+        $products = Product::where('total_amount', '<=', 'minimal_amount')->get();
+        $users = User::all();
 
-            foreach ($products as $product) {
-                $users = User::all();
-                foreach ($users as $user) {
-                    $user->notify(new CriticalProduct($product));
+        foreach ($products as $product) {
+            foreach ($users as $user) {
+                $user->notify(new CriticalProduct($product));
+                $notif = $user->unreadNotifications->where('data.type', 'critical')->where('data.type', 'critical')
+                    ->sortByDesc('created_at')
+                    ->first();;
                 }
-            }
-
-            sleep(60);
+                event(new ProductNotificationEvent('critical', $product, $notif->data['message']));
         }
     }
 }

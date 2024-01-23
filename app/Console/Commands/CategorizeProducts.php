@@ -16,8 +16,10 @@ class CategorizeProducts extends Command
     {
         $categories = CategoryProduct::orderBy('min', 'asc')->get();
         foreach ($categories as $category) {
-            Product::where('updated_at', '<=', now()->subYears($category->min))
-                ->update(['category_product_id' => $category->id]);
+            $products = Product::where('updated_at', '<=', now()->subYears($category->min))->get();
+            foreach ($products as $product) {
+                $product->update(['category_product_id' => $category->id]);
+            }
         }
 
         $this->info('Products categorized successfully.');

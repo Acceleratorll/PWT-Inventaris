@@ -28,9 +28,10 @@ class CriticalProduct extends Notification implements ShouldBroadcast
     public function toDatabase($notifiable)
     {
         return [
-            'message' => "Low stock alert: {$this->product->name} is below 10% of max amount.",
+            'message' => "Low stock alert: {$this->product->name} is below of minimal amount.",
             'name' => $this->product->name,
             'id' => $this->product->id,
+            'total_amount' => $this->product->total_amount,
             'type' => 'critical',
         ];
     }
@@ -38,9 +39,10 @@ class CriticalProduct extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => "Low stock alert: {$this->product->name} is below 10% of max amount.",
+            'message' => "Low stock alert: {$this->product->name} is below of minimal amount.",
             'name' => $this->product->name,
             'id' => $this->product->id,
+            'total_amount' => $this->product->total_amount,
         ]);
     }
 

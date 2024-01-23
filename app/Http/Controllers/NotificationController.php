@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -24,6 +25,9 @@ class NotificationController extends Controller
             })
             ->addColumn('type', function ($notification) {
                 return $notification->data['type'];
+            })
+            ->addColumn('total_amount', function ($notification) {
+                return $notification->data['total_amount'];
             })
             ->addColumn('formatted_created_at', function ($notification) {
                 return $notification->created_at->format('D, d-m-y, G:i');
@@ -71,6 +75,14 @@ class NotificationController extends Controller
             ->where('data.type', $request->type)
             ->markAsRead();
         return response()->json(['message' => 'Notifications marked as read']);
+    }
+
+    public function readAll()
+    {
+        auth()->user()->unreadNotifications->each(function ($notification) {
+            $notification->markAsRead();
+        });
+        return redirect()->route('notification.index')->with('success', 'All notifications marked as read');
     }
 
     public function markAsRead($id)

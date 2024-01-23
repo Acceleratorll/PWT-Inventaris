@@ -13,7 +13,7 @@
         <span class="badge badge-danger navbar-badge" id="critical-notification-count">{{ auth()->user()->unreadNotifications->where('data.type', 'critical')->count() }}</span>
     </a>
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="critical-notification-list">
-        <span class="dropdown-header" id="critical-count-notification">{{ auth()->user()->unreadNotifications->where('data.type', 'warning')->count() }} Notifications</span>
+        <span class="dropdown-header" id="critical-count-notification">{{ auth()->user()->unreadNotifications->where('data.type', 'critical')->count() }} Notifications</span>
         <div class="dropdown-divider"></div>
         @foreach(auth()->user()->unreadNotifications->where('data.type', 'critical')->take(5) as $notification)
         <a href="#" class="dropdown-item">
