@@ -15,6 +15,11 @@ class NotaDinasService
         $this->repository = $repository;
     }
 
+    public function all()
+    {
+        return $this->repository->all();
+    }
+
     public function getById($id)
     {
         return $this->repository->find($id);

@@ -3,12 +3,17 @@
 namespace App\Exports;
 
 use App\Models\NotaDinas;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class NotaDinasExport implements FromCollection
+class NotaDinasExport implements FromCollection, Responsable, WithHeadings, WithColumnWidths, ShouldAutoSize, WithStyles
 {
     use Exportable;
 
@@ -23,10 +28,11 @@ class NotaDinasExport implements FromCollection
     {
         return $this->notaDinas->map(function ($item) {
             return [
-                'Customer' => $item->customer->name,
                 'Code' => $item->code,
-                'Order Type' => $item->order_type->name,
-                'Outgoing Products' => $this->formatOutgoingProducts($item->outgoing_products),
+                'Authorized' => strval($item->authorized),
+                'From' => $item->from_date,
+                'To' => $item->to_date,
+                'Product Planned' => $this->formatProductPlannings($item->product_plannings),
                 'Description' => $item->desc,
             ];
         });
@@ -35,27 +41,28 @@ class NotaDinasExport implements FromCollection
     public function headings(): array
     {
         return [
-            'Customer',
             'Code',
-            'Order Type',
-            'Outgoing Products',
+            'Authorized',
+            'From',
+            'To',
+            'Product Planned',
             'Description',
         ];
     }
 
-    protected function formatOutgoingProducts($outgoingProducts)
+    protected function formatProductPlannings($productPlannings)
     {
-        $formattedOutgoingProducts = $outgoingProducts->map(function ($outgoingProduct) {
-            $productName = $outgoingProduct->product->name;
-            $qualifierAbb = $outgoingProduct->product->qualifier->abbreviation;
-            $qty = $outgoingProduct->amount;
-            $product_amount = $outgoingProduct->product_amount;
-            $expired = $outgoingProduct->expired;
+        $formattedProductPlannings = $productPlannings->map(function ($productPlanning) {
+            $productName = $productPlanning->product->name;
+            $qualifierAbb = $productPlanning->product->qualifier->abbreviation;
+            $qty = $productPlanning->requirement_amount;
+            $product_amount = $productPlanning->product_amount;
+            $procurement = $productPlanning->procurement_plan_amount;
 
-            return "{$productName} [Amount: {$qty} {$qualifierAbb}] [Saldo Awal: {$product_amount} {$qualifierAbb}] [Expired: {$expired}]";
+            return "{$productName} [Requirement: {$qty} {$qualifierAbb}] [Saldo: {$product_amount} {$qualifierAbb}] [Procurement: {$procurement}]";
         })->toArray();
 
-        return implode(', ', $formattedOutgoingProducts);
+        return implode(', ', $formattedProductPlannings);
     }
 
     public function styles(Worksheet $sheet)
@@ -87,8 +94,8 @@ class NotaDinasExport implements FromCollection
             'A' => 33.0,
             'B' => 33.0,
             'C' => 33.0,
-            'D' => 130.0,
-            'E' => 95.0,
+            'D' => 33.0,
+            'E' => 33.0,
         ];
     }
 }

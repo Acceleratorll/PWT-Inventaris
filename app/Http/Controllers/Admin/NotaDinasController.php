@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\UpdateChartEvent;
+use App\Exports\NotaDinasExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NotaDinasRequest;
+use App\Imports\NotaDinasImport;
 use App\Services\NotaDinasService;
 use App\Services\ProductPlanningService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NotaDinasController extends Controller
 {
@@ -120,5 +123,24 @@ class NotaDinasController extends Controller
     {
         $term = $request->term;
         return $this->notaDinasService->select($term);
+    }
+
+    public function import()
+    {
+        try {
+            DB::Transaction(function () {
+                Excel::import(new NotaDinasImport, request()->file('file'));
+            });
+            return redirect()->back()->with('success', 'Import successful');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
+        }
+    }
+
+    public function export()
+    {
+        $data = $this->notaDinasService->all();
+
+        return (new NotaDinasExport($data))->download('nota_dinas.xlsx');
     }
 }

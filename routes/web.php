@@ -78,6 +78,8 @@ Route::get('/export/products', [ProductController::class, 'exportProducts'])->na
 Route::post('/import/products', [ProductController::class, 'importProducts'])->name('import.products');
 Route::get('/export/process-plans', [ProcessPlanController::class, 'exportProcessPlans'])->name('export.processplans');
 Route::post('/import/process-plans', [ProcessPlanController::class, 'importProcessPlans'])->name('import.processplans');
+Route::get('/export/notaDinas', [NotaDinasController::class, 'export'])->name('export.nota-dinas');
+Route::post('/import/notaDinas', [NotaDinasController::class, 'import'])->name('import.nota-dinas');
 Route::get('/export/transaction', [TransactionController::class, 'exportTransactions'])->name('export.transactions');
 Route::post('/import/transaction', [TransactionController::class, 'importTransactions'])->name('import.transactions');
 Route::get('/export/productLocations', [ProductLocationController::class, 'exportProductLocations'])->name('export.productLocations');

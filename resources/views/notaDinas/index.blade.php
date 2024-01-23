@@ -13,7 +13,13 @@
             <div class="button-action" style="margin-bottom: 20px">
                 @can('create nota dinas')
                 <a href="{{ route('notaDinas.create') }}" class="btn btn-primary">+ Tambah</a>
+                <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
+                    <span>Import</span>
+                </a>
                 @endcan
+                <a class="btn btn-secondary" href="{{ route('export.nota-dinas') }}">
+                    <span>Excel</span>
+                </a>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered text-center" id="table">
@@ -36,6 +42,31 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Import Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('import.nota-dinas') }}" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-group">
+                        <label for="file">Choose File</label>
+                        <input type="file" class="form-control-file" id="file" name="file">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Import</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @stop
 
 @section('css')
@@ -47,6 +78,32 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
+    if ('{{ Session::has('error') }}') {
+        Swal.fire({
+            icon: 'error',
+            type: 'error',
+            title: 'Error',
+            // timer: 3000,
+            text: '{{ Session::get('error') }}',
+            onOpen: function() {
+                Swal.showLoading()
+            }
+        });
+    }
+
+    if ('{{ Session::has('success') }}') {
+        Swal.fire({
+            icon: 'success',
+            type: 'success',
+            title: 'Success',
+            // timer: 3000,
+            text: '{{ Session::get('success') }}',
+            onOpen: function() {
+                Swal.showLoading()
+            }
+        });
+    }
+
     var url = '{{ route('get-table-nota-dinas') }}';
     if ('{{ auth()->user()->getRoleNames()[0] }}' == 'logistik'){
         url = '{{ route('get-table-nota-dinas-authorized') }}';
@@ -68,30 +125,6 @@
         { data: 'desc', name: 'desc' },
         { data: 'action', name: 'action', orderable: false },
     ];
-
-    if ('{{ Session::has('error') }}') {
-        Swal.fire({
-            icon: 'error',
-            type: 'error',
-            title: 'Error',timer: 3000,
-            text: '{{ Session::get('error') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
-        });
-    }
-
-    if ('{{ Session::has('success') }}') {
-        Swal.fire({
-            icon: 'success',
-            type: 'success',title: 'Success',
-            timer: 3000,
-            text: '{{ Session::get('success') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
-        });
-    }
 
     $(document).ready(function() {
         var table = $('#table').DataTable({
