@@ -152,11 +152,8 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <label>Kadaluarsa</label>
-                                                <input type="date" name="selected_products[${productId}][pro_loc_ids][${location.id}][expired]" value="${formatDate(data.data.expired)}" class="form-control mb-3" required>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label>Tanggal Pembelian</label>
-                                                <input type="date" name="selected_products[${productId}][pro_loc_ids][${location.id}][purchase_date]" value="${formatDate(data.data.purchase_date)}" class="form-control mb-3" required>
+                                                <input type="date" name="selected_products[${productId}][pro_loc_ids][${location.id}][expired]" value="${formatDate(data.data.expired)}" class="form-control mb-3" required readonly>
+                                                <input type="hidden" name="selected_products[${productId}][pro_loc_ids][${location.id}][purchase_date]" value="${formatDate(data.data.purchase_date)}" class="form-control mb-3" required>
                                             </div>
                                         </div>
                                 `;

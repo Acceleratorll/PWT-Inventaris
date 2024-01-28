@@ -34,7 +34,7 @@ class NotaDinasRepository
 
     public function all()
     {
-        return $this->model->with('product_plannings.product')->get();
+        return $this->model->with('product_plannings.product')->orderBy('id', 'desc')->get();
     }
 
     public function paginate(int $num)

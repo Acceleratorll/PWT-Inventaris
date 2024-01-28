@@ -89,12 +89,10 @@
                 Swal.fire({
                     title: `customer Name "${name}" created successfully`, 
                     type: 'success',
-icon: 'success',
-type: 'success',
                     icon: "success",
                     timer: 1700,
                 });
-                Swal.showLoading();
+                
                 console.log('After Loading...');
                 $('#table').DataTable().ajax.reload();
             },

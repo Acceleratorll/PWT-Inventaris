@@ -121,7 +121,7 @@
                     icon: "success",
                     timer: 1700,
                 });
-                Swal.showLoading();
+                
 
                 var dataTable = $('#table').DataTable();
                 dataTable.ajax.reload();

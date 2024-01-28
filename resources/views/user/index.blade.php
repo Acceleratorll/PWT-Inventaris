@@ -20,7 +20,7 @@
                 </a>
                 @endcan
                 <a class="btn btn-secondary" href="{{ route('export.profiles') }}">
-                    <span>Excel</span>
+                    <span>Export</span>
                 </a>
             </div>
             {{-- <div class="button-action" style="margin-bottom: 20px">

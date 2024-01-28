@@ -3,9 +3,9 @@
     Ubah
 </a>
 @endcan
-<button id="show-outgoing-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+{{-- <button id="show-outgoing-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
     Detail
-</button>
+</button> --}}
 @can('delete rpp')
 <button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">
 Hapus
@@ -47,7 +47,7 @@ Hapus
                                 icon: 'success',
                                 timer: 1700,
                             });
-                            Swal.showLoading();
+                            
     
                             $('#table').DataTable().ajax.reload();
                         },

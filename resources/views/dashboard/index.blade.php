@@ -234,6 +234,7 @@
                 }else{
                     location.reload();
                 }
+                toastUpdateData(data);
             });
             
             var deleteChart = pusher.subscribe('public.delete.chart.1')

@@ -59,7 +59,6 @@ class ProductLocationController extends Controller
         try {
             DB::transaction(function () use ($id, $productLocationRequest) {
                 $input = $productLocationRequest->validated();
-
             });
         } catch (\Throwable $th) {
         }
@@ -86,6 +85,11 @@ class ProductLocationController extends Controller
 
                     foreach ($productData['location_ids'] as $locationId => $locationData) {
                         $proLoc = $this->productLocationRepository->findByProductExpiredLocation($productId, $locationId, $locationData['expired']);
+                        if ($locationData['expired'] <= now()) {
+                            $error = true;
+                            $msg = 'Invalid expired date';
+                            return;
+                        }
 
                         if (!$proLoc) {
                             $inputOutLoc = [

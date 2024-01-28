@@ -15,7 +15,7 @@
                     <span>Import</span>
                 </a> --}}
                 <a class="btn btn-secondary" href="{{ route('export.productLocations') }}">
-                    <span>Excel</span>
+                    <span>Export</span>
                 </a>
             </div>
             <div class="table-responsive">
@@ -92,9 +92,7 @@
             type: 'error',
             title: 'Error',timer: 3000,
             text: '{{ Session::get('error') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 
@@ -104,9 +102,7 @@
             type: 'success',title: 'Success',
             timer: 3000,
             text: '{{ Session::get('success') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 

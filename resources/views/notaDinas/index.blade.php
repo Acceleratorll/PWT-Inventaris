@@ -18,7 +18,7 @@
                 </a>
                 @endcan
                 <a class="btn btn-secondary" href="{{ route('export.nota-dinas') }}">
-                    <span>Excel</span>
+                    <span>Export</span>
                 </a>
             </div>
             <div class="table-responsive">
@@ -85,9 +85,7 @@
             title: 'Error',
             timer: 3000,
             text: '{{ Session::get('error') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 
@@ -98,9 +96,7 @@
             title: 'Success',
             timer: 3000,
             text: '{{ Session::get('success') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 
@@ -132,6 +128,7 @@
             serverSide: true,
             ajax: url,
             columns: column,
+            order: [[0, 'desc']],
         });
 
         var detailRows = [];
@@ -234,7 +231,7 @@
                     icon: "success",
                     timer: 1700,
                 });
-                Swal.showLoading();
+                
 
                 var dataTable = $('#table').DataTable();
                 dataTable.ajax.reload();

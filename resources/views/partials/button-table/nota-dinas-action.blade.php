@@ -4,15 +4,21 @@
 </a>
 @endcan
 @can('authorize nota dinas')
+@if($authorized !== 1)
 <a href="{{ route('notaDinas.authorize', ['id' => $id]) }}" class="auth btn btn-primary">
     Authorize
 </a>
+@endif
+@if($authorized !== 0)
 <a href="{{ route('notaDinas.wait', ['id' => $id]) }}" class="auth btn btn-success">
     Wait
 </a>
+@endif
+@if($authorized !== 2)
 <a href="{{ route('notaDinas.decline', ['id' => $id]) }}" class="auth btn btn-warning">
     Decline
 </a>
+@endif
 @endcan
 @can('delete nota dinas')
 <button id="delete" data-id="{{ $id }}" data-original-title="Delete" class="delete btn btn-danger">

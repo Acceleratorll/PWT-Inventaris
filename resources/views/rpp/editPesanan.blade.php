@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit transaction')
+@section('title', 'Pengambilan Barang')
 
 @section('content_header')
-    <h1>Alokasi Barang</h1>
+    <h1>Pengambilan Barang</h1>
 @stop
 
 @section('content')
@@ -14,28 +14,28 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="supplier_id">Supplier</label>
-                        <select name="supplier_id" id="supplier_id" class="form-control" required disabled>
-                            <option value="{{ $transaction->supplier_id }}">{{ $transaction->supplier->name }}</option>
+                        <label for="customer_id">Pelanggan</label>
+                        <select name="customer_id" id="customer_id" class="form-control" required disabled>
+                            <option value="{{ $rpp->customer_id }}">{{ $rpp->customer->name }}</option>
                         </select>
                     </div>
                         <div class="col-md-6">
                         <label for="code">Kode</label>
-                        <input type="text" value="{{ $transaction->code }}" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode transaction" required readonly/>
-                        <input type="hidden" value="{{ $transaction->id }}" class="form-control mb-3" name="transaction_id" id="transaction_id" required readonly/>
+                        <input type="text" value="{{ $rpp->code }}" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode rpp" required readonly/>
+                        <input type="hidden" value="{{ $rpp->id }}" class="form-control mb-3" name="rpp_id" id="rpp_id" required readonly/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="purchase_date">Tanggal Beli</label>
-                        <input type="datetime-local" name="purchase_date" value="{{ $transaction->purchase_date }}" id="purchase_date" class="form-control mb-3" placeholder="Masukkan Tanggal Pembelian" required readonly/>
+                        <label for="outed_date">Tanggal Beli</label>
+                        <input type="datetime-local" name="outed_date" value="{{ $rpp->outed_date }}" id="outed_date" class="form-control mb-3" placeholder="Masukkan Tanggal Pembelian" required readonly/>
                     </div>
                     <div class="col-md-8">
                         <label for="products">Barang (Bisa pilih lebih dari 1)</label>
                         <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple disabled>
-                            @if($transaction->product_transactions)
-                                @foreach($transaction->product_transactions as $product_transaction)
-                                    <option value="{{ $product_transaction->product_id }}" selected>{{ $product_transaction->product->name }}</option>
+                            @if($rpp->outgoing_products)
+                                @foreach($rpp->outgoing_products as $outgoing_product)
+                                    <option value="{{ $outgoing_product->product_id }}" selected>{{ $outgoing_product->product->name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -92,43 +92,43 @@
     }
 
     $(document).ready(function () {
-        const supplier = document.getElementById("supplier_id");
+        const customer = document.getElementById("customer_id");
         const products = document.getElementById("products");
         const locations = document.getElementById("locations");
         const productsSelect = $("#products");
         const selectedProductsDiv = $("#selected-products");
         const products_ph = "Pilih Barang";
         const products_url = '{{ route("get-json-products") }}';
-        const supplier_ph = "Pilih Supplier";
-        const supplier_url = '{{ route("get-json-suppliers") }}';
+        const customer_ph = "Pilih Customer";
+        const customer_url = '{{ route("get-json-customers") }}';
         const location_ph = "Pilih Location";
         const locations_url = '{{ route("get-json-locations") }}';
         
         let totalRealAmount=0;
 
-        selectInput(supplier, supplier_url, supplier_ph);
+        selectInput(customer, customer_url, customer_ph);
         selectInput(products, products_url, products_ph);
         
         function getProductQty(productId) {
-            @foreach($transaction->product_transactions as $product_transaction)
-                if ({{ $product_transaction->product_id }} == productId) {
-                    return {{ $product_transaction->amount }};
+            @foreach($rpp->outgoing_products as $outgoing_product)
+                if ({{ $outgoing_product->product_id }} == productId) {
+                    return {{ $outgoing_product->amount }};
                 }
             @endforeach
         }
 
         function getLocation(productId) {
-            @foreach($transaction->product_transactions as $product_transaction)
-                if ({{ $product_transaction->product_id }} == productId) {
-                    return {{ $product_transaction->amount }};
+            @foreach($rpp->outgoing_products as $outgoing_product)
+                if ({{ $outgoing_product->product_id }} == productId) {
+                    return {{ $outgoing_product->amount }};
                 }
             @endforeach
         }
 
         function getLocationDetails(locationId) {
-            @foreach($transaction->product_transactions as $proction)
+            @foreach($rpp->outgoing_products as $proction)
                 @foreach($proction->product->product_locations as $location)
-                    @if ($location->location_id == '{{ locationId }}' && $transaction->purchase_date == '{{ $location->purchase_date }}')
+                    @if ($location->location_id == '{{ locationId }}' && $rpp->outed_date == '{{ $location->outed_date }}')
                         return { expired: '{{ $location->expired }}', amount: {{ $location->amount }} };
                     @endif
                 @endforeach

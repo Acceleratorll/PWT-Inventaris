@@ -61,9 +61,7 @@
             type: 'error',
             title: 'Error',timer: 3000,
             text: '{{ Session::get('error') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 
@@ -73,9 +71,7 @@
             type: 'success',title: 'Success',
             timer: 3000,
             text: '{{ Session::get('success') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 

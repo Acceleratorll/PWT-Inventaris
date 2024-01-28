@@ -59,8 +59,7 @@ class NotaDinasController extends Controller
             event(new UpdateChartEvent('pPChart', 'Nota Dinas'));
             return redirect()->route('notaDinas.index')->with('success', 'Nota dinas created successfully');
         } catch (\Throwable $th) {
-            DB::rollBack();
-            return redirect()->back()->with('error', $th);
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 
@@ -80,8 +79,11 @@ class NotaDinasController extends Controller
     {
         try {
             $input = $notaDinasRequest->validated();
+            $data = $this->notaDinasService->getById($id);
+            $data->update($input);
+            return redirect()->route('notaDinas.index')->with('success', 'Nota Dinas updated successfully');
         } catch (\Throwable $th) {
-            //throw $th;
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 

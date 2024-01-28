@@ -22,7 +22,7 @@
                     </a>
                     @endcan
                     <a class="btn btn-secondary" href="{{ route('export.processplans') }}">
-                        <span>Excel</span>
+                        <span>Export</span>
                     </a>
                 </div>
                 <div class="table-responsive">
@@ -111,9 +111,7 @@
             title: 'Error',
             timer: 3000,
             text: '{{ Session::get('error') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 
@@ -123,9 +121,7 @@
             type: 'success',title: 'Success',
             timer: 3000,
             text: '{{ Session::get('success') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
         $(function() {

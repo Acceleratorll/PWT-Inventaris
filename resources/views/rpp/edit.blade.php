@@ -3,7 +3,7 @@
 @section('title', 'Edit RPP')
 
 @section('content_header')
-    <h1>Tambah Barang</h1>
+    <h1>Ubah Barang</h1>
 @stop
 
 @section('content')
@@ -22,17 +22,23 @@
                 </div>
                 <div class="col-md-6">
                     <label for="product_code">Kode RPP</label>
-                    <input type="number" value="{{ $rpp->code }}" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode RPP" required/>
+                    <input type="text" value="{{ $rpp->code }}" class="form-control mb-3" name="code" id="code" placeholder="Masukkan Kode RPP" required/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="order_type">Jenis Orderan</label>
-                    <input name="order_type" value="{{ $rpp->order_type }}" id="order_type" class="form-control mb-3" placeholder="Masukkan Jenis Orderan" required/>
+                    <select name="order_type_id" id="order_type_id" class="form-control mb-3" placeholder="Masukkan Jenis Orderan" required>
+                        <option value="{{ $rpp->order_type_id }}">{{ $rpp->order_type->name }}</option>
+                    </select>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-2">
+                    <label for="outed_date">Tanggal</label>
+                    <input type="date" name="outed_date" id="outed_date" class="form-control" placeholder="Masukkan tanggal barang keluar" value="{{ $rpp->outed_date->format('Y-m-d') }}"/>
+                </div>
+                <div class="col-md-7">
                     <label for="products">Barang (Bisa pilih lebih dari 1)</label>
-                    <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple>
+                    <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple readonly>
                         @if($rpp->outgoing_products)
                         @foreach($rpp->outgoing_products as $outgoing_product)
                         <option value="{{ $outgoing_product->product_id }}" selected>{{ $outgoing_product->product->name ?? 'Product Deleted' }}</option>
@@ -73,18 +79,22 @@
 
         const customer = document.getElementById("customer_id");
         const products = document.getElementById("products");
+        const order_type = document.getElementById("order_type_id");    
         const products_ph = "Pilih Barang";
         const products_url = '{{ route("get-json-products") }}';
+        const order_type_ph = "Pilih Order Type";
+        const order_type_url = '{{ route("select-order-type") }}';
         const customer_ph = "Pilih Customer";
         const customer_url = '{{ route("get-json-customers") }}';
         
         selectInput(customer, customer_url, customer_ph);
         selectInput(products, products_url, products_ph);
+        selectInput(order_type, order_type_url, order_type_ph);
 
         function getProductQty(productId) {
             @foreach($rpp->outgoing_products as $outgoing_product)
                 if ({{ $outgoing_product->product_id }} == productId) {
-                    return {{ $outgoing_product->qty }};
+                    return {{ $outgoing_product->amount }};
                 }
             @endforeach
         }
@@ -119,11 +129,11 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label>Jumlah</label>
-                                    <input type="number" name="selected_products[${productId}][qty]" value="${getProductQty(productId)}" class="form-control mb-3" placeholder="Quantity" required>
+                                    <input type="number" name="selected_products[${productId}][amount]" value="${getProductQty(productId)}" class="form-control mb-3" placeholder="Quantity" required readonly>
                                 </div>
                                 <div class="col-md-2">
                                     <label>Satuan</label>
-                                    <input type="text" name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" value="${qualifier.name}" placeholder="Qualifier" required>
+                                    <input type="text" name="selected_products[${productId}][qualifier_id]" class="form-control mb-3" value="${qualifier.name}" placeholder="Qualifier" required readonly>
                                 </div>
                             </div>
                         `;
@@ -141,13 +151,13 @@
             multiple: true,
             placeholder: "Tambah Barang",
         }).on("change", function () {
-            // console.log(productsSelect.select2("data"));
             updateSelectedProducts();
         });
 
         updateSelectedProducts();
+    });
 
-        function confirmation() {
+    function confirmation() {
             Swal.fire({
                 title: 'Apakah anda sudah yakin ?',
                 text: 'Apakah anda sudah yakin dengan inputan anda ?',
@@ -162,7 +172,6 @@
                 }
             });
         }
-    });
 </script>
 
 @stop

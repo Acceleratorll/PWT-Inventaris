@@ -153,7 +153,7 @@ Hapus
                                 icon: 'success',
                                 timer: 1700,
                             });
-                            Swal.showLoading();
+                            
     
                             $('#table').DataTable().ajax.reload();
                         },

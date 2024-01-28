@@ -81,7 +81,7 @@ type: 'success',
 type: 'success',
                             timer: 1700,
                         });
-                        Swal.showLoading();
+                        
 
                         $('#table').DataTable().ajax.reload();
                     },
@@ -115,7 +115,7 @@ type: 'success',
 type: 'success',
             timer: 1700,
         });
-        Swal.showLoading();
+        
         
         var dataTable = $('#table').DataTable();
         dataTable.ajax.reload();

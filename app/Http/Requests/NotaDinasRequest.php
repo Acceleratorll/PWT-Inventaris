@@ -23,10 +23,10 @@ class NotaDinasRequest extends FormRequest
     {
         return [
             'code' => 'required',
-            'authorized' => 'nullable',
+            'authorized' => '',
             'from_date' => 'required',
             'to_date' => 'required',
-            'desc' => 'nullable',
+            'desc' => '',
             'selected_products' => 'required|array',
         ];
     }

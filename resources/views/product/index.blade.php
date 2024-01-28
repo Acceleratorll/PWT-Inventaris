@@ -20,7 +20,7 @@
                 </a>
             @endcan
                 <a class="btn btn-secondary" href="{{ route('export.products') }}">
-                    <span>Excel</span>
+                    <span>Export</span>
                 </a>
             </div>
             <div class="button-action" style="margin-bottom: 20px">
@@ -112,9 +112,7 @@
             title: 'Error',
             timer: 3000,
             text: '{{ Session::get('error') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 
@@ -125,9 +123,7 @@
             title: 'Success',
             timer: 3000,
             text: '{{ Session::get('success') }}',
-            onOpen: function() {
-                Swal.showLoading()
-            }
+            
         });
     }
 

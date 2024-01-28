@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\UpdateChartEvent;
+use App\Events\UpdateDataEvent;
 use App\Exports\TransactionExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequest;
@@ -115,14 +116,14 @@ class TransactionController extends Controller
 
     public function update(TransactionRequest $request, string $id)
     {
+        dd($request);
         $input = $request->validated();
-        dd($input);
-        // $amount_changes = $request->;
         $transaction = $this->transactionRepository->find($id);
         $this->transactionRepository->update($id, $input);
 
 
-        $this->transactionService->updateChart($transaction);
+        // $this->transactionService->updateChart($transaction);
+        event(new UpdateDataEvent($chartData, 'Transaction'));
 
         return redirect()->route('transaction.index')->with('success', 'TRANSACTION berhasil diupdate!');
     }

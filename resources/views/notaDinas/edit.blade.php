@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="col-md-7">
                     <label for="products" class="control-label">Barang (Bisa pilih lebih dari 1)</label>
-                    <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple>
+                    <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple readonly>
                         @foreach ($data->product_plannings as $proplan)
                             <option value="{{ $proplan->id }}" selected>{{ $proplan->product->name }}</option>
                         @endforeach
@@ -73,9 +73,7 @@
                 title: 'Error',
                 timer: 3000,
                 text: '{{ Session::get('error') }}',
-                onOpen: function() {
-                    Swal.showLoading()
-                }
+                
             });
         }
 
@@ -85,9 +83,7 @@
                 type: 'success',title: 'Success',
                 timer: 3000,
                 text: '{{ Session::get('success') }}',
-                onOpen: function() {
-                    Swal.showLoading()
-                }
+                
             });
         }
 
@@ -135,16 +131,16 @@
                             </div>
                             <div class="col-md-2">
                                 <label>Requirement</label>
-                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][requirement_amount]" placeholder="Requirement amount" required>
+                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][requirement_amount]" placeholder="Requirement amount" required readonly>
                             </div>
                             <div class="col-md-2">
                                 <label>Stock</label>
-                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][product_amount]" value="${data.total_amount}" required readonly>
-                                <input type="hidden" class="form-control mb-3" name="selected_products[${productId}][minimum_stock]" value="${data.minimal_amount}">
+                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][product_amount]" value="${data.total_amount}" required readonly readonly>
+                                <input type="hidden" class="form-control mb-3" name="selected_products[${productId}][minimum_stock]" value="${data.minimal_amount}" readonly>
                             </div>
                             <div class="col-md-2">
                                 <label>Procurement</label>
-                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" placeholder="Procurement plan amount" required>
+                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" placeholder="Procurement plan amount" required readonly>
                             </div>
                             <div class="col-md-2">
                                 <label>Satuan</label>
@@ -184,7 +180,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label>Requirement</label>
-                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][requirement_amount]" value="${data.data.requirement_amount}" placeholder="Requirement amount" required>
+                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][requirement_amount]" value="${data.data.requirement_amount}" placeholder="Requirement amount" required readonly>
                             </div>
                             <div class="col-md-2">
                                 <label>Stock</label>
@@ -192,7 +188,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label>Procurement</label>
-                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" value="${data.data.procurement_plan_amount}" placeholder="Procurement plan amount" required>
+                                <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" value="${data.data.procurement_plan_amount}" placeholder="Procurement plan amount" required readonly>
                             </div>
                             <div class="col-md-2">
                                 <label>Satuan</label>

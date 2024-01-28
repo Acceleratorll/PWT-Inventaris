@@ -43,7 +43,7 @@
                             icon: 'success',
                             timer: 1700,
                         });
-                        Swal.showLoading();
+                        
 
                         $('#myTable').DataTable().ajax.reload();
                     },

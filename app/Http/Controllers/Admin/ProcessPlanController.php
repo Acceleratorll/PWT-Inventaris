@@ -210,48 +210,49 @@ class ProcessPlanController extends Controller
         $input = $request->validated();
         $user = auth()->user();
         $rpp = $this->processPlanRepository->find($id);
-        $amountChanges = [];
-        foreach ($input['selected_products'] as $productId => $productData) {
-            $outgoingProduct = $rpp->outgoing_products->firstWhere('product_id', $productId);
-            if ($outgoingProduct) {
-                $netChange = $outgoingProduct['qty'] - $productData['qty'];
-                if (!isset($amountChanges[$productId])) {
-                    $amountChanges[$productId] = 0;
-                }
-                $amountChanges[$productId] += $netChange;
-                $outgoingProduct->qty = $productData['qty'];
-                $outgoingProduct->save();
-            } else {
-                $inputOutPro = [
-                    'process_plan_id' => $rpp->id,
-                    'product_id' => $productId,
-                    'qty' => $productData['qty'],
-                ];
-                $this->outgoingProductRepository->create($inputOutPro);
-                $netChange = $productData['qty'];
-                if (!isset($amountChanges[$productId])) {
-                    $amountChanges[$productId] = 0;
-                }
-                $amountChanges[$productId] += $netChange;
-            }
-        }
-        foreach ($amountChanges as $productId => $netChange) {
-            $product = $this->productRepository->find($productId);
-            $product->amount += $netChange;
-            $product->save();
-        }
+        $rpp->update($input);
+        // $amountChanges = [];
+        // foreach ($input['selected_products'] as $productId => $productData) {
+        //     $outgoingProduct = $rpp->outgoing_products->firstWhere('product_id', $productId);
+        //     if ($outgoingProduct) {
+        //         $netChange = $outgoingProduct['qty'] - $productData['qty'];
+        //         if (!isset($amountChanges[$productId])) {
+        //             $amountChanges[$productId] = 0;
+        //         }
+        //         $amountChanges[$productId] += $netChange;
+        //         $outgoingProduct->qty = $productData['qty'];
+        //         $outgoingProduct->save();
+        //     } else {
+        //         $inputOutPro = [
+        //             'process_plan_id' => $rpp->id,
+        //             'product_id' => $productId,
+        //             'qty' => $productData['qty'],
+        //         ];
+        //         $this->outgoingProductRepository->create($inputOutPro);
+        //         $netChange = $productData['qty'];
+        //         if (!isset($amountChanges[$productId])) {
+        //             $amountChanges[$productId] = 0;
+        //         }
+        //         $amountChanges[$productId] += $netChange;
+        //     }
+        // }
+        // foreach ($amountChanges as $productId => $netChange) {
+        //     $product = $this->productRepository->find($productId);
+        //     $product->amount += $netChange;
+        //     $product->save();
+        // }
 
-        foreach ($rpp->outgoing_products as $oProduct) {
-            $cproduct = $this->productRepository->find($oProduct->product_id);
-            if ($cproduct->amount <= $cproduct->minimal_amount) {
-                $users = $this->userRepository->all();
-                foreach ($users as $user) {
-                    $user->notify(new CriticalProduct($cproduct));
-                    $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
-                    event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
-                }
-            }
-        }
+        // foreach ($rpp->outgoing_products as $oProduct) {
+        //     $cproduct = $this->productRepository->find($oProduct->product_id);
+        //     if ($cproduct->amount <= $cproduct->minimal_amount) {
+        //         $users = $this->userRepository->all();
+        //         foreach ($users as $user) {
+        //             $user->notify(new CriticalProduct($cproduct));
+        //             $notif = $user->unreadNotifications->where('data.type', 'critical')->last();
+        //             event(new ProductNotificationEvent('critical', $cproduct, $notif->data['message']));
+        //         }
+        //     }
+        // }
 
         $materials = $this->materialRepository->all();
         $data = [];
