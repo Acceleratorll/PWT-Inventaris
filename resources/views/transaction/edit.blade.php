@@ -32,7 +32,7 @@
                     </div>
                     <div class="col-md-8">
                         <label for="products">Barang (Bisa pilih lebih dari 1)</label>
-                        <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple readonly>
+                        <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple disabled>
                             @if($transaction->product_transactions)
                                 @foreach($transaction->product_transactions as $product_transaction)
                                     <option value="{{ $product_transaction->product_id }}" selected>{{ $product_transaction->product->name }}</option>

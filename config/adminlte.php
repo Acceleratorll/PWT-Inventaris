@@ -433,6 +433,20 @@ return [
                     'can'     => 'view rpp',
                 ],
                 [
+                    'text'    => 'Menunggu',
+                    'route'     => 'rpp.wait',
+                    'shift'   => 'ml-3',
+                    'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view rpp',
+                ],
+                [
+                    'text'    => 'Selesai',
+                    'route'     => 'rpp.finish',
+                    'shift'   => 'ml-3',
+                    'icon' => 'nav-icon fas fa-book',
+                    'can'     => 'view rpp',
+                ],
+                [
                     'text'    => 'Tambah RPP',
                     'route'     => 'rpp.create',
                     'shift'   => 'ml-3',

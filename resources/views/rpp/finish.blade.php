@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Barang Masuk')
+@section('title', 'Barang Keluar')
 
 @section('content_header')
-    <h1>Transaksi Barang Masuk</h1>
+    <h1>Barang Keluar Status Selesai</h1>
 @stop
 
 @section('content')
@@ -13,29 +13,29 @@
         <div class="card">
             <div class="card-body">
                 <div class="button-action" style="margin-bottom: 20px">
-                    @can('create transaction')
-                    <a class="btn btn-primary" href="{{ route('transaction.create') }}">
+                    @can('create rpp')
+                    <a class="btn btn-primary" href="{{ route('rpp.create') }}">
                         <span>+ Tambah</span>
                     </a>
                     <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                         <span>Import</span>
                     </a>
                     @endcan
-                    <a class="btn btn-secondary" href="{{ route('export.transactions') }}">
+                    <a class="btn btn-secondary" href="{{ route('export.processplans') }}">
                         <span>Export</span>
                     </a>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table">
-                        <caption>Daftar Barang Masuk</caption>
+                        <caption>Daftar Barang Keluar</caption>
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
                                 <th scope="col" class="text-center">Kode</th>
-                                <th scope="col" class="text-center">Supplier</th>
+                                <th scope="col" class="text-center">Status</th>
+                                <th scope="col" class="text-center">Pelanggan</th>
                                 <th scope="col" class="text-center">Tanggal Beli</th>
                                 <th scope="col" class="text-center">Barang</th>
-                                <th scope="col" class="text-center">Status</th>
                                 <th scope="col" class="text-center">Diubah</th>
                                 <th scope="col" class="text-center">Dibuat</th>
                                 <th scope="col" class="text-center" width="14%">Tindakan</th>
@@ -45,10 +45,10 @@
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
                                 <th scope="col" class="text-center">Kode</th>
-                                <th scope="col" class="text-center">Supplier</th>
-                                <th scope="col" class="text-center">Tanggal Beli</th>
-                                <th scope="col" class="text-center">Barang</th>
                                 <th scope="col" class="text-center">Status</th>
+                                <th scope="col" class="text-center">Pelanggan</th>
+                                <th scope="col" class="text-center">Tanggal Keluar</th>
+                                <th scope="col" class="text-center">Barang</th>
                                 <th scope="col" class="text-center">Diubah</th>
                                 <th scope="col" class="text-center">Dibuat</th>
                             </tr>
@@ -79,7 +79,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('import.transactions') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('import.processplans') }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
                             @csrf
                             <div class="form-group">
@@ -109,7 +109,7 @@
         Swal.fire({
             icon: 'error',
             type: 'error',
-            title: 'Error',
+            title: 'Error',timer: 3000,
             text: '{{ Session::get('error') }}',
             
         });
@@ -139,14 +139,14 @@
             scrollX: true,
             scrollY: 350,
             columnDefs: [{ width: 550, targets: 4 }],
-            ajax: '{{ route('get-json-transactions') }}',
+            ajax: '{{ route('get-rpps-finish') }}',
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'code', name: 'code' },
-                { data: 'supplier', name: 'supplier' },
-                { data: 'formatted_purchase_date', name: 'formatted_purchase_date' },
-                { data: 'products', name: 'products' },
                 { data: 'status', name: 'status' },
+                { data: 'customer', name: 'customer' },
+                { data: 'outed_date', name: 'outed_date' },
+                { data: 'products', name: 'products' },
                 { data: 'formatted_updated_at', name: 'formatted_updated_at' },
                 { data: 'formatted_created_at', name: 'formatted_created_at' },
                 { data: 'action', name: 'action', orderable: false },
@@ -164,7 +164,7 @@
 
         $('#table tbody').on('click', '#show-incoming-products', function () {
             var data = $('#table').DataTable().row($(this).parents('tr')).data();
-            var incomingProducts = data.product_transactions;
+            var incomingProducts = data.product_processplans;
             
             var modal = $('#incomingProductsModal');
             var modalList = modal.find('#incoming-products-list');

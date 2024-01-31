@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Events\UpdateChartEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductLocationRequest;
+use App\Repositories\ProcessPlanRepository;
 use App\Repositories\ProductLocationRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\TransactionRepository;
 use App\Services\ProductLocationService;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,17 +23,20 @@ class ProductLocationController extends Controller
     protected $productLocationService;
     protected $productRepository;
     protected $transactionRepository;
+    protected $processPlanRepository;
 
     public function __construct(
         ProductLocationRepository $productLocationRepository,
         ProductLocationService $productLocationService,
         ProductRepository $productRepository,
         TransactionRepository $transactionRepository,
+        ProcessPlanRepository $processPlanRepository,
     ) {
         $this->productLocationRepository = $productLocationRepository;
         $this->productLocationService = $productLocationService;
         $this->productRepository = $productRepository;
         $this->transactionRepository = $transactionRepository;
+        $this->processPlanRepository = $processPlanRepository;
     }
 
     public function index(): View
@@ -125,6 +130,61 @@ class ProductLocationController extends Controller
         }
 
         return redirect()->route('transaction.index')->with('success', 'Product Location Added Successfully');
+    }
+
+    public function takeOut(ProductLocationRequest $productLocationRequest)
+    {
+        $input = $productLocationRequest->validated();
+        $error = false;
+        $msg = 'An error occurred during the transaction.';
+        try {
+            $rpp = $this->processPlanRepository->find($input['rpp_id']);
+            DB::transaction(function () use ($input, &$error, &$msg, &$rpp) {
+                foreach ($input['selected_products'] as $productId => $productData) {
+                    $realAmount = $rpp->outgoing_products->where('product_id', $productId)->first()->amount;
+                    $locationAmounts = array_column($productData['pro_loc_ids'], 'amount');
+                    $sumLocationAmounts = array_sum($locationAmounts);
+
+                    if ($realAmount != $sumLocationAmounts) {
+                        $error = true;
+                        $msg = 'Invalid amount. Amount not matched';
+                        return;
+                    }
+
+                    foreach ($productData['pro_loc_ids'] as $locationId => $locationData) {
+                        $proLoc = $this->productLocationRepository->findByProductExpiredLocation(
+                            $productId,
+                            $locationData['location_id'],
+                            Carbon::parse($locationData['expired'])->addDay(),
+                        );
+
+                        if ($proLoc === null) {
+                            $error = true;
+                            $msg = 'Product location not found';
+                            return;
+                        }
+                        if ($proLoc->amount < $locationData['amount']) {
+                            $error = true;
+                            $msg = 'Invalid amount';
+                            return;
+                        }
+
+                        $proLoc->update(['amount' => $proLoc->amount -= $locationData['amount']]);
+                    }
+                }
+
+                $rpp->update(['status' => 1]);
+            });
+        } catch (\Throwable $th) {
+            $error = true;
+            $msg = $th->getMessage();
+        }
+
+        if ($error) {
+            return redirect()->back()->with('error', $msg);
+        }
+
+        return redirect()->route('rpp.index')->with('success', 'RPP Processed Successfully');
     }
 
     public function destroy($id): JsonResponse

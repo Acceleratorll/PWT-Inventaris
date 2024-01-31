@@ -22,12 +22,12 @@ class ProductLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'product_id' => 'required',
             // 'location_id' => 'required',
             // 'amount' => 'required',
             // 'expired' => 'required',
-            'purchase_date' => 'required',
-            'transaction_id' => 'required',
+            'rpp_id' => '',
+            'purchase_date' => '',
+            'transaction_id' => '',
             'selected_products' => 'required',
         ];
     }

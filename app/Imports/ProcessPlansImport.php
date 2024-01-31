@@ -20,6 +20,7 @@ class ProcessPlansImport implements ToModel, WithHeadingRow
         $this->rpp = new ProcessPlan([
             'customer_id' => $this->getCustomerIdByName($row['customer']),
             'code' => $row['code'],
+            'status' => $row['status'],
             'order_type_id' => $this->getOrderTypeIdByName($row['order_type']),
             'desc' => $row['description'] ?? null
         ]);

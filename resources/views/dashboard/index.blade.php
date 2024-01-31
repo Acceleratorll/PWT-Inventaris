@@ -145,7 +145,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <x-adminlte-card title="Info RPP Setahun" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+        <x-adminlte-card title="Info RPP(Tahun)" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="rounded shadow justify-center" id="chart-rpp" style="height:630px">
                 <canvas id="rppChart"></canvas>
             </div>
@@ -154,14 +154,14 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <x-adminlte-card title="Barang Masuk" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+        <x-adminlte-card title="Barang Masuk(Bulan)" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="rounded shadow justify-center" id="chart-productTransaction">
                 <canvas id="productTransactionChart"></canvas>
             </div>
         </x-adminlte-card>
     </div>
     <div class="col-md-6">
-        <x-adminlte-card title="Barang Keluar RPP" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
+        <x-adminlte-card title="Barang Keluar(Bulan)" theme="lightblue" theme-mode="outline" icon="fas fa-chart-pie" header-class="text-uppercase rounded-bottom border-info" removable>
             <div class="chart-container" style="position: relative;">
                 <canvas id="tintaChart" style="width: 100%;"></canvas>
             </div>

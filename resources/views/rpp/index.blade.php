@@ -27,11 +27,12 @@
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table">
-                        <caption>Daftar of Rpps</caption>
+                        <caption>Daftar of RPP</caption>
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
                                 <th scope="col" class="text-center">Kode</th>
+                                <th scope="col" class="text-center">Status</th>
                                 <th scope="col" class="text-center">Pelanggan</th>
                                 <th scope="col" class="text-center">Jenis Pesanan</th>
                                 <th scope="col" class="text-center">Barang-barang</th>
@@ -45,6 +46,7 @@
                             <tr>
                                 <th scope="col" class="text-center">ID</th>
                                 <th scope="col" class="text-center">Kode</th>
+                                <th scope="col" class="text-center">Status</th>
                                 <th scope="col" class="text-center">Pelanggan</th>
                                 <th scope="col" class="text-center">Jenis Pesanan</th>
                                 <th scope="col" class="text-center">Barang-barang</th>
@@ -105,25 +107,26 @@
     @section('js')
     <script>
         if ('{{ Session::has('error') }}') {
-        Swal.fire({
-            icon: 'error',
-            type: 'error',
-            title: 'Error',
-            timer: 3000,
-            text: '{{ Session::get('error') }}',
-            
-        });
-    }
+            Swal.fire({
+                icon: 'error',
+                type: 'error',
+                title: 'Error',
+                timer: 3000,
+                text: '{{ Session::get('error') }}',
+                
+            });
+        }
 
-    if ('{{ Session::has('success') }}') {
-        Swal.fire({
-            icon: 'success',
-            type: 'success',title: 'Success',
-            timer: 3000,
-            text: '{{ Session::get('success') }}',
-            
-        });
-    }
+        if ('{{ Session::has('success') }}') {
+            Swal.fire({
+                icon: 'success',
+                type: 'success',title: 'Success',
+                timer: 3000,
+                text: '{{ Session::get('success') }}',
+                
+            });
+        }
+        
         $(function() {
 
             $('#table tfoot th').each( function (i) {
@@ -143,6 +146,7 @@
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'code', name: 'code' },
+                    { data: 'status', name: 'status' },
                     { data: 'customer', name: 'customer' },
                     { data: 'order_type', name: 'order_type' },
                     { data: 'products', name: 'products' },

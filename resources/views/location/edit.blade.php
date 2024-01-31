@@ -43,7 +43,6 @@
             icon: 'error',
             type: 'error',
             title: 'Error',
-            timer: 3000,
             text: '{{ Session::get('error') }}',
             
         });

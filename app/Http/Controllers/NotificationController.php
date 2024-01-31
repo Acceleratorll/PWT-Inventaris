@@ -54,6 +54,9 @@ class NotificationController extends Controller
             ->addColumn('type', function ($notification) {
                 return $notification->data['type'];
             })
+            ->addColumn('total_amount', function ($notification) {
+                return $notification->data['total_amount'];
+            })
             ->addColumn('formatted_created_at', function ($notification) {
                 return $notification->created_at->format('D, d-m-y, G:i');
             })

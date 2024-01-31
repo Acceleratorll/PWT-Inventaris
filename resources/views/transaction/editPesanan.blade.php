@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit transaction')
+@section('title', 'Alokasi Barang Masuk')
 
 @section('content_header')
-    <h1>Alokasi Barang</h1>
+    <h1>Alokasi Barang Masuk</h1>
 @stop
 
 @section('content')
@@ -76,7 +76,6 @@
             icon: 'error',
             type: 'error',
             title: 'Error',
-            timer: 3000,
             text: '{{ Session::get('error') }}',
         });
     }

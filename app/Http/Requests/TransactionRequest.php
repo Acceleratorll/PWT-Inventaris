@@ -18,7 +18,7 @@ class TransactionRequest extends FormRequest
     {
         return [
             'supplier_id' => 'required',
-            'selected_products' => 'required',
+            'selected_products' => '',
             'code' => 'required',
             'purchase_date' => 'required',
             'note' => '',

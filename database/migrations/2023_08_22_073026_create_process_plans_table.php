@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained();
             $table->foreignId('order_type_id')->constrained();
             $table->string('code')->unique();
+            $table->boolean('status')->default(0);
             $table->datetime('outed_date')->nullable();
             $table->string('desc')->nullable();
             $table->timestamps();

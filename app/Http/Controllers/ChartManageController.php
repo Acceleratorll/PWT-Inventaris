@@ -39,8 +39,8 @@ class ChartManageController extends Controller
     public function planPaperFirst(): JsonResponse
     {
         $currentYear = now()->year;
-        $datas = Transaction::whereYear('created_at', $currentYear)->get();
-        $plans = NotaDinas::whereYear('to_date', $currentYear)->get();
+        $datas = Transaction::whereYear('purchase_date', $currentYear)->where('status', 1)->get();
+        $plans = NotaDinas::whereYear('to_date', $currentYear)->where('authorized', 1)->get();
 
         $datasets = [];
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'];
@@ -86,8 +86,8 @@ class ChartManageController extends Controller
     public function planPaperSecond(): JsonResponse
     {
         $currentYear = now()->year;
-        $datas = Transaction::whereYear('created_at', $currentYear)->get();
-        $plans = NotaDinas::whereYear('to_date', $currentYear)->get();
+        $datas = Transaction::whereYear('purchase_date', $currentYear)->where('status', 1)->get();
+        $plans = NotaDinas::whereYear('to_date', $currentYear)->where('authorized', 1)->get();
         $types = Material::all();
 
         $datasets = [];
@@ -134,8 +134,8 @@ class ChartManageController extends Controller
     public function planInkFirst(): JsonResponse
     {
         $currentYear = now()->year;
-        $datas = Transaction::whereYear('created_at', $currentYear)->get();
-        $plans = NotaDinas::whereYear('to_date', $currentYear)->get();
+        $datas = Transaction::whereYear('purchase_date', $currentYear)->where('status', 1)->get();
+        $plans = NotaDinas::whereYear('to_date', $currentYear)->where('authorized', 1)->get();
 
         $datasets = [];
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'];
@@ -181,8 +181,8 @@ class ChartManageController extends Controller
     public function planInkSecond(): JsonResponse
     {
         $currentYear = now()->year;
-        $datas = Transaction::whereYear('created_at', $currentYear)->get();
-        $plans = NotaDinas::whereYear('to_date', $currentYear)->get();
+        $datas = Transaction::whereYear('purchase_date', $currentYear)->where('status', 1)->get();
+        $plans = NotaDinas::whereYear('to_date', $currentYear)->where('authorized', 1)->get();
 
         $datasets = [];
         $months = ['July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

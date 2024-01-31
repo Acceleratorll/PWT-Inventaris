@@ -29,6 +29,7 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
             return [
                 'Customer' => $processPlan->customer->name,
                 'Code' => $processPlan->code,
+                'Status' => $processPlan->status,
                 'Order Type' => $processPlan->order_type->name,
                 'Outgoing Products' => $this->formatOutgoingProducts($processPlan->outgoing_products),
                 'Description' => $processPlan->desc,
@@ -41,6 +42,7 @@ class ProcessPlansExport implements FromCollection, Responsable, WithHeadings, W
         return [
             'Customer',
             'Code',
+            'Status',
             'Order Type',
             'Outgoing Products',
             'Description',

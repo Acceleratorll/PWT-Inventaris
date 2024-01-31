@@ -3,6 +3,13 @@
     Ubah
 </a>
 @endcan
+@if($status == 0)
+@can('create product location')
+<a href="/rpp/choose/{{ $id }}" id="isi" data-id="{{ $id }}" class="isi btn btn-success">
+    Process
+</a>
+@endcan
+@endif
 {{-- <button id="show-outgoing-products" data-id="{{ $id }}" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
     Detail
 </button> --}}

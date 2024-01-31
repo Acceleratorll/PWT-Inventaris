@@ -17,6 +17,7 @@ class ProcessPlan extends Model
         'order_type_id',
         'code',
         'desc',
+        'status',
         'outed_date',
     ];
 

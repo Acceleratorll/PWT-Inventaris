@@ -70,6 +70,9 @@ class ProcessPlanController extends Controller
             ->addColumn('code', function ($rpp) {
                 return $rpp->code;
             })
+            ->addColumn('status', function ($rpp) {
+                return $rpp->status ? 'Selesai' : 'Menunggu';
+            })
             ->addColumn('order_type', function ($rpp) {
                 return $rpp->order_type->name;
             })
@@ -96,9 +99,105 @@ class ProcessPlanController extends Controller
             ->make(true);
     }
 
-    public function create()
+    public function getWaitRpps()
+    {
+        $rpps = $this->processPlanRepository->getByStatus(0);
+
+        return DataTables::of($rpps)
+            ->addColumn('customer', function ($rpp) {
+                return $rpp->customer->name;
+            })
+            ->addColumn('code', function ($rpp) {
+                return $rpp->code;
+            })
+            ->addColumn('status', function ($rpp) {
+                return $rpp->status ? 'Selesai' : 'Menunggu';
+            })
+            ->addColumn('order_type', function ($rpp) {
+                return $rpp->order_type->name;
+            })
+            ->addColumn('products', function ($rpp) {
+                $productList = '<ul>';
+                foreach ($rpp->outgoing_products as $product) {
+                    $productList .= '<li>' . $product->product->name . ' | (Qty: ' . $product->amount . ')</li>';
+                }
+                $productList .= '</ul>';
+                return $productList;
+            })
+            ->addColumn('desc', function ($rpp) {
+                return $rpp->desc;
+            })
+            ->addColumn('formatted_created_at', function ($rpp) {
+                return $rpp->created_at->format('D, d-m-y, G:i');
+            })
+            ->addColumn('formatted_updated_at', function ($rpp) {
+                return $rpp->updated_at->format('D, d-m-y, G:i');
+            })
+            ->addColumn('action', 'partials.button-table.process-plan-action')
+            ->rawColumns(['action', 'products'])
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    public function getFinishRpps()
+    {
+        $rpps = $this->processPlanRepository->getByStatus(1);
+
+        return DataTables::of($rpps)
+            ->addColumn('customer', function ($rpp) {
+                return $rpp->customer->name;
+            })
+            ->addColumn('code', function ($rpp) {
+                return $rpp->code;
+            })
+            ->addColumn('status', function ($rpp) {
+                return $rpp->status ? 'Selesai' : 'Menunggu';
+            })
+            ->addColumn('order_type', function ($rpp) {
+                return $rpp->order_type->name;
+            })
+            ->addColumn('products', function ($rpp) {
+                $productList = '<ul>';
+                foreach ($rpp->outgoing_products as $product) {
+                    $productList .= '<li>' . $product->product->name . ' | (Qty: ' . $product->amount . ')</li>';
+                }
+                $productList .= '</ul>';
+                return $productList;
+            })
+            ->addColumn('desc', function ($rpp) {
+                return $rpp->desc;
+            })
+            ->addColumn('formatted_created_at', function ($rpp) {
+                return $rpp->created_at->format('D, d-m-y, G:i');
+            })
+            ->addColumn('formatted_updated_at', function ($rpp) {
+                return $rpp->updated_at->format('D, d-m-y, G:i');
+            })
+            ->addColumn('action', 'partials.button-table.process-plan-action')
+            ->rawColumns(['action', 'products'])
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    public function create(): View
     {
         return view('rpp.create');
+    }
+
+    public function wait(): View
+    {
+        return view('rpp.wait');
+    }
+
+    public function finish(): View
+    {
+        return view('rpp.finish');
+    }
+
+    public function choose($id)
+    {
+        $rpp = $this->processPlanRepository->find($id);
+        return view('rpp.editPesanan', compact('rpp'));
     }
 
     public function store(ProcessPlanRequest $processPlanRequest)
@@ -113,28 +212,27 @@ class ProcessPlanController extends Controller
                     $datasets = [];
                     $amountChanges = [];
                     foreach ($input['selected_products'] as $productId => $productData) {
-                        foreach ($productData['pro_loc_ids'] as $proLocId => $proLocData) {
-                            $product = $this->productRepository->find($productId);
-                            $inputOutPro = [
-                                'process_plan_id' => $rpp->id,
-                                'product_id' => $productId,
-                                'amount' => $proLocData['amount'],
-                                'product_amount' => $product->total_amount,
-                                'expired' => $proLocData['expired'],
-                            ];
+                        $product = $this->productRepository->find($productId);
+                        $inputOutPro = [
+                            'process_plan_id' => $rpp->id,
+                            'product_id' => $productId,
+                            'amount' => $productData['amount'],
+                            'product_amount' => $product->total_amount,
+                        ];
 
-                            $netChange = $proLocData['amount'];
+                        // $netChange = $productData['amount'];
 
-                            if (!isset($amountChanges[$productId])) {
-                                $amountChanges[$productId] = 0;
-                            }
+                        // if (!isset($amountChanges[$productId])) {
+                        //     $amountChanges[$productId] = 0;
+                        // }
 
-                            $amountChanges[$productId] += $netChange;
+                        // $amountChanges[$productId] += $netChange;
 
-                            $this->outgoingProductRepository->create($inputOutPro);
-                            $proLoc = $this->productLocationRepository->find($proLocId);
-                            $proLoc->update(['amount' => $proLoc->amount -= $proLocData['amount']]);
-                        }
+                        $this->outgoingProductRepository->create($inputOutPro);
+                        // foreach ($productData['pro_loc_ids'] as $productId => $productData) {
+                        //     $product = $this->productLocationRepository->find($productId);
+                        //     $product->update(['amount' => $product->amount -= $productData['amount']]);
+                        // }
                     }
 
                     foreach ($rpp->outgoing_products as $oProduct) {

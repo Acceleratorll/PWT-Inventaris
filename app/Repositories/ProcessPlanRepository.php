@@ -68,6 +68,12 @@ class ProcessPlanRepository
             ->get();
     }
 
+    public function getByStatus($data)
+    {
+        return $this->model->with('outgoing_products.product.qualifier', 'customer', 'order_type')
+            ->where('status', $data)->get();
+    }
+
     public function find($id)
     {
         return $this->model->findOrFail($id);

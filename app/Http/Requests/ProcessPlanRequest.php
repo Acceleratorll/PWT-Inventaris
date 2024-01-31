@@ -17,6 +17,7 @@ class ProcessPlanRequest extends FormRequest
             'customer_id' => 'required',
             'order_type_id' => 'required|string',
             'code' => 'required|string',
+            'status' => 'nullable',
             'outed_date' => 'required|date',
             'desc' => 'nullable',
             'selected_products' => 'required|array',

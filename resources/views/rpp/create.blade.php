@@ -111,14 +111,18 @@
                 success: function (data) {
                     var inputHtml = `
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <label>Nama Barang</label>
                             <input type="hidden" name="selected_products[${productId}][product_id]" value="${productId}">
                             <input type="text" class="form-control mb-3" value="${productName}" disabled>
                         </div>
-                        <div class="col-md-5">
-                            <label>Lokasi</label>
-                            <select name="selected_products[${productId}][location][]" id="${uniqueLocationId}" class="form-control mb-3" multiple required></select>
+                        <div class="col-md-2">
+                            <label>Jumlah</label>
+                            <input type="number" name="selected_products[${productId}][amount]" class="form-control mb-3" placeholder="Amount" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Saldo</label>
+                            <input type="number" value="${data.total_amount}" name="selected_products[${productId}][product_amount]" class="form-control mb-3" placeholder="Amount" required readonly>
                         </div>
                         <div class="col-md-2">
                             <label>Satuan</label>
@@ -158,7 +162,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <label>Kadaluarsa</label>
-                                                <input type="date" name="selected_products[${productId}][pro_loc_ids][${location.id}][expired]" value="${formatDate(data.data.expired)}" class="form-control mb-3" required readonly>
+                                                <input type="date" name="selected_products[${productId}][pro_loc_ids][${location.id}][expired]" value="${data.data.expired}" class="form-control mb-3" required readonly>
                                                 <input type="hidden" name="selected_products[${productId}][pro_loc_ids][${location.id}][purchase_date]" value="${formatDate(data.data.purchase_date)}" class="form-control mb-3" required>
                                             </div>
                                         </div>

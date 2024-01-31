@@ -21,7 +21,7 @@ class OutgoingProductRequest extends FormRequest
             'product_location_id' => 'required|integer',
             'amount' => 'required|numeric',
             'product_amount' => 'required|numeric',
-            'expired' => 'required|date',
+            'expired' => 'nullable|date',
         ];
     }
 }

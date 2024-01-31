@@ -25,6 +25,7 @@ class TransactionRepository
         return $this->model
             ->with(['product_transactions.product.material', 'supplier'])
             ->whereMonth('purchase_date', $month)
+            ->where('status', 1)
             ->get();
     }
 
