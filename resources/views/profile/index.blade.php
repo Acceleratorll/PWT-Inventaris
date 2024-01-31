@@ -15,13 +15,13 @@
                 <a class="btn btn-primary" href="{{route('profile.create')}}">
                     <span>+ Tambah</span>
                 </a>
-                <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
+                {{-- <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                     <span>Import</span>
-                </a>
+                </a> --}}
                 @endcan
-                <a class="btn btn-secondary" href="{{ route('export.profiles') }}">
+                {{-- <a class="btn btn-secondary" href="{{ route('export.profiles') }}">
                     <span>Export</span>
-                </a>
+                </a> --}}
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="myTable">

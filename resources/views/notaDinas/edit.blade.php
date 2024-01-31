@@ -130,7 +130,7 @@
                                 <input type="text" class="form-control mb-3" name="selected_products[${productId}][name][]" value="${productName} | ${data.product_code}" disabled>
                             </div>
                             <div class="col-md-2">
-                                <label>Requirement</label>
+                                <label>Kebutuhan</label>
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][requirement_amount]" placeholder="Requirement amount" required readonly>
                             </div>
                             <div class="col-md-2">
@@ -139,7 +139,7 @@
                                 <input type="hidden" class="form-control mb-3" name="selected_products[${productId}][minimum_stock]" value="${data.minimal_amount}" readonly>
                             </div>
                             <div class="col-md-2">
-                                <label>Procurement</label>
+                                <label>Pengadaan</label>
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" placeholder="Procurement plan amount" required readonly>
                             </div>
                             <div class="col-md-2">
@@ -179,7 +179,7 @@
                                 <input type="text" class="form-control mb-3" name="selected_products[${productId}][name][]" value="${productName} | ${data.data.product.product_code}" disabled>
                             </div>
                             <div class="col-md-2">
-                                <label>Requirement</label>
+                                <label>Kebutuhan</label>
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][requirement_amount]" value="${data.data.requirement_amount}" placeholder="Requirement amount" required readonly>
                             </div>
                             <div class="col-md-2">
@@ -187,7 +187,7 @@
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][product_amount]" value="${data.data.product.total_amount}" required readonly>
                             </div>
                             <div class="col-md-2">
-                                <label>Procurement</label>
+                                <label>Pengadaan</label>
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" value="${data.data.procurement_plan_amount}" placeholder="Procurement plan amount" required readonly>
                             </div>
                             <div class="col-md-2">

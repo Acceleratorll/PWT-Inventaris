@@ -46,8 +46,14 @@
                         @endif
                     </select>
                 </div>
-            </div><br>
-            <div id="selected-products">
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="note">Deskripsi</label>
+                    <textarea name="desc"class="form-control mb-3" placeholder="Masukkan Catatan Pembelian">{{ $rpp->desc }}</textarea>
+                </div>
+            </div>
+            <br><div id="selected-products">
             </div>
             <div class="row justify-content-end">
                 <div class="col-md-3">

@@ -3,7 +3,7 @@
 @section('title', 'Product Location')
 
 @section('content_header')
-    <h1>Daftar Product Location</h1>
+    <h1>Daftar Lokasi Barang</h1>
 @stop
 
 @section('content')
@@ -14,9 +14,9 @@
                 {{-- <a class="btn btn-success" data-toggle="modal" data-target="#importModal">
                     <span>Import</span>
                 </a> --}}
-                <a class="btn btn-secondary" href="{{ route('export.productLocations') }}">
+                {{-- <a class="btn btn-secondary" href="{{ route('export.productLocations') }}">
                     <span>Export</span>
-                </a>
+                </a> --}}
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="myTable">

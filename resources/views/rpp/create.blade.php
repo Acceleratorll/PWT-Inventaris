@@ -35,8 +35,14 @@
                     <label for="products">Barang (Bisa pilih lebih dari 1)</label>
                     <select name="products[]" id="products" class="form-control mb-3" width="100%" required multiple></select>
                 </div>
-            </div><br>
-                <div id="selected-products"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="note">Deskripsi</label>
+                    <textarea name="desc"class="form-control mb-3" placeholder="Masukkan Catatan Pembelian"></textarea>
+                </div>
+            </div>
+            <br><div id="selected-products"></div>
             <div class="row justify-content-end">
                 <div class="col-md-3">
                     <button class="form-control btn btn-outline-success" type="button" onclick="confirmation()">Simpan</button>

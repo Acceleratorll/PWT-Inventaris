@@ -271,7 +271,7 @@ class ChartManageController extends Controller
             $data = [];
             foreach ($months as $index => $month) {
                 $totalQty = $datas->filter(function ($item) use ($index, $type) {
-                    return $item->created_at->month == $index + 1 &&
+                    return $item->outed_date->month == $index + 1 &&
                         $item->outgoing_products->contains('product.material_id', $type->id);
                 })->sum(function ($item) use ($type) {
                     return $item->outgoing_products->where('product.material_id', $type->id)->sum('amount');

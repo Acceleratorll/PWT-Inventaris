@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\UpdateChartEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductLocationRequest;
 use App\Repositories\ProductLocationRepository;
@@ -109,6 +110,11 @@ class ProductLocationController extends Controller
 
                 $transaction->update(['status' => 1]);
             });
+
+            $data = [
+                'name' => 'Transaksi',
+            ];
+            event(new UpdateChartEvent('pPChart', $data));
         } catch (\Throwable $th) {
             $error = true;
             $msg = $th->getMessage();
@@ -124,6 +130,12 @@ class ProductLocationController extends Controller
     public function destroy($id): JsonResponse
     {
         $this->productLocationRepository->delete($id);
+
+        $data = [
+            'name' => 'Transaksi',
+        ];
+
+        event(new UpdateChartEvent('pPChart', $data));
         return response()->json(['message' => 'Data has been found!'], 200);
     }
 

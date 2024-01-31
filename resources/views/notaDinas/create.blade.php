@@ -109,7 +109,7 @@
                                 <input type="text" class="form-control mb-3" name="selected_products[${productId}][name][]" value="${productName} | ${data.product_code}" disabled>
                             </div>
                             <div class="col-md-2">
-                                <label>Requirement</label>
+                                <label>Kebutuhan</label>
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][requirement_amount]" placeholder="Requirement amount" required>
                             </div>
                             <div class="col-md-2">
@@ -118,7 +118,7 @@
                                 <input type="hidden" class="form-control mb-3" name="selected_products[${productId}][minimum_stock]" value="${data.minimal_amount}">
                             </div>
                             <div class="col-md-2">
-                                <label>Procurement</label>
+                                <label>Pengadaan</label>
                                 <input type="number" class="form-control mb-3" name="selected_products[${productId}][procurement_plan_amount]" placeholder="Procurement plan amount" required>
                             </div>
                             <div class="col-md-2">
